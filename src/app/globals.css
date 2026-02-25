@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-mystic text-zinc-100;
+}
+
+.panel {
+  @apply rounded-xl border border-zinc-700/80 bg-zinc-900/80 p-4;
+}
