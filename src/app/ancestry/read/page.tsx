@@ -21,7 +21,7 @@ export default function AncestryReadPage() {
     if (format === 'pattern') {
       const local = `Opening\nAncestral Pattern Reading (${scope})\nTop birth places: ${patterns.topBirthPlaces.map((x) => x.join(':')).join(', ')}\nMigration arcs: ${patterns.migrationArcs.map((x) => x.join(':')).join(', ')}\nLongevity avg: ${patterns.longevity.avg ?? 'n/a'}\nReflective prompt: Which pattern asks for gentler reinterpretation?`;
       setOut(local);
-      setPacket({ facts: s.allowAncestryAi ? patterns : 'ancestry ai context disabled by settings' });
+      setPacket({ facts: s.allowAncestryAi ? patterns : 'ancestry ai context disabled by settings', sources: ['Ancestry patterns (derived)'] });
       return;
     }
     if (format === 'tarot') {
@@ -46,7 +46,7 @@ export default function AncestryReadPage() {
         <label>Format <select className="rounded border border-zinc-700 bg-zinc-800" value={format} onChange={(e) => setFormat(e.target.value as any)}><option value="pattern">Ancestral Pattern Reading</option><option value="tarot">Ancestral Tarot Spread</option><option value="genekeys">Gene Keys Ancestral Contemplation</option></select></label>
         <button className="rounded border border-zinc-700 px-2" onClick={run}>Generate</button>
       </div>
-      <section className="panel text-sm"><pre className="whitespace-pre-wrap">{out}</pre><details className="mt-2"><summary>What this reading used</summary><pre className="whitespace-pre-wrap text-xs">{JSON.stringify(packet?.facts ?? {}, null, 2)}</pre></details></section>
+      <section className="panel text-sm"><pre data-testid="ancestry-reading" className="whitespace-pre-wrap">{out}</pre><p data-testid="ancestry-sources" className="text-xs text-zinc-400">Sources: {(packet?.sources || ['Ancestry patterns (derived)']).join(', ')}</p><details className="mt-2"><summary>What this reading used</summary><pre className="whitespace-pre-wrap text-xs">{JSON.stringify(packet?.facts ?? {}, null, 2)}</pre></details></section>
     </main>
   );
 }

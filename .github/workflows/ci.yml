@@ -7,7 +7,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,7 +33,16 @@ jobs:
         run: pnpm install --frozen-lockfile=false || (echo "Install failed. Check registry access and run: pnpm config set registry https://registry.npmjs.org/" && exit 1)
       - name: Lint
         run: pnpm lint
-      - name: Test
+      - name: Unit tests
         run: pnpm test
       - name: Build
         run: pnpm build
+      - name: Install Playwright browsers
+        if: matrix.os == 'ubuntu-latest'
+        run: pnpm exec playwright install --with-deps chromium
+      - name: E2E tests
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          TEST_MODE: '1'
+          NEXT_PUBLIC_TEST_MODE: '1'
+        run: pnpm test:e2e

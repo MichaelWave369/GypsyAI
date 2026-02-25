@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Nav } from '@/components/Nav';
 import { ChatOrb } from '@/components/ChatOrb';
+import { PwaStatus } from '@/components/pwa/PwaStatus';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { SwRegister } from '@/components/pwa/SwRegister';
+import { OnboardingWizard } from '@/components/OnboardingWizard';
 
 export const metadata: Metadata = {
   title: 'Gypsy AI',
@@ -18,6 +22,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Nav />
         </header>
         {children}
+        <footer className="mt-8 flex items-center justify-between border-t border-zinc-800 pt-3 text-xs text-zinc-400">
+          <span>Gypsy AI v0.1.4</span>
+          <div className="flex items-center gap-2"><PwaStatus /><InstallPrompt /></div>
+        </footer>
+        <SwRegister />
+        <OnboardingWizard />
         <ChatOrb />
       </body>
     </html>

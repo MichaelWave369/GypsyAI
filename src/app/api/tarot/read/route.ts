@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/security/rateLimit';
+import { isTestMode } from '@/lib/env';
 import { z } from 'zod';
 import { drawCards } from '@/lib/tarot/engine';
 import { callModel } from '@/lib/ai/client';
@@ -19,10 +21,15 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const limit = checkRateLimit(req.headers.get('x-forwarded-for') ?? 'local');
+  if (!limit.ok) return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+
   const parsed = schema.parse(await req.json());
-  const drawn = drawCards(parsed.spread, parsed.seed);
+  const forcedDemo = isTestMode() || parsed.demoMode;
+  const seed = parsed.seed ?? (isTestMode() ? 'test-seed' : undefined);
+  const drawn = drawCards(parsed.spread, seed);
   const packet = buildGroundingPacketTarot(parsed.spread, drawn);
-  if (parsed.demoMode) return NextResponse.json({ drawn, reading: demoTarotInterpretation(drawn, parsed.question), packet, mode: 'demo' });
+  if (forcedDemo) return NextResponse.json({ drawn, reading: demoTarotInterpretation(drawn, parsed.question), packet, mode: 'demo' });
 
   try {
     let reading = await callModel(buildGroundedPrompt(packet, parsed.style), parsed.temperaturePreset === 'low' ? 0.2 : 0.5);

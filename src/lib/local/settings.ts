@@ -56,12 +56,15 @@ export const defaultSettings: AppSettings = {
 
 const KEY = 'gypsy-ai-settings';
 
+const testMode = () => typeof process !== 'undefined' && process.env.NEXT_PUBLIC_TEST_MODE === '1';
+
 export function loadSettings(): AppSettings {
   if (typeof window === 'undefined') return defaultSettings;
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return defaultSettings;
-    return { ...defaultSettings, ...JSON.parse(raw), noNewCorrespondences: true } as AppSettings;
+    if (!raw) return testMode() ? { ...defaultSettings, demoMode: true } : defaultSettings;
+    const merged = { ...defaultSettings, ...JSON.parse(raw), noNewCorrespondences: true } as AppSettings;
+    return testMode() ? { ...merged, demoMode: true, allowAncestryAi: false, includeNamesInAiContext: false } : merged;
   } catch {
     return defaultSettings;
   }

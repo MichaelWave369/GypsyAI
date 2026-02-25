@@ -1,6 +1,6 @@
 {
   "name": "gypsy-ai",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "private": true,
   "packageManager": "pnpm@9.12.3",
   "scripts": {
@@ -10,6 +10,8 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test tests/e2e/a11y.spec.ts",
     "doctor": "node scripts/doctor.mjs",
     "pnpm:setup": "corepack enable && corepack prepare pnpm@9.12.3 --activate && pnpm config set registry https://registry.npmjs.org/"
   },
@@ -23,6 +25,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.55.0",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
