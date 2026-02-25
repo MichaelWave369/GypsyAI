@@ -1,4 +1,10 @@
-export type TarotSpreadType = 'single' | 'three-card' | 'celtic-cross' | 'tree-of-life' | '369';
+export type TarotSpreadType =
+  | 'single'
+  | 'three-card'
+  | 'celtic-cross'
+  | 'tree-of-life'
+  | '369'
+  | 'ancestral-ladder';
 
 export interface TarotCard {
   id: string;
@@ -11,10 +17,14 @@ export interface TarotCard {
   reversed_keywords: string[];
   short_upright_meaning: string;
   short_reversed_meaning: string;
-  hermetic: Record<string, string>;
+  hermetic: Record<string, string | undefined>;
 }
 
-export interface DrawnCard { card: TarotCard; orientation: 'upright' | 'reversed'; position: string; }
+export interface DrawnCard {
+  card: TarotCard;
+  orientation: 'upright' | 'reversed';
+  position: string;
+}
 
 export interface PlanetPosition {
   body: string;

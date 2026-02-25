@@ -1,6 +1,6 @@
 import { Aspect, PlanetPosition } from '@/types';
 import { getDecanForSignDegree, getHermeticProfile } from '@/lib/hermetic';
-import { Body, EclipticLongitude } from 'astronomy-engine';
+import { EclipticLongitude } from 'astronomy-engine';
 import tzLookup from 'tz-lookup';
 
 const zodiac = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -57,9 +57,9 @@ export function findAspects(positions: PlanetPosition[], orb = 6, withMinor = fa
 
 export const equalHouses = (ascendantLongitude: number) => Array.from({ length: 12 }, (_, i) => { const long = (ascendantLongitude + i * 30) % 360; return { house: i + 1, ...longitudeToSign(long), cusp: long }; });
 
-function retrogradeNow(body: Body, date: Date) {
+function retrogradeNow(body: string, date: Date) {
   const later = new Date(date.getTime() + 86400000);
-  const now = EclipticLongitude(body, date); const next = EclipticLongitude(body, later);
+  const now = EclipticLongitude(body as any, date); const next = EclipticLongitude(body as any, later);
   return next < now;
 }
 
@@ -69,9 +69,9 @@ function dignityNote(body: string, sign: string) {
 }
 
 export function computeChart(date: Date, lat: number, lon: number, orb = 6, zodiacMode: 'tropical' | 'sidereal' = 'tropical', minorAspects = false, extraBodies = true) {
-  const bodies: Body[] = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', ...(extraBodies ? (['Chiron', 'TrueNode'] as Body[]) : [])];
+  const bodies: string[] = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', ...(extraBodies ? ['Chiron', 'TrueNode'] : [])];
   const placements: PlanetPosition[] = bodies.map((body) => {
-    const tropicalLong = EclipticLongitude(body, date);
+    const tropicalLong = EclipticLongitude(body as any, date);
     const longitude = zodiacMode === 'sidereal' ? (tropicalLong - ayanamsaApprox + 360) % 360 : tropicalLong;
     const { sign, degreeInSign } = longitudeToSign(longitude);
     return { body, longitude, sign, degreeInSign, retrograde: retrogradeNow(body, date), dignity: dignityNote(body, sign) } as PlanetPosition;

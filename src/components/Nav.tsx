@@ -5,9 +5,12 @@ const links = [
   { href: '/tarot', label: 'Tarot' },
   { href: '/astrology', label: 'Astrology' },
   { href: '/genekeys', label: 'Gene Keys' },
-  { href: '/profile', label: 'Profile' },
+  { href: '/ancestry', label: 'Ancestry' },
+  { href: '/assistant', label: 'Assistant' },
   { href: '/study', label: 'Study' },
-  { href: '/settings', label: 'Settings' }
+  { href: '/profile', label: 'Profile' },
+  { href: '/settings', label: 'Settings' },
+  { href: '/privacy', label: 'Privacy' }
 ];
 
 export function Nav() {

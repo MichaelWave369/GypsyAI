@@ -9,7 +9,7 @@ import { buildRevisionPrompt, verifyReading } from '@/lib/reading/verifier';
 
 const schema = z.object({
   question: z.string().optional(),
-  spread: z.enum(['single', 'three-card', 'celtic-cross', 'tree-of-life', '369']),
+  spread: z.enum(['single', 'three-card', 'celtic-cross', 'tree-of-life', '369', 'ancestral-ladder']),
   seed: z.string().optional(),
   demoMode: z.boolean().optional(),
   style: z.enum(['Direct', 'Gentle', 'Ritual']).default('Gentle'),

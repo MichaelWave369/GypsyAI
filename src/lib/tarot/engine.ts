@@ -7,7 +7,8 @@ const spreads: Record<TarotSpreadType, string[]> = {
   'three-card': ['Past', 'Present', 'Future'],
   'celtic-cross': ['Present', 'Challenge', 'Root', 'Past', 'Goal', 'Near Future', 'Self', 'Environment', 'Hopes/Fears', 'Outcome'],
   'tree-of-life': ['Kether', 'Chokmah', 'Binah', 'Chesed', 'Geburah', 'Tiphareth', 'Netzach', 'Hod', 'Yesod', 'Malkuth'],
-  '369': ['Triad Theme', 'Triad Shadow', 'Triad Resource', 'Clarifier 1', 'Clarifier 2', 'Clarifier 3', 'Clarifier 4', 'Clarifier 5', 'Synthesis']
+  '369': ['Triad Theme', 'Triad Shadow', 'Triad Resource', 'Clarifier 1', 'Clarifier 2', 'Clarifier 3', 'Clarifier 4', 'Clarifier 5', 'Synthesis'],
+  'ancestral-ladder': ['Kether-Origin', 'Chokmah-Impulse', 'Binah-Structure', 'Chesed-Blessing', 'Geburah-Resilience', 'Tiphareth-Heartline', 'Netzach-Desire', 'Hod-Story', 'Yesod-Memory', 'Malkuth-Embodiment']
 };
 
 export const getSpreadPositions = (spread: TarotSpreadType) => spreads[spread];

@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { BirthProfile, loadProfiles, markDefaultProfile, saveProfiles } from '@/lib/local/storage';
 
+type ProfileField = 'name' | 'date' | 'time' | 'place' | 'lat' | 'lon' | 'timezone';
+const fields: ProfileField[] = ['name', 'date', 'time', 'place', 'lat', 'lon', 'timezone'];
+
 export default function ProfilePage() {
   const [profiles, setProfiles] = useState<BirthProfile[]>([]);
   const [form, setForm] = useState<BirthProfile>({ id: '', name: '', date: '', time: '', place: '', lat: '', lon: '', timezone: '' });
@@ -43,8 +46,8 @@ export default function ProfilePage() {
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Local Birth Profiles</h2>
       <div className="panel grid gap-2 md:grid-cols-3">
-        {['name', 'date', 'time', 'place', 'lat', 'lon', 'timezone'].map((k) => (
-          <input key={k} placeholder={k} value={(form as Record<string, string>)[k]} onChange={(e) => setForm((f) => ({ ...f, [k]: e.target.value }))} className="rounded border border-zinc-700 bg-zinc-800 p-2" />
+        {fields.map((k) => (
+          <input key={k} placeholder={k} value={form[k] ?? ''} onChange={(e) => setForm((f) => ({ ...f, [k]: e.target.value }))} className="rounded border border-zinc-700 bg-zinc-800 p-2" />
         ))}
         <button className="rounded bg-gold p-2 font-semibold text-black" onClick={add}>Save profile</button>
       </div>

@@ -1,7 +1,7 @@
 import keys from './keys.json';
 import lines from './lines.json';
 import mandala from './mandala.json';
-import { Body, EclipticLongitude } from 'astronomy-engine';
+import { EclipticLongitude } from 'astronomy-engine';
 
 export type GuideMode = 'contemplation' | 'direct';
 
@@ -13,6 +13,22 @@ export interface KeyLineMapping {
 
 export const geneKeys = keys;
 export const lineThemes = lines;
+
+function sunLongitudeApprox(date: Date) {
+  const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+  const diff = date.getTime() - start;
+  const day = diff / 86400000;
+  return ((day * 0.985647 + 280.46) % 360 + 360) % 360;
+}
+
+function longitudeForBody(body: string, date: Date) {
+  if (body === 'Sun') return sunLongitudeApprox(date);
+  try {
+    return EclipticLongitude(body as any, date);
+  } catch {
+    return sunLongitudeApprox(date);
+  }
+}
 
 export function mapLongitudeToGeneKey(longitude: number): KeyLineMapping {
   const normalized = ((longitude % 360) + 360) % 360;
@@ -33,8 +49,8 @@ export function findDesignDate(birthDate: Date, targetSunLong: number): Date {
 
   for (let i = 0; i < 50; i++) {
     const mid = new Date((low.getTime() + high.getTime()) / 2);
-    const midSun = EclipticLongitude('Sun', mid);
-    const lowSun = EclipticLongitude('Sun', low);
+    const midSun = longitudeForBody('Sun', mid);
+    const lowSun = longitudeForBody('Sun', low);
     if (dist(midSun, targetSunLong) < dist(lowSun, targetSunLong)) low = mid;
     else high = mid;
   }
@@ -42,13 +58,13 @@ export function findDesignDate(birthDate: Date, targetSunLong: number): Date {
 }
 
 export function buildGeneKeysProfile(date: Date) {
-  const bodies: Body[] = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
-  const birthSun = EclipticLongitude('Sun', date);
+  const bodies: string[] = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
+  const birthSun = longitudeForBody('Sun', date);
   const birthEarth = (birthSun + 180) % 360;
 
   const designTarget = (birthSun - 88 + 360) % 360;
   const designDate = findDesignDate(date, designTarget);
-  const designSun = EclipticLongitude('Sun', designDate);
+  const designSun = longitudeForBody('Sun', designDate);
   const designEarth = (designSun + 180) % 360;
 
   const personalitySun = mapLongitudeToGeneKey(birthSun);
@@ -57,7 +73,7 @@ export function buildGeneKeysProfile(date: Date) {
   const designEarthMap = mapLongitudeToGeneKey(designEarth);
 
   const planetary = bodies.map((b) => {
-    const longitude = EclipticLongitude(b, date);
+    const longitude = longitudeForBody(b, date);
     return { body: b, longitude, ...mapLongitudeToGeneKey(longitude) };
   });
 

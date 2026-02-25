@@ -9,7 +9,7 @@ import { TarotSession, loadTarotSessions, saveTarotSessions } from '@/lib/local/
 import { tarotToMarkdown, toJsonExport, toPrintableHtml } from '@/lib/export/formatters';
 
 const spreadOptions: { label: string; value: TarotSpreadType }[] = [
-  { label: 'Single Card', value: 'single' },{ label: 'Three Card', value: 'three-card' },{ label: 'Celtic Cross', value: 'celtic-cross' },{ label: 'Tree of Life', value: 'tree-of-life' },{ label: '369 Spread', value: '369' }
+  { label: 'Single Card', value: 'single' },{ label: 'Three Card', value: 'three-card' },{ label: 'Celtic Cross', value: 'celtic-cross' },{ label: 'Tree of Life', value: 'tree-of-life' },{ label: '369 Spread', value: '369' },{ label: 'Ancestral Ladder', value: 'ancestral-ladder' }
 ];
 
 export default function TarotPage() {

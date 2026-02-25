@@ -1,24 +1,27 @@
-# Gypsy AI v1.2 — Accuracy + Gene Keys
+# Gypsy AI v1.3 — Ancestral Memory + Conversational Oracle
 
-Gypsy AI is a free + open-source Hermetic self-reflection app combining Tarot, Astrology, and Gene Keys with local-first privacy.
+Gypsy AI is a free + open-source Hermetic reflection app combining Tarot, Astrology, Gene Keys, and Ancestry with local-first privacy.
 
-## v1.2 Highlights
-- **Grounded Reading Engine** for Tarot/Astro/Gene Keys:
-  - deterministic facts packet
-  - allowed-terms constraints
-  - required-sections enforcement
-  - verifier pass for missing sections / invented facts
-- **Accuracy settings**: Accuracy Mode, passes (1/2/3), temperature preset, and hard “no new correspondences”.
-- **Gene Keys module**:
-  - `/genekeys`, `/genekeys/profile`, `/study/genekeys`
-  - 64-key local dataset + line themes
-  - activation sequence + planetary keys + design-date search (~88° solar offset)
-  - local save/export only (no server-side profile storage)
+## v1.3 Highlights
+- **Ancestry module** (`/ancestry`):
+  - GEDCOM import (`/ancestry/import`)
+  - family tree (`/ancestry/tree`)
+  - people browser/details (`/ancestry/people`, `/ancestry/person/[id]`)
+  - ancestry-based readings (`/ancestry/read`)
+- **Conversational Oracle** (`/assistant`):
+  - free chat + auto reading routing (Tarot/Astro/Gene Keys/Ancestry)
+  - local session memory, summarize, export/import
+  - strict reading mode with source tags
+- **Grounded reading safeguards** continue across modalities.
 
-## Privacy and disclosures
-- Local-first storage (profiles/sessions in browser localStorage).
-- Interpretations are contemplative, reflective, and non-fatalistic.
-- No medical, legal, or financial advice.
+## Privacy-first model
+- Data is stored locally in browser storage (localStorage + IndexedDB object stores).
+- GEDCOM ancestry data is never uploaded by default.
+- Consent controls in `/settings`:
+  - Hide living persons (default ON)
+  - Allow AI to use ancestry data (default OFF)
+  - Include names in AI context (default OFF)
+- You can delete all ancestry data in `/ancestry/import`.
 
 ## Quick start
 ```bash
@@ -39,19 +42,23 @@ pnpm run doctor
 ```
 Use **Demo Mode** in `/settings` to keep core UX usable without AI backend.
 
-## Feature map
+## Core routes
 - Tarot: `/tarot`
 - Astrology: `/astrology`
 - Gene Keys: `/genekeys`
-- Local profiles: `/profile`, `/genekeys/profile`
-- Study mode: `/study`, `/study/tree`, `/study/tarot`, `/study/decans`, `/study/genekeys`
+- Ancestry: `/ancestry`
+- Assistant: `/assistant`
+- Privacy: `/privacy`
+
+## Disclaimers
+For entertainment and self-reflection only. No legal, medical, or financial advice.
 
 ## Credits
 - Astronomy calculations: `astronomy-engine`
 - Timezone lookup: `tz-lookup`
 - Geocoding endpoint: OpenStreetMap Nominatim
 - Framework: Next.js + React + Tailwind + Vitest
-- Gene Keys mandala/data in this repo are concise original summaries and static mapping authored for this project; no runtime scraping.
+- GEDCOM parser implemented in-project for core tags (no runtime scraping/services)
 
 ## License
 MIT (existing LICENSE preserved).

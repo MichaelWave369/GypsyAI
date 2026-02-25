@@ -15,6 +15,16 @@ export interface AppSettings {
   temperaturePreset: 'low' | 'med';
   noNewCorrespondences: true;
   geneKeysGuideMode: 'contemplation' | 'direct';
+  hideLivingPersons: boolean;
+  allowAncestryAi: boolean;
+  includeNamesInAiContext: boolean;
+  strictReadingMode: boolean;
+  casualChatMode: boolean;
+  autoSwitchReadingMode: boolean;
+  enableChatOrb: boolean;
+  useBirthProfileInAssistant: boolean;
+  useSessionsInAssistant: boolean;
+  familySearchConnectorEnabled: boolean;
 }
 
 export const defaultSettings: AppSettings = {
@@ -31,7 +41,17 @@ export const defaultSettings: AppSettings = {
   accuracyPasses: 2,
   temperaturePreset: 'low',
   noNewCorrespondences: true,
-  geneKeysGuideMode: 'contemplation'
+  geneKeysGuideMode: 'contemplation',
+  hideLivingPersons: true,
+  allowAncestryAi: false,
+  includeNamesInAiContext: false,
+  strictReadingMode: true,
+  casualChatMode: true,
+  autoSwitchReadingMode: true,
+  enableChatOrb: false,
+  useBirthProfileInAssistant: true,
+  useSessionsInAssistant: true,
+  familySearchConnectorEnabled: false
 };
 
 const KEY = 'gypsy-ai-settings';
