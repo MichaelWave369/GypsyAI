@@ -1,0 +1,511 @@
+{
+  "profile": "golden-dawn-inspired",
+  "description": "Original concise correspondences authored for this project in a Golden Dawn style framework.",
+  "sephiroth": [
+    {
+      "number": 1,
+      "name": "Kether",
+      "keywords": [
+        "Crown of pure potential"
+      ],
+      "attribution": "Spirit",
+      "short_meaning": "Crown of pure potential"
+    },
+    {
+      "number": 2,
+      "name": "Chokmah",
+      "keywords": [
+        "Dynamic wisdom",
+        "spark"
+      ],
+      "attribution": "Zodiac",
+      "short_meaning": "Dynamic wisdom and spark"
+    },
+    {
+      "number": 3,
+      "name": "Binah",
+      "keywords": [
+        "Understanding",
+        "form"
+      ],
+      "attribution": "Saturn",
+      "short_meaning": "Understanding and form"
+    },
+    {
+      "number": 4,
+      "name": "Chesed",
+      "keywords": [
+        "Mercy",
+        "order"
+      ],
+      "attribution": "Jupiter",
+      "short_meaning": "Mercy and order"
+    },
+    {
+      "number": 5,
+      "name": "Geburah",
+      "keywords": [
+        "Courage",
+        "discipline"
+      ],
+      "attribution": "Mars",
+      "short_meaning": "Courage and discipline"
+    },
+    {
+      "number": 6,
+      "name": "Tiphareth",
+      "keywords": [
+        "Harmony",
+        "radiant heart"
+      ],
+      "attribution": "Sun",
+      "short_meaning": "Harmony and radiant heart"
+    },
+    {
+      "number": 7,
+      "name": "Netzach",
+      "keywords": [
+        "Desire",
+        "beauty"
+      ],
+      "attribution": "Venus",
+      "short_meaning": "Desire, beauty, and longing"
+    },
+    {
+      "number": 8,
+      "name": "Hod",
+      "keywords": [
+        "Mind",
+        "language"
+      ],
+      "attribution": "Mercury",
+      "short_meaning": "Mind, language, and craft"
+    },
+    {
+      "number": 9,
+      "name": "Yesod",
+      "keywords": [
+        "Dream",
+        "memory"
+      ],
+      "attribution": "Moon",
+      "short_meaning": "Dream, memory, and tides"
+    },
+    {
+      "number": 10,
+      "name": "Malkuth",
+      "keywords": [
+        "Embodied life",
+        "practice"
+      ],
+      "attribution": "Earth",
+      "short_meaning": "Embodied life and practice"
+    }
+  ],
+  "paths": [
+    {
+      "hebrew_letter": "Aleph",
+      "tarot_key": "The Fool",
+      "attribution": "Air",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "hebrew_letter": "Beth",
+      "tarot_key": "The Magician",
+      "attribution": "Mercury",
+      "from": 1,
+      "to": 3
+    },
+    {
+      "hebrew_letter": "Gimel",
+      "tarot_key": "The High Priestess",
+      "attribution": "Moon",
+      "from": 1,
+      "to": 6
+    },
+    {
+      "hebrew_letter": "Daleth",
+      "tarot_key": "The Empress",
+      "attribution": "Venus",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "hebrew_letter": "Heh",
+      "tarot_key": "The Emperor",
+      "attribution": "Aries",
+      "from": 2,
+      "to": 4
+    },
+    {
+      "hebrew_letter": "Vav",
+      "tarot_key": "The Hierophant",
+      "attribution": "Taurus",
+      "from": 2,
+      "to": 6
+    },
+    {
+      "hebrew_letter": "Zayin",
+      "tarot_key": "The Lovers",
+      "attribution": "Gemini",
+      "from": 3,
+      "to": 5
+    },
+    {
+      "hebrew_letter": "Cheth",
+      "tarot_key": "The Chariot",
+      "attribution": "Cancer",
+      "from": 3,
+      "to": 6
+    },
+    {
+      "hebrew_letter": "Teth",
+      "tarot_key": "Strength",
+      "attribution": "Leo",
+      "from": 4,
+      "to": 5
+    },
+    {
+      "hebrew_letter": "Yod",
+      "tarot_key": "The Hermit",
+      "attribution": "Virgo",
+      "from": 4,
+      "to": 6
+    },
+    {
+      "hebrew_letter": "Kaph",
+      "tarot_key": "Wheel of Fortune",
+      "attribution": "Jupiter",
+      "from": 4,
+      "to": 7
+    },
+    {
+      "hebrew_letter": "Lamed",
+      "tarot_key": "Justice",
+      "attribution": "Libra",
+      "from": 5,
+      "to": 6
+    },
+    {
+      "hebrew_letter": "Mem",
+      "tarot_key": "The Hanged Man",
+      "attribution": "Water",
+      "from": 5,
+      "to": 8
+    },
+    {
+      "hebrew_letter": "Nun",
+      "tarot_key": "Death",
+      "attribution": "Scorpio",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "hebrew_letter": "Samekh",
+      "tarot_key": "Temperance",
+      "attribution": "Sagittarius",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "hebrew_letter": "Ayin",
+      "tarot_key": "The Devil",
+      "attribution": "Capricorn",
+      "from": 6,
+      "to": 9
+    },
+    {
+      "hebrew_letter": "Peh",
+      "tarot_key": "The Tower",
+      "attribution": "Mars",
+      "from": 7,
+      "to": 8
+    },
+    {
+      "hebrew_letter": "Tzaddi",
+      "tarot_key": "The Star",
+      "attribution": "Aquarius",
+      "from": 7,
+      "to": 9
+    },
+    {
+      "hebrew_letter": "Qoph",
+      "tarot_key": "The Moon",
+      "attribution": "Pisces",
+      "from": 7,
+      "to": 10
+    },
+    {
+      "hebrew_letter": "Resh",
+      "tarot_key": "The Sun",
+      "attribution": "Sun",
+      "from": 8,
+      "to": 9
+    },
+    {
+      "hebrew_letter": "Shin",
+      "tarot_key": "Judgement",
+      "attribution": "Fire",
+      "from": 8,
+      "to": 10
+    },
+    {
+      "hebrew_letter": "Tav",
+      "tarot_key": "The World",
+      "attribution": "Saturn",
+      "from": 9,
+      "to": 10
+    }
+  ],
+  "suit_elements": {
+    "Wands": "Fire",
+    "Cups": "Water",
+    "Swords": "Air",
+    "Pentacles": "Earth"
+  },
+  "number_to_sephirah": {
+    "1": "Kether",
+    "2": "Chokmah",
+    "3": "Binah",
+    "4": "Chesed",
+    "5": "Geburah",
+    "6": "Tiphareth",
+    "7": "Netzach",
+    "8": "Hod",
+    "9": "Yesod",
+    "10": "Malkuth"
+  },
+  "decans": [
+    {
+      "sign": "Aries",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "2 of Wands"
+    },
+    {
+      "sign": "Aries",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Sun",
+      "minor_card": "3 of Wands"
+    },
+    {
+      "sign": "Aries",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Venus",
+      "minor_card": "4 of Wands"
+    },
+    {
+      "sign": "Taurus",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Mercury",
+      "minor_card": "2 of Pentacles"
+    },
+    {
+      "sign": "Taurus",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Moon",
+      "minor_card": "3 of Pentacles"
+    },
+    {
+      "sign": "Taurus",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Saturn",
+      "minor_card": "4 of Pentacles"
+    },
+    {
+      "sign": "Gemini",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Jupiter",
+      "minor_card": "2 of Swords"
+    },
+    {
+      "sign": "Gemini",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "3 of Swords"
+    },
+    {
+      "sign": "Gemini",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Sun",
+      "minor_card": "4 of Swords"
+    },
+    {
+      "sign": "Cancer",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Venus",
+      "minor_card": "2 of Cups"
+    },
+    {
+      "sign": "Cancer",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Mercury",
+      "minor_card": "3 of Cups"
+    },
+    {
+      "sign": "Cancer",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Moon",
+      "minor_card": "4 of Cups"
+    },
+    {
+      "sign": "Leo",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Saturn",
+      "minor_card": "2 of Wands"
+    },
+    {
+      "sign": "Leo",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Jupiter",
+      "minor_card": "3 of Wands"
+    },
+    {
+      "sign": "Leo",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "4 of Wands"
+    },
+    {
+      "sign": "Virgo",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Sun",
+      "minor_card": "2 of Pentacles"
+    },
+    {
+      "sign": "Virgo",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Venus",
+      "minor_card": "3 of Pentacles"
+    },
+    {
+      "sign": "Virgo",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Mercury",
+      "minor_card": "4 of Pentacles"
+    },
+    {
+      "sign": "Libra",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Moon",
+      "minor_card": "2 of Swords"
+    },
+    {
+      "sign": "Libra",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Saturn",
+      "minor_card": "3 of Swords"
+    },
+    {
+      "sign": "Libra",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Jupiter",
+      "minor_card": "4 of Swords"
+    },
+    {
+      "sign": "Scorpio",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "2 of Cups"
+    },
+    {
+      "sign": "Scorpio",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Sun",
+      "minor_card": "3 of Cups"
+    },
+    {
+      "sign": "Scorpio",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Venus",
+      "minor_card": "4 of Cups"
+    },
+    {
+      "sign": "Sagittarius",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Mercury",
+      "minor_card": "2 of Wands"
+    },
+    {
+      "sign": "Sagittarius",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Moon",
+      "minor_card": "3 of Wands"
+    },
+    {
+      "sign": "Sagittarius",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Saturn",
+      "minor_card": "4 of Wands"
+    },
+    {
+      "sign": "Capricorn",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Jupiter",
+      "minor_card": "2 of Pentacles"
+    },
+    {
+      "sign": "Capricorn",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "3 of Pentacles"
+    },
+    {
+      "sign": "Capricorn",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Sun",
+      "minor_card": "4 of Pentacles"
+    },
+    {
+      "sign": "Aquarius",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Venus",
+      "minor_card": "2 of Swords"
+    },
+    {
+      "sign": "Aquarius",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Mercury",
+      "minor_card": "3 of Swords"
+    },
+    {
+      "sign": "Aquarius",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Moon",
+      "minor_card": "4 of Swords"
+    },
+    {
+      "sign": "Pisces",
+      "degree_range": "0-9\u00b0",
+      "planet_ruler": "Saturn",
+      "minor_card": "2 of Cups"
+    },
+    {
+      "sign": "Pisces",
+      "degree_range": "10-19\u00b0",
+      "planet_ruler": "Jupiter",
+      "minor_card": "3 of Cups"
+    },
+    {
+      "sign": "Pisces",
+      "degree_range": "20-29\u00b0",
+      "planet_ruler": "Mars",
+      "minor_card": "4 of Cups"
+    }
+  ],
+  "sign_to_major_key": {
+    "Aries": "The Emperor",
+    "Taurus": "The Hierophant",
+    "Gemini": "The Lovers",
+    "Cancer": "The Chariot",
+    "Leo": "Strength",
+    "Virgo": "The Hermit",
+    "Libra": "Justice",
+    "Scorpio": "Death",
+    "Sagittarius": "Temperance",
+    "Capricorn": "The Devil",
+    "Aquarius": "The Star",
+    "Pisces": "The Moon"
+  }
+}
