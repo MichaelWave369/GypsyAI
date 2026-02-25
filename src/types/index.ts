@@ -14,17 +14,15 @@ export interface TarotCard {
   hermetic: Record<string, string>;
 }
 
-export interface DrawnCard {
-  card: TarotCard;
-  orientation: 'upright' | 'reversed';
-  position: string;
-}
+export interface DrawnCard { card: TarotCard; orientation: 'upright' | 'reversed'; position: string; }
 
 export interface PlanetPosition {
   body: string;
   longitude: number;
   sign: string;
   degreeInSign: number;
+  retrograde?: boolean;
+  dignity?: string;
 }
 
 export interface Aspect {
@@ -34,4 +32,5 @@ export interface Aspect {
   orb: number;
   exactAngle: number;
   strength: number;
+  tag?: string;
 }

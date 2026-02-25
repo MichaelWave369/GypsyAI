@@ -1,20 +1,24 @@
-# Gypsy AI v1.1
+# Gypsy AI v1.2 — Accuracy + Gene Keys
 
-Gypsy AI is a free + open-source **Hermetic Tarot and astrology web app** built with Next.js + TypeScript.
+Gypsy AI is a free + open-source Hermetic self-reflection app combining Tarot, Astrology, and Gene Keys with local-first privacy.
 
-## What’s new in v1.1
-- Reliability hardening: pinned pnpm, `.npmrc`, `pnpm:setup`, and `doctor` script.
-- Demo Mode (No AI): deterministic fallback interpretations for Tarot/Astrology/Chat.
-- Local-first Profiles + Tarot Sessions with import/export.
-- Study Mode pages: Tree explorer, Tarot browser, and Decans map.
-- Astrology upgrade: Ascendant/MC via sidereal-time math, equal houses from Asc, tropical/sidereal toggle, minor aspects, strength score.
+## v1.2 Highlights
+- **Grounded Reading Engine** for Tarot/Astro/Gene Keys:
+  - deterministic facts packet
+  - allowed-terms constraints
+  - required-sections enforcement
+  - verifier pass for missing sections / invented facts
+- **Accuracy settings**: Accuracy Mode, passes (1/2/3), temperature preset, and hard “no new correspondences”.
+- **Gene Keys module**:
+  - `/genekeys`, `/genekeys/profile`, `/study/genekeys`
+  - 64-key local dataset + line themes
+  - activation sequence + planetary keys + design-date search (~88° solar offset)
+  - local save/export only (no server-side profile storage)
 
-## Features
-- Tarot AI Reader with spreads: Single Card, Three Card, Celtic Cross, Tree of Life, and 369.
-- Hermetic correspondences panel + deep-link to Study pages.
-- Astrology chart generator (Sun–Pluto, aspects, equal houses, Asc/MC).
-- Chart → Tarot Keys synthesis (“Hermetic Lens”).
-- Local-first saving only (localStorage): no server-side profile persistence.
+## Privacy and disclosures
+- Local-first storage (profiles/sessions in browser localStorage).
+- Interpretations are contemplative, reflective, and non-fatalistic.
+- No medical, legal, or financial advice.
 
 ## Quick start
 ```bash
@@ -23,10 +27,8 @@ pnpm install
 pnpm run doctor
 pnpm dev
 ```
-Open http://localhost:3000.
 
-## If install fails (403 / restricted network)
-Run:
+## If install fails (restricted network / 403)
 ```bash
 corepack enable
 corepack prepare pnpm@9.12.3 --activate
@@ -35,39 +37,21 @@ pnpm store prune
 pnpm install --prefer-offline
 pnpm run doctor
 ```
-Then enable **Demo Mode** in `/settings` to keep app usable without AI backends.
+Use **Demo Mode** in `/settings` to keep core UX usable without AI backend.
 
-## Environment
-Create `.env.local` (optional):
-```bash
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.1
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4o-mini
-```
-
-## Ollama setup
-1. Install Ollama: https://ollama.com/
-2. Pull model: `ollama pull llama3.1`
-3. Run locally and use default settings.
-
-## Study Mode
-- `/study`: hub
-- `/study/tree`: 10 Sephiroth + 22 paths explorer
-- `/study/tarot`: filterable deck browser
-- `/study/decans`: 36 decans linked to minor cards
-
-## Privacy + ethics
-- Birth data and sessions are local-first.
-- No deterministic/fatalistic claims by design.
-- For entertainment/self-reflection only (not medical/legal/financial advice).
+## Feature map
+- Tarot: `/tarot`
+- Astrology: `/astrology`
+- Gene Keys: `/genekeys`
+- Local profiles: `/profile`, `/genekeys/profile`
+- Study mode: `/study`, `/study/tree`, `/study/tarot`, `/study/decans`, `/study/genekeys`
 
 ## Credits
-- Hermetic Qabalah + Golden Dawn tradition (high-level inspiration)
-- Astronomy: `astronomy-engine`
-- Timezone inference: `tz-lookup`
-- Geocoding: OpenStreetMap Nominatim
-- Frameworks: Next.js, React, Tailwind CSS, Vitest
+- Astronomy calculations: `astronomy-engine`
+- Timezone lookup: `tz-lookup`
+- Geocoding endpoint: OpenStreetMap Nominatim
+- Framework: Next.js + React + Tailwind + Vitest
+- Gene Keys mandala/data in this repo are concise original summaries and static mapping authored for this project; no runtime scraping.
 
 ## License
 MIT (existing LICENSE preserved).

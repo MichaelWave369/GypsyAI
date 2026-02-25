@@ -10,6 +10,11 @@ export interface AppSettings {
   zodiacMode: 'tropical' | 'sidereal';
   minorAspects: boolean;
   readingStyle: ReadingStyle;
+  accuracyMode: boolean;
+  accuracyPasses: 1 | 2 | 3;
+  temperaturePreset: 'low' | 'med';
+  noNewCorrespondences: true;
+  geneKeysGuideMode: 'contemplation' | 'direct';
 }
 
 export const defaultSettings: AppSettings = {
@@ -21,7 +26,12 @@ export const defaultSettings: AppSettings = {
   demoMode: true,
   zodiacMode: 'tropical',
   minorAspects: false,
-  readingStyle: 'Gentle'
+  readingStyle: 'Gentle',
+  accuracyMode: true,
+  accuracyPasses: 2,
+  temperaturePreset: 'low',
+  noNewCorrespondences: true,
+  geneKeysGuideMode: 'contemplation'
 };
 
 const KEY = 'gypsy-ai-settings';
@@ -31,7 +41,7 @@ export function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return defaultSettings;
-    return { ...defaultSettings, ...JSON.parse(raw) } as AppSettings;
+    return { ...defaultSettings, ...JSON.parse(raw), noNewCorrespondences: true } as AppSettings;
   } catch {
     return defaultSettings;
   }
@@ -39,5 +49,5 @@ export function loadSettings(): AppSettings {
 
 export function saveSettings(settings: AppSettings) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(KEY, JSON.stringify(settings));
+  localStorage.setItem(KEY, JSON.stringify({ ...settings, noNewCorrespondences: true }));
 }
