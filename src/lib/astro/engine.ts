@@ -41,6 +41,20 @@ export function ascendantMc(date: Date, lat: number, lon: number) {
 
 const ayanamsaApprox = 24;
 
+
+function sunLongitudeApprox(date: Date) {
+  const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+  const diff = date.getTime() - start;
+  const day = diff / 86400000;
+  return ((day * 0.985647 + 280.46) % 360 + 360) % 360;
+}
+
+function eclipticLongitudeSafe(body: string, date: Date) {
+  if (body === 'Sun') return sunLongitudeApprox(date);
+  return EclipticLongitude(body as any, date);
+}
+
+
 export function findAspects(positions: PlanetPosition[], orb = 6, withMinor = false): Aspect[] {
   const angles = withMinor ? { ...baseAspectAngles, ...minorAspectAngles } : baseAspectAngles;
   const results: Aspect[] = [];
@@ -59,7 +73,7 @@ export const equalHouses = (ascendantLongitude: number) => Array.from({ length: 
 
 function retrogradeNow(body: string, date: Date) {
   const later = new Date(date.getTime() + 86400000);
-  const now = EclipticLongitude(body as any, date); const next = EclipticLongitude(body as any, later);
+  const now = eclipticLongitudeSafe(body, date); const next = eclipticLongitudeSafe(body, later);
   return next < now;
 }
 
@@ -71,7 +85,7 @@ function dignityNote(body: string, sign: string) {
 export function computeChart(date: Date, lat: number, lon: number, orb = 6, zodiacMode: 'tropical' | 'sidereal' = 'tropical', minorAspects = false, extraBodies = true) {
   const bodies: string[] = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', ...(extraBodies ? ['Chiron', 'TrueNode'] : [])];
   const placements: PlanetPosition[] = bodies.map((body) => {
-    const tropicalLong = EclipticLongitude(body as any, date);
+    const tropicalLong = eclipticLongitudeSafe(body, date);
     const longitude = zodiacMode === 'sidereal' ? (tropicalLong - ayanamsaApprox + 360) % 360 : tropicalLong;
     const { sign, degreeInSign } = longitudeToSign(longitude);
     return { body, longitude, sign, degreeInSign, retrograde: retrogradeNow(body, date), dignity: dignityNote(body, sign) } as PlanetPosition;

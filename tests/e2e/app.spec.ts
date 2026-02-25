@@ -1,11 +1,17 @@
 import { expect, test } from '@playwright/test';
 import path from 'node:path';
 
-test('Landing -> Tarot flow', async ({ page, context, browserName }) => {
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => {
+    localStorage.setItem('gypsy-onboarded', '1');
+  });
+});
+
+test('Landing -> Tarot flow', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Tarot' }).click();
-  await page.getByLabel('tarot-question').fill('How can I focus this week?');
-  await page.getByLabel('tarot-spread').selectOption('three-card');
+  await page.getByTestId('home-cta-tarot').click();
+  await page.getByLabel('tarot-question', { exact: true }).fill('How can I focus this week?');
+  await page.getByLabel('tarot-spread', { exact: true }).selectOption('three-card');
   await page.getByTestId('tarot-generate').click();
   await expect(page.getByText('Drawn Cards')).toBeVisible();
   await expect(page.locator('li').filter({ hasText: /Past:|Present:|Future:/ })).toHaveCount(3);
@@ -18,13 +24,15 @@ test('Landing -> Tarot flow', async ({ page, context, browserName }) => {
 });
 
 test('Landing -> Astrology flow', async ({ page }) => {
-  await page.goto('/astrology');
-  await page.getByLabel('astro-name').fill('Test User');
-  await page.getByLabel('astro-date').fill('1990-01-01');
-  await page.getByLabel('astro-time').fill('12:00');
-  await page.getByLabel('astro-lat').fill('40.7128');
-  await page.getByLabel('astro-lon').fill('-74.0060');
-  await page.getByLabel('astro-timezone').fill('America/New_York');
+  await page.goto('/');
+  await page.getByTestId('home-cta-astrology').click();
+  await page.getByLabel('astro-name', { exact: true }).fill('Test User');
+  await page.getByLabel('astro-date', { exact: true }).fill('1990-01-01');
+  await page.getByLabel('astro-time', { exact: true }).fill('12:00');
+  await page.getByLabel('astro-place', { exact: true }).fill('');
+  await page.getByLabel('astro-lat', { exact: true }).fill('40.7128');
+  await page.getByLabel('astro-lon', { exact: true }).fill('-74.0060');
+  await page.getByLabel('astro-timezone', { exact: true }).fill('America/New_York');
   await page.getByTestId('astro-generate').click();
   await expect(page.getByText('Planets')).toBeVisible();
   await expect(page.locator('svg')).toBeVisible();
@@ -36,8 +44,8 @@ test('Landing -> Astrology flow', async ({ page }) => {
 
 test('Gene Keys flow', async ({ page }) => {
   await page.goto('/genekeys');
-  await page.getByLabel('gk-date').fill('1991-06-21');
-  await page.getByLabel('gk-time').fill('10:10');
+  await page.getByLabel('gk-date', { exact: true }).fill('1991-06-21');
+  await page.getByLabel('gk-time', { exact: true }).fill('10:10');
   await page.getByTestId('gk-generate').click();
   await expect(page.getByTestId('gk-reading')).toContainText('Activation Sequence overview');
   await page.getByTestId('gk-save').click();
@@ -49,7 +57,7 @@ test('Gene Keys flow', async ({ page }) => {
 test('Ancestry flow', async ({ page }) => {
   await page.goto('/ancestry/import');
   const filePath = path.resolve('tests/fixtures/sample.ged');
-  await page.getByLabel('gedcom-file').setInputFiles(filePath);
+  await page.getByLabel('gedcom-file', { exact: true }).setInputFiles(filePath);
   await expect(page.getByText('Imported people: 6')).toBeVisible();
   await page.goto('/ancestry/people');
   await expect(page.getByText('Private Person').first()).toBeVisible();
