@@ -1,0 +1,386 @@
+[
+  {
+    "key": 1,
+    "start_degree": 0.0,
+    "end_degree": 5.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 2,
+    "start_degree": 5.625,
+    "end_degree": 11.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 3,
+    "start_degree": 11.25,
+    "end_degree": 16.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 4,
+    "start_degree": 16.875,
+    "end_degree": 22.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 5,
+    "start_degree": 22.5,
+    "end_degree": 28.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 6,
+    "start_degree": 28.125,
+    "end_degree": 33.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 7,
+    "start_degree": 33.75,
+    "end_degree": 39.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 8,
+    "start_degree": 39.375,
+    "end_degree": 45.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 9,
+    "start_degree": 45.0,
+    "end_degree": 50.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 10,
+    "start_degree": 50.625,
+    "end_degree": 56.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 11,
+    "start_degree": 56.25,
+    "end_degree": 61.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 12,
+    "start_degree": 61.875,
+    "end_degree": 67.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 13,
+    "start_degree": 67.5,
+    "end_degree": 73.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 14,
+    "start_degree": 73.125,
+    "end_degree": 78.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 15,
+    "start_degree": 78.75,
+    "end_degree": 84.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 16,
+    "start_degree": 84.375,
+    "end_degree": 90.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 17,
+    "start_degree": 90.0,
+    "end_degree": 95.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 18,
+    "start_degree": 95.625,
+    "end_degree": 101.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 19,
+    "start_degree": 101.25,
+    "end_degree": 106.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 20,
+    "start_degree": 106.875,
+    "end_degree": 112.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 21,
+    "start_degree": 112.5,
+    "end_degree": 118.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 22,
+    "start_degree": 118.125,
+    "end_degree": 123.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 23,
+    "start_degree": 123.75,
+    "end_degree": 129.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 24,
+    "start_degree": 129.375,
+    "end_degree": 135.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 25,
+    "start_degree": 135.0,
+    "end_degree": 140.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 26,
+    "start_degree": 140.625,
+    "end_degree": 146.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 27,
+    "start_degree": 146.25,
+    "end_degree": 151.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 28,
+    "start_degree": 151.875,
+    "end_degree": 157.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 29,
+    "start_degree": 157.5,
+    "end_degree": 163.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 30,
+    "start_degree": 163.125,
+    "end_degree": 168.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 31,
+    "start_degree": 168.75,
+    "end_degree": 174.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 32,
+    "start_degree": 174.375,
+    "end_degree": 180.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 33,
+    "start_degree": 180.0,
+    "end_degree": 185.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 34,
+    "start_degree": 185.625,
+    "end_degree": 191.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 35,
+    "start_degree": 191.25,
+    "end_degree": 196.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 36,
+    "start_degree": 196.875,
+    "end_degree": 202.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 37,
+    "start_degree": 202.5,
+    "end_degree": 208.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 38,
+    "start_degree": 208.125,
+    "end_degree": 213.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 39,
+    "start_degree": 213.75,
+    "end_degree": 219.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 40,
+    "start_degree": 219.375,
+    "end_degree": 225.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 41,
+    "start_degree": 225.0,
+    "end_degree": 230.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 42,
+    "start_degree": 230.625,
+    "end_degree": 236.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 43,
+    "start_degree": 236.25,
+    "end_degree": 241.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 44,
+    "start_degree": 241.875,
+    "end_degree": 247.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 45,
+    "start_degree": 247.5,
+    "end_degree": 253.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 46,
+    "start_degree": 253.125,
+    "end_degree": 258.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 47,
+    "start_degree": 258.75,
+    "end_degree": 264.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 48,
+    "start_degree": 264.375,
+    "end_degree": 270.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 49,
+    "start_degree": 270.0,
+    "end_degree": 275.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 50,
+    "start_degree": 275.625,
+    "end_degree": 281.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 51,
+    "start_degree": 281.25,
+    "end_degree": 286.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 52,
+    "start_degree": 286.875,
+    "end_degree": 292.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 53,
+    "start_degree": 292.5,
+    "end_degree": 298.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 54,
+    "start_degree": 298.125,
+    "end_degree": 303.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 55,
+    "start_degree": 303.75,
+    "end_degree": 309.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 56,
+    "start_degree": 309.375,
+    "end_degree": 315.0,
+    "line_size": 0.9375
+  },
+  {
+    "key": 57,
+    "start_degree": 315.0,
+    "end_degree": 320.625,
+    "line_size": 0.9375
+  },
+  {
+    "key": 58,
+    "start_degree": 320.625,
+    "end_degree": 326.25,
+    "line_size": 0.9375
+  },
+  {
+    "key": 59,
+    "start_degree": 326.25,
+    "end_degree": 331.875,
+    "line_size": 0.9375
+  },
+  {
+    "key": 60,
+    "start_degree": 331.875,
+    "end_degree": 337.5,
+    "line_size": 0.9375
+  },
+  {
+    "key": 61,
+    "start_degree": 337.5,
+    "end_degree": 343.125,
+    "line_size": 0.9375
+  },
+  {
+    "key": 62,
+    "start_degree": 343.125,
+    "end_degree": 348.75,
+    "line_size": 0.9375
+  },
+  {
+    "key": 63,
+    "start_degree": 348.75,
+    "end_degree": 354.375,
+    "line_size": 0.9375
+  },
+  {
+    "key": 64,
+    "start_degree": 354.375,
+    "end_degree": 360.0,
+    "line_size": 0.9375
+  }
+]

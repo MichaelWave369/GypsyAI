@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable corepack and activate pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.12.3 --activate
+
+      - name: Configure pnpm registry
+        run: pnpm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: |
+          if ! pnpm install --frozen-lockfile=false; then
+            echo "Install failed. Check registry access and run: pnpm config set registry https://registry.npmjs.org/"
+            exit 1
+          fi
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Playwright Chromium
+        if: matrix.os == 'ubuntu-latest'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: E2E tests
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          TEST_MODE: '1'
+          NEXT_PUBLIC_TEST_MODE: '1'
+        run: pnpm test:e2e
