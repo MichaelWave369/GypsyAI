@@ -1,14 +1,17 @@
 {
   "name": "gypsy-ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
+  "packageManager": "pnpm@9.12.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "doctor": "node scripts/doctor.mjs",
+    "pnpm:setup": "corepack enable && corepack prepare pnpm@9.12.3 --activate && pnpm config set registry https://registry.npmjs.org/"
   },
   "dependencies": {
     "astronomy-engine": "^2.1.19",
@@ -20,8 +23,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.8",
-    "@testing-library/react": "^16.0.0",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

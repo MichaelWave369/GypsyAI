@@ -1,23 +1,23 @@
-import { DrawnCard, Aspect, PlanetPosition } from '@/types';
+import { Aspect, DrawnCard, PlanetPosition } from '@/types';
+import { ReadingStyle } from '@/lib/local/settings';
+
+const styleLine = (style: ReadingStyle) => `Reading style: ${style}. Keep facts fixed; adjust only tone.`;
 
 export const buildTarotPrompt = ({
   question,
   spread,
-  drawn
+  drawn,
+  style
 }: {
   question?: string;
   spread: string;
   drawn: DrawnCard[];
-}) => `You are Gypsy AI, a warm mystical but grounded Hermetic tarot guide.
-Tone: Hermetic, reflective, non-dogmatic. Never fatalistic.
+  style: ReadingStyle;
+}) => `Hermetic tarot reading request.
+${styleLine(style)}
 Question: ${question ?? 'No explicit question supplied'}
 Spread: ${spread}
-Cards:\n${drawn
-  .map(
-    (d) =>
-      `- ${d.position}: ${d.card.name} (${d.orientation}) | Hermetic: ${JSON.stringify(d.card.hermetic)}`
-  )
-  .join('\n')}
+Cards:\n${drawn.map((d) => `- ${d.position}: ${d.card.name} (${d.orientation}) | Hermetic ${JSON.stringify(d.card.hermetic)}`).join('\n')}
 
 Return sections exactly:
 1) Opening (1–2 sentences)
@@ -31,16 +31,18 @@ export const buildAstroPrompt = ({
   placements,
   aspects,
   houses,
-  hermeticKeys
+  hermeticKeys,
+  style
 }: {
   placements: PlanetPosition[];
   aspects: Aspect[];
   houses: { house: number; sign: string }[];
   hermeticKeys: string[];
-}) => `You are Gypsy AI, interpreting a Hermetic astrology chart with Tarot synthesis.
-Tone: Hermetic, reflective, non-dogmatic.
+  style: ReadingStyle;
+}) => `Hermetic astrology synthesis request.
+${styleLine(style)}
 Placements:\n${placements.map((p) => `- ${p.body}: ${p.sign} ${p.degreeInSign.toFixed(1)}°`).join('\n')}
-Aspects:\n${aspects.map((a) => `- ${a.bodyA} ${a.type} ${a.bodyB} (orb ${a.orb.toFixed(2)}°)`).join('\n')}
+Aspects:\n${aspects.map((a) => `- ${a.bodyA} ${a.type} ${a.bodyB} (orb ${a.orb.toFixed(2)}, strength ${a.strength.toFixed(2)})`).join('\n')}
 Houses:\n${houses.map((h) => `- House ${h.house}: ${h.sign}`).join('\n')}
 Hermetic Keys:\n${hermeticKeys.map((k) => `- ${k}`).join('\n')}
 

@@ -1,66 +1,72 @@
-# Gypsy AI
+# Gypsy AI v1.1
 
 Gypsy AI is a free + open-source **Hermetic Tarot and astrology web app** built with Next.js + TypeScript.
 
+## What’s new in v1.1
+- Reliability hardening: pinned pnpm, `.npmrc`, `pnpm:setup`, and `doctor` script.
+- Demo Mode (No AI): deterministic fallback interpretations for Tarot/Astrology/Chat.
+- Local-first Profiles + Tarot Sessions with import/export.
+- Study Mode pages: Tree explorer, Tarot browser, and Decans map.
+- Astrology upgrade: Ascendant/MC via sidereal-time math, equal houses from Asc, tropical/sidereal toggle, minor aspects, strength score.
+
 ## Features
 - Tarot AI Reader with spreads: Single Card, Three Card, Celtic Cross, Tree of Life, and 369.
-- Hermetic correspondences panel (Golden Dawn-inspired default profile).
-- Astrology chart generator (Sun–Pluto placements, aspects, equal houses, estimated ascendant).
+- Hermetic correspondences panel + deep-link to Study pages.
+- Astrology chart generator (Sun–Pluto, aspects, equal houses, Asc/MC).
 - Chart → Tarot Keys synthesis (“Hermetic Lens”).
-- Local-first AI with Ollama default and optional OpenAI fallback.
-
-## Hermetic system
-This project includes an original, concise correspondence dataset authored specifically for this repository:
-- 10 Sephiroth + short meanings
-- 22 paths with Hebrew letters and major-key attributions
-- Suit ↔ element, number ↔ Sephirah
-- 36 decans mapped to minor arcana cards
-
-No long copyrighted text or proprietary tables are included.
+- Local-first saving only (localStorage): no server-side profile persistence.
 
 ## Quick start
 ```bash
+pnpm run pnpm:setup
 pnpm install
+pnpm run doctor
 pnpm dev
 ```
 Open http://localhost:3000.
+
+## If install fails (403 / restricted network)
+Run:
+```bash
+corepack enable
+corepack prepare pnpm@9.12.3 --activate
+pnpm config set registry https://registry.npmjs.org/
+pnpm store prune
+pnpm install --prefer-offline
+pnpm run doctor
+```
+Then enable **Demo Mode** in `/settings` to keep app usable without AI backends.
 
 ## Environment
 Create `.env.local` (optional):
 ```bash
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=llama3.1
-# Optional OpenAI fallback
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4o-mini
 ```
 
 ## Ollama setup
 1. Install Ollama: https://ollama.com/
-2. Pull a model:
-   ```bash
-   ollama pull llama3.1
-   ```
-3. Run Ollama locally (default listens on `http://localhost:11434`).
-4. Start Gypsy AI and use Tarot/Chat endpoints.
+2. Pull model: `ollama pull llama3.1`
+3. Run locally and use default settings.
 
-## Scripts
-- `pnpm dev` – run development server
-- `pnpm lint` – lint
-- `pnpm test` – unit tests
-- `pnpm build` – production build
+## Study Mode
+- `/study`: hub
+- `/study/tree`: 10 Sephiroth + 22 paths explorer
+- `/study/tarot`: filterable deck browser
+- `/study/decans`: 36 decans linked to minor cards
 
 ## Privacy + ethics
-- Birth data is processed per request and not persisted server-side.
-- Settings/profile preferences are localStorage-first.
-- Interpretations are reflective and non-fatalistic.
+- Birth data and sessions are local-first.
+- No deterministic/fatalistic claims by design.
 - For entertainment/self-reflection only (not medical/legal/financial advice).
 
 ## Credits
 - Hermetic Qabalah + Golden Dawn tradition (high-level inspiration)
-- Astronomy math: `astronomy-engine`
+- Astronomy: `astronomy-engine`
 - Timezone inference: `tz-lookup`
-- Geocoding endpoint: OpenStreetMap Nominatim
+- Geocoding: OpenStreetMap Nominatim
 - Frameworks: Next.js, React, Tailwind CSS, Vitest
 
 ## License

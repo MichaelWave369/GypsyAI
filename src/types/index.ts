@@ -1,9 +1,4 @@
-export type TarotSpreadType =
-  | 'single'
-  | 'three-card'
-  | 'celtic-cross'
-  | 'tree-of-life'
-  | '369';
+export type TarotSpreadType = 'single' | 'three-card' | 'celtic-cross' | 'tree-of-life' | '369';
 
 export interface TarotCard {
   id: string;
@@ -35,7 +30,8 @@ export interface PlanetPosition {
 export interface Aspect {
   bodyA: string;
   bodyB: string;
-  type: 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile';
+  type: 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile' | 'quincunx' | 'semisextile';
   orb: number;
   exactAngle: number;
+  strength: number;
 }

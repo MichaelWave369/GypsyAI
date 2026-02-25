@@ -4,6 +4,8 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/tarot', label: 'Tarot' },
   { href: '/astrology', label: 'Astrology' },
+  { href: '/profile', label: 'Profile' },
+  { href: '/study', label: 'Study' },
   { href: '/settings', label: 'Settings' }
 ];
 
