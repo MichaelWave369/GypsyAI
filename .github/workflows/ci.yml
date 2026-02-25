@@ -91,5 +91,5 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: E2E tests (critical app flows, retry once)
-        run: pnpm exec playwright test tests/e2e/app.spec.ts || pnpm exec playwright test tests/e2e/app.spec.ts
+      - name: E2E tests (retry once)
+        run: pnpm test:e2e || pnpm test:e2e
