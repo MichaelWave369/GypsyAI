@@ -8,9 +8,16 @@ const BoolRow = ({ label, value, onChange }: { label: string; value: boolean; on
   <label className="flex items-center gap-2"><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /> {label}</label>
 );
 
+interface ProviderStatus {
+  openai: boolean;
+  anthropic: boolean;
+  xai: boolean;
+}
+
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [diag, setDiag] = useState<any>(null);
+  const [providerStatus, setProviderStatus] = useState<ProviderStatus>({ openai: false, anthropic: false, xai: false });
   const [encrypt, setEncrypt] = useState(false);
   const [password, setPassword] = useState('');
   const [restorePreview, setRestorePreview] = useState<any>(null);
@@ -19,6 +26,7 @@ export default function SettingsPage() {
   useEffect(() => {
     setSettings(loadSettings());
     dbHealthCheck().then(setDiag).catch(() => setDiag({ ok: false }));
+    fetch('/api/providers/status').then((r) => r.json()).then(setProviderStatus).catch(() => setProviderStatus({ openai: false, anthropic: false, xai: false }));
   }, []);
 
   const doBackup = async () => {
@@ -50,14 +58,34 @@ export default function SettingsPage() {
     alert('Restore complete. Reload app to ensure all modules reflect latest local data.');
   };
 
+  const keyLabel = (ok: boolean) => (ok ? 'API key detected' : 'missing');
+
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Settings</h2>
       <div className="panel grid gap-3 md:max-w-3xl text-sm">
         <p className="text-xs text-zinc-400">App version: 0.1.4</p>
         <p className="text-xs text-zinc-400">DB health: {diag?.ok ? 'OK' : 'Unknown'} ({diag?.name || 'n/a'} v{diag?.version || 'n/a'})</p>
-        <label>Provider <select value={settings.provider} onChange={(e) => setSettings({ ...settings, provider: e.target.value as AppSettings['provider'] })} className="ml-2 rounded border border-zinc-700 bg-zinc-800 p-1"><option value="ollama">Ollama</option><option value="openai">OpenAI</option></select></label>
+
+        <label>
+          Provider
+          <select value={settings.provider} onChange={(e) => setSettings({ ...settings, provider: e.target.value as AppSettings['provider'] })} className="ml-2 rounded border border-zinc-700 bg-zinc-800 p-1">
+            <option value="ollama">Ollama</option>
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Claude (Anthropic)</option>
+            <option value="xai">Grok (xAI)</option>
+          </select>
+        </label>
+
         <label>Model <input value={settings.model} onChange={(e) => setSettings({ ...settings, model: e.target.value })} className="ml-2 rounded border border-zinc-700 bg-zinc-800 p-1" /></label>
+
+        <div className="rounded border border-zinc-700 p-2 text-xs">
+          <p className="font-semibold text-gold">Provider status</p>
+          <p>OpenAI: {keyLabel(providerStatus.openai)}</p>
+          <p>Claude: {keyLabel(providerStatus.anthropic)}</p>
+          <p>Grok: {keyLabel(providerStatus.xai)}</p>
+        </div>
+
         <label>Zodiac mode <select value={settings.zodiacMode} onChange={(e) => setSettings({ ...settings, zodiacMode: e.target.value as AppSettings['zodiacMode'] })} className="ml-2 rounded border border-zinc-700 bg-zinc-800 p-1"><option value="tropical">Tropical</option><option value="sidereal">Sidereal</option></select></label>
         <label>Gene Keys guide <select value={settings.geneKeysGuideMode} onChange={(e) => setSettings({ ...settings, geneKeysGuideMode: e.target.value as AppSettings['geneKeysGuideMode'] })} className="ml-2 rounded border border-zinc-700 bg-zinc-800 p-1"><option value="contemplation">Contemplation Guide</option><option value="direct">Direct Summary</option></select></label>
         <BoolRow label="Accuracy Mode" value={settings.accuracyMode} onChange={(v) => setSettings({ ...settings, accuracyMode: v })} />

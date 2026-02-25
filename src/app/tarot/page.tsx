@@ -45,6 +45,8 @@ export default function TarotPage() {
         accuracyMode: s.accuracyMode,
         passes: s.accuracyPasses,
         temperaturePreset: s.temperaturePreset,
+        provider: s.provider,
+        model: s.model,
         seed: process.env.NEXT_PUBLIC_TEST_MODE === '1' ? 'test-seed' : undefined
       })
     });
@@ -86,7 +88,7 @@ export default function TarotPage() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: chatInput, demoMode: s.demoMode, mode: chatMode }),
+      body: JSON.stringify({ message: chatInput, demoMode: s.demoMode, mode: chatMode, provider: s.provider, model: s.model }),
       signal: controllerRef.current.signal
     });
     const ct = res.headers.get('content-type') || '';

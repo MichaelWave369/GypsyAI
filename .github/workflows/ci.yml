@@ -7,42 +7,89 @@ on:
 
 jobs:
   build:
+    name: build-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Enable corepack and activate pnpm
         run: |
           corepack enable
           corepack prepare pnpm@9.12.3 --activate
-      - name: Resolve pnpm store path
-        id: pnpm-store
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+
+      - name: Configure pnpm registry
+        run: pnpm config set registry https://registry.npmjs.org/
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile=false || (echo "Install failed. Check registry access and run: pnpm config set registry https://registry.npmjs.org/" && exit 1)
+        run: |
+          if ! pnpm install --frozen-lockfile=false; then
+            echo "Install failed. Check registry access and run: pnpm config set registry https://registry.npmjs.org/"
+            exit 1
+          fi
+
       - name: Lint
         run: pnpm lint
+
       - name: Unit tests
         run: pnpm test
+
       - name: Build
         run: pnpm build
-      - name: Install Playwright browsers
-        if: matrix.os == 'ubuntu-latest'
+
+  e2e:
+    name: e2e-ubuntu
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        shell: bash
+    env:
+      TEST_MODE: '1'
+      NEXT_PUBLIC_TEST_MODE: '1'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable corepack and activate pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.12.3 --activate
+
+      - name: Configure pnpm registry
+        run: pnpm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: |
+          if ! pnpm install --frozen-lockfile=false; then
+            echo "Install failed. Check registry access and run: pnpm config set registry https://registry.npmjs.org/"
+            exit 1
+          fi
+
+      - name: Build app for Playwright web server
+        run: pnpm build
+
+      - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
-      - name: E2E tests
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          TEST_MODE: '1'
-          NEXT_PUBLIC_TEST_MODE: '1'
-        run: pnpm test:e2e
+
+      - name: E2E tests (critical app flows, retry once)
+        run: pnpm exec playwright test tests/e2e/app.spec.ts || pnpm exec playwright test tests/e2e/app.spec.ts

@@ -37,7 +37,7 @@ export default function AssistantPage() {
     setMessages(next);
     setInput('');
     controllerRef.current = new AbortController();
-    const res = await fetch('/api/assistant/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: input, demoMode: s.demoMode, strictReadingMode: s.strictReadingMode, autoSwitchReadingMode: s.autoSwitchReadingMode }), signal: controllerRef.current.signal });
+    const res = await fetch('/api/assistant/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: input, demoMode: s.demoMode, strictReadingMode: s.strictReadingMode, autoSwitchReadingMode: s.autoSwitchReadingMode, provider: s.provider, model: s.model }), signal: controllerRef.current.signal });
     const ct = res.headers.get('content-type') || '';
     if (ct.includes('application/json')) {
       const data = await res.json();

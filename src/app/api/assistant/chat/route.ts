@@ -3,7 +3,7 @@ import { checkRateLimit } from '@/lib/security/rateLimit';
 import { isTestMode } from '@/lib/env';
 import { z } from 'zod';
 import { classifyIntent } from '@/lib/assistant/router';
-import { streamOllama, callModel } from '@/lib/ai/client';
+import { streamOllama, callModel, assertProvider, getProviderConfigError } from '@/lib/ai/client';
 import { buildGroundingPacketTarot, buildGroundingPacketAstro, buildGroundingPacketGeneKeys } from '@/lib/reading/grounding';
 import { drawCards } from '@/lib/tarot/engine';
 import { computeChart } from '@/lib/astro/engine';
@@ -12,22 +12,54 @@ import { verifyReading, buildRevisionPrompt } from '@/lib/reading/verifier';
 import { buildGroundedPrompt } from '@/lib/ai/promptBuilder';
 import { sanitizeUserInput } from '@/lib/security/promptShield';
 
-const schema = z.object({ message: z.string().min(1), demoMode: z.boolean().optional(), strictReadingMode: z.boolean().optional(), autoSwitchReadingMode: z.boolean().optional() });
+const schema = z.object({
+  message: z.string().min(1),
+  demoMode: z.boolean().optional(),
+  strictReadingMode: z.boolean().optional(),
+  autoSwitchReadingMode: z.boolean().optional(),
+  provider: z.enum(['ollama', 'openai', 'anthropic', 'xai']).optional(),
+  model: z.string().optional()
+});
 
 export async function POST(req: NextRequest) {
   const limit = checkRateLimit(req.headers.get('x-forwarded-for') ?? 'local');
   if (!limit.ok) return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
 
-  const { message, demoMode, strictReadingMode = true } = schema.parse(await req.json());
+  const { message, demoMode, strictReadingMode = true, provider: providerInput, model } = schema.parse(await req.json());
   const cleanMessage = sanitizeUserInput(message);
   const intent = classifyIntent(cleanMessage);
-  if (isTestMode() || demoMode) return NextResponse.json({ content: `Demo assistant (${intent}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`, intent, sources: [] });
+
+  if (isTestMode() || demoMode) {
+    return NextResponse.json({
+      content: `Demo assistant (${intent}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`,
+      intent,
+      sources: []
+    });
+  }
+
+  let provider;
+  try {
+    provider = assertProvider(providerInput ?? 'ollama');
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'provider_error';
+    if (msg.startsWith('invalid_provider:')) {
+      return NextResponse.json({ error: 'Invalid provider selection.' }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Provider configuration error.' }, { status: 400 });
+  }
+
+  const providerIssue = getProviderConfigError(provider);
+  if (providerIssue) return NextResponse.json(providerIssue, { status: 400 });
 
   const readingIntent = intent !== 'CHAT' && intent !== 'STUDY_LOOKUP';
   if (!readingIntent) {
-    const body = await streamOllama(`Conversational mode. Be warm and practical.\nUser: ${cleanMessage}`);
-    if (!body) return NextResponse.json({ content: 'No stream body', intent, sources: [] });
-    return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    if (provider === 'ollama') {
+      const body = await streamOllama({ model, prompt: `Conversational mode. Be warm and practical.\nUser: ${cleanMessage}` });
+      if (!body) return NextResponse.json({ content: 'No stream body', intent, sources: [] });
+      return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    }
+    const content = await callModel({ provider, model, prompt: `Conversational mode. Be warm and practical.\nUser: ${cleanMessage}`, temperature: 0.2 });
+    return NextResponse.json({ content, intent, sources: [], mode: 'chat' });
   }
 
   let packet;
@@ -47,10 +79,10 @@ export async function POST(req: NextRequest) {
     sources.push('Gene Keys spheres');
   }
 
-  let reading = await callModel(buildGroundedPrompt(packet, 'Gentle'), 0.2);
+  let reading = await callModel({ provider, model, prompt: buildGroundedPrompt(packet, 'Gentle'), temperature: 0.2 });
   if (strictReadingMode) {
     const issues = verifyReading(reading, packet);
-    if (issues.length) reading = await callModel(buildRevisionPrompt(reading, packet, issues), 0.1);
+    if (issues.length) reading = await callModel({ provider, model, prompt: buildRevisionPrompt(reading, packet, issues), temperature: 0.1 });
   }
   return NextResponse.json({ content: reading, intent, sources, mode: 'reading' });
 }

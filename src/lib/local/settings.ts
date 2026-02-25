@@ -1,7 +1,7 @@
 export type ReadingStyle = 'Direct' | 'Gentle' | 'Ritual';
 
 export interface AppSettings {
-  provider: 'ollama' | 'openai';
+  provider: 'ollama' | 'openai' | 'anthropic' | 'xai';
   model: string;
   ollamaBaseUrl: string;
   aspectOrb: number;

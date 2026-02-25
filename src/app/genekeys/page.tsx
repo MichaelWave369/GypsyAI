@@ -15,7 +15,7 @@ export default function GeneKeysPage() {
 
   const run = async () => {
     const s = loadSettings();
-    const res = await fetch('/api/genekeys/read', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date: form.date, time: form.time, guideMode: s.geneKeysGuideMode, demoMode: s.demoMode, accuracyMode: s.accuracyMode }) });
+    const res = await fetch('/api/genekeys/read', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date: form.date, time: form.time, guideMode: s.geneKeysGuideMode, demoMode: s.demoMode, accuracyMode: s.accuracyMode, provider: s.provider, model: s.model }) });
     setResult(await res.json());
   };
   const save = () => {

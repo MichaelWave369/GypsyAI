@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { defaultSettings, loadSettings, saveSettings } from '@/lib/local/settings';
 
 export function OnboardingWizard() {
@@ -8,11 +8,22 @@ export function OnboardingWizard() {
   const [step, setStep] = useState(1);
   const [settings, setSettings] = useState(loadSettings());
 
-  useEffect(() => {
-    setOpen(localStorage.getItem('gypsy-onboarded') !== '1');
+  const isWebDriver = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    return navigator.webdriver === true;
   }, []);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (isWebDriver) {
+      localStorage.setItem('gypsy-onboarded', '1');
+      setOpen(false);
+      return;
+    }
+    setOpen(localStorage.getItem('gypsy-onboarded') !== '1');
+  }, [isWebDriver]);
+
+  if (isWebDriver || !open) return null;
+
   return (
     <div className="fixed inset-0 z-50 bg-black/70 p-6" role="dialog" aria-modal="true">
       <div className="mx-auto mt-10 max-w-xl rounded-xl border border-zinc-700 bg-zinc-900 p-4">

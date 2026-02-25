@@ -3,7 +3,7 @@ import { checkRateLimit } from '@/lib/security/rateLimit';
 import { isTestMode } from '@/lib/env';
 import { z } from 'zod';
 import { drawCards } from '@/lib/tarot/engine';
-import { callModel } from '@/lib/ai/client';
+import { callModel, assertProvider, getProviderConfigError } from '@/lib/ai/client';
 import { demoTarotInterpretation } from '@/lib/ai/demo';
 import { buildGroundingPacketTarot } from '@/lib/reading/grounding';
 import { buildGroundedPrompt } from '@/lib/ai/promptBuilder';
@@ -17,7 +17,9 @@ const schema = z.object({
   style: z.enum(['Direct', 'Gentle', 'Ritual']).default('Gentle'),
   accuracyMode: z.boolean().default(true),
   passes: z.number().min(1).max(3).default(2),
-  temperaturePreset: z.enum(['low', 'med']).default('low')
+  temperaturePreset: z.enum(['low', 'med']).default('low'),
+  provider: z.enum(['ollama', 'openai', 'anthropic', 'xai']).optional(),
+  model: z.string().optional()
 });
 
 export async function POST(req: NextRequest) {
@@ -32,16 +34,21 @@ export async function POST(req: NextRequest) {
   if (forcedDemo) return NextResponse.json({ drawn, reading: demoTarotInterpretation(drawn, parsed.question), packet, mode: 'demo' });
 
   try {
-    let reading = await callModel(buildGroundedPrompt(packet, parsed.style), parsed.temperaturePreset === 'low' ? 0.2 : 0.5);
+    const provider = assertProvider(parsed.provider ?? 'ollama');
+    const providerIssue = getProviderConfigError(provider);
+    if (providerIssue) return NextResponse.json(providerIssue, { status: 400 });
+    let reading = await callModel({ provider, model: parsed.model, prompt: buildGroundedPrompt(packet, parsed.style), temperature: parsed.temperaturePreset === 'low' ? 0.2 : 0.5 });
     if (parsed.accuracyMode) {
       for (let i = 0; i < parsed.passes; i++) {
         const issues = verifyReading(reading, packet);
         if (!issues.length) break;
-        reading = await callModel(buildRevisionPrompt(reading, packet, issues), 0.1);
+        reading = await callModel({ provider, model: parsed.model, prompt: buildRevisionPrompt(reading, packet, issues), temperature: 0.1 });
       }
     }
     return NextResponse.json({ drawn, reading, packet, mode: 'ai' });
-  } catch {
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'provider_error';
+    if (msg.startsWith('invalid_provider:')) return NextResponse.json({ error: 'Invalid provider selection.' }, { status: 400 });
     return NextResponse.json({ drawn, reading: demoTarotInterpretation(drawn, parsed.question), packet, mode: 'demo-fallback' });
   }
 }

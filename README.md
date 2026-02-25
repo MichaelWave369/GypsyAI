@@ -58,6 +58,22 @@ Example:
 TEST_MODE=1 pnpm test:e2e
 ```
 
+
+## Provider configuration (optional, Demo Mode works without keys)
+- OpenAI
+  - `OPENAI_API_KEY`
+  - `OPENAI_MODEL` (default: `gpt-4o-mini`)
+- Anthropic (Claude)
+  - `ANTHROPIC_API_KEY`
+  - `ANTHROPIC_MODEL` (default: `claude-3-5-sonnet-latest`)
+  - `ANTHROPIC_VERSION` (default: `2023-06-01`)
+- xAI (Grok)
+  - `XAI_API_KEY`
+  - `XAI_MODEL` (default: `grok-4-0709`)
+- Ollama
+  - `OLLAMA_BASE_URL`
+  - `OLLAMA_MODEL`
+
 ## Backup encryption notes
 Encrypted backups use browser WebCrypto (`PBKDF2` + `AES-GCM`) and store required metadata (salt/iv) in the backup envelope. This protects backup portability but still depends on strong user passwords and local device security.
 
