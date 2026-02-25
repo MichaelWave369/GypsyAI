@@ -1,0 +1,2108 @@
+[
+  {
+    "id": "major-0",
+    "name": "The Fool",
+    "arcana": "major",
+    "suit": null,
+    "number": 0,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Fool invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Fool suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Aleph",
+      "path": "1->2",
+      "attribution": "Air",
+      "magical_title": "Key of Air",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-1",
+    "name": "The Magician",
+    "arcana": "major",
+    "suit": null,
+    "number": 1,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Magician invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Magician suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Beth",
+      "path": "1->3",
+      "attribution": "Mercury",
+      "magical_title": "Key of Mercury",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-2",
+    "name": "The High Priestess",
+    "arcana": "major",
+    "suit": null,
+    "number": 2,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The High Priestess invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The High Priestess suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Gimel",
+      "path": "1->6",
+      "attribution": "Moon",
+      "magical_title": "Key of Moon",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-3",
+    "name": "The Empress",
+    "arcana": "major",
+    "suit": null,
+    "number": 3,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Empress invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Empress suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Daleth",
+      "path": "2->3",
+      "attribution": "Venus",
+      "magical_title": "Key of Venus",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-4",
+    "name": "The Emperor",
+    "arcana": "major",
+    "suit": null,
+    "number": 4,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Emperor invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Emperor suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Heh",
+      "path": "2->4",
+      "attribution": "Aries",
+      "magical_title": "Key of Aries",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-5",
+    "name": "The Hierophant",
+    "arcana": "major",
+    "suit": null,
+    "number": 5,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Hierophant invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Hierophant suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Vav",
+      "path": "2->6",
+      "attribution": "Taurus",
+      "magical_title": "Key of Taurus",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-6",
+    "name": "The Lovers",
+    "arcana": "major",
+    "suit": null,
+    "number": 6,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Lovers invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Lovers suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Zayin",
+      "path": "3->5",
+      "attribution": "Gemini",
+      "magical_title": "Key of Gemini",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-7",
+    "name": "The Chariot",
+    "arcana": "major",
+    "suit": null,
+    "number": 7,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Chariot invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Chariot suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Cheth",
+      "path": "3->6",
+      "attribution": "Cancer",
+      "magical_title": "Key of Cancer",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-8",
+    "name": "Strength",
+    "arcana": "major",
+    "suit": null,
+    "number": 8,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Strength invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Strength suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Teth",
+      "path": "4->5",
+      "attribution": "Leo",
+      "magical_title": "Key of Leo",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-9",
+    "name": "The Hermit",
+    "arcana": "major",
+    "suit": null,
+    "number": 9,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Hermit invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Hermit suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Yod",
+      "path": "4->6",
+      "attribution": "Virgo",
+      "magical_title": "Key of Virgo",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-10",
+    "name": "Wheel of Fortune",
+    "arcana": "major",
+    "suit": null,
+    "number": 10,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Wheel of Fortune invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Wheel of Fortune suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Kaph",
+      "path": "4->7",
+      "attribution": "Jupiter",
+      "magical_title": "Key of Jupiter",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-11",
+    "name": "Justice",
+    "arcana": "major",
+    "suit": null,
+    "number": 11,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Justice invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Justice suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Lamed",
+      "path": "5->6",
+      "attribution": "Libra",
+      "magical_title": "Key of Libra",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-12",
+    "name": "The Hanged Man",
+    "arcana": "major",
+    "suit": null,
+    "number": 12,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Hanged Man invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Hanged Man suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Mem",
+      "path": "5->8",
+      "attribution": "Water",
+      "magical_title": "Key of Water",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-13",
+    "name": "Death",
+    "arcana": "major",
+    "suit": null,
+    "number": 13,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Death invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Death suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Nun",
+      "path": "6->7",
+      "attribution": "Scorpio",
+      "magical_title": "Key of Scorpio",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-14",
+    "name": "Temperance",
+    "arcana": "major",
+    "suit": null,
+    "number": 14,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Temperance invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Temperance suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Samekh",
+      "path": "6->8",
+      "attribution": "Sagittarius",
+      "magical_title": "Key of Sagittarius",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-15",
+    "name": "The Devil",
+    "arcana": "major",
+    "suit": null,
+    "number": 15,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Devil invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Devil suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Ayin",
+      "path": "6->9",
+      "attribution": "Capricorn",
+      "magical_title": "Key of Capricorn",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-16",
+    "name": "The Tower",
+    "arcana": "major",
+    "suit": null,
+    "number": 16,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Tower invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Tower suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Peh",
+      "path": "7->8",
+      "attribution": "Mars",
+      "magical_title": "Key of Mars",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-17",
+    "name": "The Star",
+    "arcana": "major",
+    "suit": null,
+    "number": 17,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Star invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Star suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Tzaddi",
+      "path": "7->9",
+      "attribution": "Aquarius",
+      "magical_title": "Key of Aquarius",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-18",
+    "name": "The Moon",
+    "arcana": "major",
+    "suit": null,
+    "number": 18,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Moon invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Moon suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Qoph",
+      "path": "7->10",
+      "attribution": "Pisces",
+      "magical_title": "Key of Pisces",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-19",
+    "name": "The Sun",
+    "arcana": "major",
+    "suit": null,
+    "number": 19,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The Sun invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The Sun suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Resh",
+      "path": "8->9",
+      "attribution": "Sun",
+      "magical_title": "Key of Sun",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-20",
+    "name": "Judgement",
+    "arcana": "major",
+    "suit": null,
+    "number": 20,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "Judgement invites conscious alignment with purpose.",
+    "short_reversed_meaning": "Judgement suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Shin",
+      "path": "8->10",
+      "attribution": "Fire",
+      "magical_title": "Key of Fire",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "major-21",
+    "name": "The World",
+    "arcana": "major",
+    "suit": null,
+    "number": 21,
+    "court": null,
+    "upright_keywords": [
+      "insight",
+      "movement",
+      "agency"
+    ],
+    "reversed_keywords": [
+      "delay",
+      "fog",
+      "recalibration"
+    ],
+    "short_upright_meaning": "The World invites conscious alignment with purpose.",
+    "short_reversed_meaning": "The World suggests pausing to untangle mixed signals.",
+    "hermetic": {
+      "hebrew_letter": "Tav",
+      "path": "9->10",
+      "attribution": "Saturn",
+      "magical_title": "Key of Saturn",
+      "sephirothic_context": "Bridges inner vision with daily action."
+    }
+  },
+  {
+    "id": "wands-ace",
+    "name": "Ace of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 1,
+    "court": null,
+    "upright_keywords": [
+      "seed",
+      "potential",
+      "spark"
+    ],
+    "reversed_keywords": [
+      "stall",
+      "hesitation",
+      "block"
+    ],
+    "short_upright_meaning": "Pure fire current seeks expression.",
+    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Kether",
+      "decan": "none",
+      "planet_ruler": "n/a",
+      "hermetic_title": "Root of the powers"
+    }
+  },
+  {
+    "id": "wands-2",
+    "name": "2 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 2,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "2 of Wands channels fire through Chokmah.",
+    "short_reversed_meaning": "2 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Chokmah",
+      "decan": "Sagittarius 0-9\u00b0",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Chokmah of Fire"
+    }
+  },
+  {
+    "id": "wands-3",
+    "name": "3 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 3,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "3 of Wands channels fire through Binah.",
+    "short_reversed_meaning": "3 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Binah",
+      "decan": "Sagittarius 10-19\u00b0",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Binah of Fire"
+    }
+  },
+  {
+    "id": "wands-4",
+    "name": "4 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 4,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "4 of Wands channels fire through Chesed.",
+    "short_reversed_meaning": "4 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Chesed",
+      "decan": "Sagittarius 20-29\u00b0",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Chesed of Fire"
+    }
+  },
+  {
+    "id": "wands-5",
+    "name": "5 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 5,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "5 of Wands channels fire through Geburah.",
+    "short_reversed_meaning": "5 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Geburah",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Geburah of Fire"
+    }
+  },
+  {
+    "id": "wands-6",
+    "name": "6 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 6,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "6 of Wands channels fire through Tiphareth.",
+    "short_reversed_meaning": "6 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Tiphareth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Tiphareth of Fire"
+    }
+  },
+  {
+    "id": "wands-7",
+    "name": "7 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 7,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "7 of Wands channels fire through Netzach.",
+    "short_reversed_meaning": "7 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Netzach",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Netzach of Fire"
+    }
+  },
+  {
+    "id": "wands-8",
+    "name": "8 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 8,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "8 of Wands channels fire through Hod.",
+    "short_reversed_meaning": "8 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Hod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Hod of Fire"
+    }
+  },
+  {
+    "id": "wands-9",
+    "name": "9 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 9,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "9 of Wands channels fire through Yesod.",
+    "short_reversed_meaning": "9 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Yesod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Yesod of Fire"
+    }
+  },
+  {
+    "id": "wands-10",
+    "name": "10 of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": 10,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "10 of Wands channels fire through Malkuth.",
+    "short_reversed_meaning": "10 of Wands asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Malkuth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Malkuth of Fire"
+    }
+  },
+  {
+    "id": "wands-page",
+    "name": "Page of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": null,
+    "court": "Page",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Page of Wands personifies the living voice of fire.",
+    "short_reversed_meaning": "Page of Wands can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Fire"
+    }
+  },
+  {
+    "id": "wands-knight",
+    "name": "Knight of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": null,
+    "court": "Knight",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Knight of Wands personifies the living voice of fire.",
+    "short_reversed_meaning": "Knight of Wands can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Fire"
+    }
+  },
+  {
+    "id": "wands-queen",
+    "name": "Queen of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": null,
+    "court": "Queen",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Queen of Wands personifies the living voice of fire.",
+    "short_reversed_meaning": "Queen of Wands can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Fire"
+    }
+  },
+  {
+    "id": "wands-king",
+    "name": "King of Wands",
+    "arcana": "minor",
+    "suit": "Wands",
+    "number": null,
+    "court": "King",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "King of Wands personifies the living voice of fire.",
+    "short_reversed_meaning": "King of Wands can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Fire",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Fire"
+    }
+  },
+  {
+    "id": "cups-ace",
+    "name": "Ace of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 1,
+    "court": null,
+    "upright_keywords": [
+      "seed",
+      "potential",
+      "spark"
+    ],
+    "reversed_keywords": [
+      "stall",
+      "hesitation",
+      "block"
+    ],
+    "short_upright_meaning": "Pure water current seeks expression.",
+    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Kether",
+      "decan": "none",
+      "planet_ruler": "n/a",
+      "hermetic_title": "Root of the powers"
+    }
+  },
+  {
+    "id": "cups-2",
+    "name": "2 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 2,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "2 of Cups channels water through Chokmah.",
+    "short_reversed_meaning": "2 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Chokmah",
+      "decan": "Pisces 0-9\u00b0",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Chokmah of Water"
+    }
+  },
+  {
+    "id": "cups-3",
+    "name": "3 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 3,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "3 of Cups channels water through Binah.",
+    "short_reversed_meaning": "3 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Binah",
+      "decan": "Pisces 10-19\u00b0",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Binah of Water"
+    }
+  },
+  {
+    "id": "cups-4",
+    "name": "4 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 4,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "4 of Cups channels water through Chesed.",
+    "short_reversed_meaning": "4 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Chesed",
+      "decan": "Pisces 20-29\u00b0",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Chesed of Water"
+    }
+  },
+  {
+    "id": "cups-5",
+    "name": "5 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 5,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "5 of Cups channels water through Geburah.",
+    "short_reversed_meaning": "5 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Geburah",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Geburah of Water"
+    }
+  },
+  {
+    "id": "cups-6",
+    "name": "6 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 6,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "6 of Cups channels water through Tiphareth.",
+    "short_reversed_meaning": "6 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Tiphareth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Tiphareth of Water"
+    }
+  },
+  {
+    "id": "cups-7",
+    "name": "7 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 7,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "7 of Cups channels water through Netzach.",
+    "short_reversed_meaning": "7 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Netzach",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Netzach of Water"
+    }
+  },
+  {
+    "id": "cups-8",
+    "name": "8 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 8,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "8 of Cups channels water through Hod.",
+    "short_reversed_meaning": "8 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Hod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Hod of Water"
+    }
+  },
+  {
+    "id": "cups-9",
+    "name": "9 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 9,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "9 of Cups channels water through Yesod.",
+    "short_reversed_meaning": "9 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Yesod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Yesod of Water"
+    }
+  },
+  {
+    "id": "cups-10",
+    "name": "10 of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": 10,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "10 of Cups channels water through Malkuth.",
+    "short_reversed_meaning": "10 of Cups asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Malkuth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Malkuth of Water"
+    }
+  },
+  {
+    "id": "cups-page",
+    "name": "Page of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": null,
+    "court": "Page",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Page of Cups personifies the living voice of water.",
+    "short_reversed_meaning": "Page of Cups can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Water"
+    }
+  },
+  {
+    "id": "cups-knight",
+    "name": "Knight of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": null,
+    "court": "Knight",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Knight of Cups personifies the living voice of water.",
+    "short_reversed_meaning": "Knight of Cups can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Water"
+    }
+  },
+  {
+    "id": "cups-queen",
+    "name": "Queen of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": null,
+    "court": "Queen",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Queen of Cups personifies the living voice of water.",
+    "short_reversed_meaning": "Queen of Cups can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Water"
+    }
+  },
+  {
+    "id": "cups-king",
+    "name": "King of Cups",
+    "arcana": "minor",
+    "suit": "Cups",
+    "number": null,
+    "court": "King",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "King of Cups personifies the living voice of water.",
+    "short_reversed_meaning": "King of Cups can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Water",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Water"
+    }
+  },
+  {
+    "id": "swords-ace",
+    "name": "Ace of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 1,
+    "court": null,
+    "upright_keywords": [
+      "seed",
+      "potential",
+      "spark"
+    ],
+    "reversed_keywords": [
+      "stall",
+      "hesitation",
+      "block"
+    ],
+    "short_upright_meaning": "Pure air current seeks expression.",
+    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Kether",
+      "decan": "none",
+      "planet_ruler": "n/a",
+      "hermetic_title": "Root of the powers"
+    }
+  },
+  {
+    "id": "swords-2",
+    "name": "2 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 2,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "2 of Swords channels air through Chokmah.",
+    "short_reversed_meaning": "2 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Chokmah",
+      "decan": "Aquarius 0-9\u00b0",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Chokmah of Air"
+    }
+  },
+  {
+    "id": "swords-3",
+    "name": "3 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 3,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "3 of Swords channels air through Binah.",
+    "short_reversed_meaning": "3 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Binah",
+      "decan": "Aquarius 10-19\u00b0",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Binah of Air"
+    }
+  },
+  {
+    "id": "swords-4",
+    "name": "4 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 4,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "4 of Swords channels air through Chesed.",
+    "short_reversed_meaning": "4 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Chesed",
+      "decan": "Aquarius 20-29\u00b0",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Chesed of Air"
+    }
+  },
+  {
+    "id": "swords-5",
+    "name": "5 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 5,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "5 of Swords channels air through Geburah.",
+    "short_reversed_meaning": "5 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Geburah",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Geburah of Air"
+    }
+  },
+  {
+    "id": "swords-6",
+    "name": "6 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 6,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "6 of Swords channels air through Tiphareth.",
+    "short_reversed_meaning": "6 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Tiphareth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Tiphareth of Air"
+    }
+  },
+  {
+    "id": "swords-7",
+    "name": "7 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 7,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "7 of Swords channels air through Netzach.",
+    "short_reversed_meaning": "7 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Netzach",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Netzach of Air"
+    }
+  },
+  {
+    "id": "swords-8",
+    "name": "8 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 8,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "8 of Swords channels air through Hod.",
+    "short_reversed_meaning": "8 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Hod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Hod of Air"
+    }
+  },
+  {
+    "id": "swords-9",
+    "name": "9 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 9,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "9 of Swords channels air through Yesod.",
+    "short_reversed_meaning": "9 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Yesod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Yesod of Air"
+    }
+  },
+  {
+    "id": "swords-10",
+    "name": "10 of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": 10,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "10 of Swords channels air through Malkuth.",
+    "short_reversed_meaning": "10 of Swords asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Malkuth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Malkuth of Air"
+    }
+  },
+  {
+    "id": "swords-page",
+    "name": "Page of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": null,
+    "court": "Page",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Page of Swords personifies the living voice of air.",
+    "short_reversed_meaning": "Page of Swords can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Air"
+    }
+  },
+  {
+    "id": "swords-knight",
+    "name": "Knight of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": null,
+    "court": "Knight",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Knight of Swords personifies the living voice of air.",
+    "short_reversed_meaning": "Knight of Swords can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Air"
+    }
+  },
+  {
+    "id": "swords-queen",
+    "name": "Queen of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": null,
+    "court": "Queen",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Queen of Swords personifies the living voice of air.",
+    "short_reversed_meaning": "Queen of Swords can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Air"
+    }
+  },
+  {
+    "id": "swords-king",
+    "name": "King of Swords",
+    "arcana": "minor",
+    "suit": "Swords",
+    "number": null,
+    "court": "King",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "King of Swords personifies the living voice of air.",
+    "short_reversed_meaning": "King of Swords can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Air",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Air"
+    }
+  },
+  {
+    "id": "pentacles-ace",
+    "name": "Ace of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 1,
+    "court": null,
+    "upright_keywords": [
+      "seed",
+      "potential",
+      "spark"
+    ],
+    "reversed_keywords": [
+      "stall",
+      "hesitation",
+      "block"
+    ],
+    "short_upright_meaning": "Pure earth current seeks expression.",
+    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Kether",
+      "decan": "none",
+      "planet_ruler": "n/a",
+      "hermetic_title": "Root of the powers"
+    }
+  },
+  {
+    "id": "pentacles-2",
+    "name": "2 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 2,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "2 of Pentacles channels earth through Chokmah.",
+    "short_reversed_meaning": "2 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Chokmah",
+      "decan": "Capricorn 0-9\u00b0",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Chokmah of Earth"
+    }
+  },
+  {
+    "id": "pentacles-3",
+    "name": "3 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 3,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "3 of Pentacles channels earth through Binah.",
+    "short_reversed_meaning": "3 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Binah",
+      "decan": "Capricorn 10-19\u00b0",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Binah of Earth"
+    }
+  },
+  {
+    "id": "pentacles-4",
+    "name": "4 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 4,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "4 of Pentacles channels earth through Chesed.",
+    "short_reversed_meaning": "4 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Chesed",
+      "decan": "Capricorn 20-29\u00b0",
+      "planet_ruler": "Sun",
+      "hermetic_title": "Chesed of Earth"
+    }
+  },
+  {
+    "id": "pentacles-5",
+    "name": "5 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 5,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "5 of Pentacles channels earth through Geburah.",
+    "short_reversed_meaning": "5 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Geburah",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Geburah of Earth"
+    }
+  },
+  {
+    "id": "pentacles-6",
+    "name": "6 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 6,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "6 of Pentacles channels earth through Tiphareth.",
+    "short_reversed_meaning": "6 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Tiphareth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Tiphareth of Earth"
+    }
+  },
+  {
+    "id": "pentacles-7",
+    "name": "7 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 7,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "7 of Pentacles channels earth through Netzach.",
+    "short_reversed_meaning": "7 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Netzach",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Netzach of Earth"
+    }
+  },
+  {
+    "id": "pentacles-8",
+    "name": "8 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 8,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "8 of Pentacles channels earth through Hod.",
+    "short_reversed_meaning": "8 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Hod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Hod of Earth"
+    }
+  },
+  {
+    "id": "pentacles-9",
+    "name": "9 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 9,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "9 of Pentacles channels earth through Yesod.",
+    "short_reversed_meaning": "9 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Yesod",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Yesod of Earth"
+    }
+  },
+  {
+    "id": "pentacles-10",
+    "name": "10 of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": 10,
+    "court": null,
+    "upright_keywords": [
+      "flow",
+      "focus",
+      "development"
+    ],
+    "reversed_keywords": [
+      "friction",
+      "overreach",
+      "adjustment"
+    ],
+    "short_upright_meaning": "10 of Pentacles channels earth through Malkuth.",
+    "short_reversed_meaning": "10 of Pentacles asks for disciplined balance before expansion.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Malkuth",
+      "decan": " ",
+      "planet_ruler": "",
+      "hermetic_title": "Malkuth of Earth"
+    }
+  },
+  {
+    "id": "pentacles-page",
+    "name": "Page of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": null,
+    "court": "Page",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Page of Pentacles personifies the living voice of earth.",
+    "short_reversed_meaning": "Page of Pentacles can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Earth"
+    }
+  },
+  {
+    "id": "pentacles-knight",
+    "name": "Knight of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": null,
+    "court": "Knight",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Knight of Pentacles personifies the living voice of earth.",
+    "short_reversed_meaning": "Knight of Pentacles can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Earth"
+    }
+  },
+  {
+    "id": "pentacles-queen",
+    "name": "Queen of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": null,
+    "court": "Queen",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "Queen of Pentacles personifies the living voice of earth.",
+    "short_reversed_meaning": "Queen of Pentacles can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Earth"
+    }
+  },
+  {
+    "id": "pentacles-king",
+    "name": "King of Pentacles",
+    "arcana": "minor",
+    "suit": "Pentacles",
+    "number": null,
+    "court": "King",
+    "upright_keywords": [
+      "character",
+      "style",
+      "message"
+    ],
+    "reversed_keywords": [
+      "immaturity",
+      "misfire",
+      "defensiveness"
+    ],
+    "short_upright_meaning": "King of Pentacles personifies the living voice of earth.",
+    "short_reversed_meaning": "King of Pentacles can show reactive patterns that need refinement.",
+    "hermetic": {
+      "element": "Earth",
+      "sephirah": "Court current",
+      "decan": "variable",
+      "planet_ruler": "variable",
+      "hermetic_title": "Court of Earth"
+    }
+  }
+]
