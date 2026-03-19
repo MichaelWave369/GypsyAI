@@ -98,3 +98,45 @@ For entertainment and self-reflection only. Gypsy AI does **not** provide legal,
 
 ## License
 MIT (existing LICENSE preserved).
+
+## TIEKAT Phase 1 (Assistant Kernel)
+- Assistant requests now run through a small internal **TIEKAT** kernel before response delivery.
+- Phase 1 scope is intentionally limited to the Assistant orchestration boundary:
+  - deterministic request routing/classification
+  - consent-aware context envelope assembly
+  - lightweight module adapters (Tarot, Astrology, Gene Keys, Ancestry)
+  - local-first, optional compact memory anchors
+  - deterministic verification pass on generated outputs
+- Privacy safeguards remain strict:
+  - ancestry context is only included when consent allows it
+  - name inclusion follows settings consent
+  - living-person hiding flags are propagated into kernel redaction metadata
+  - memory is disableable; when disabled, TIEKAT runs statelessly and does not persist memory
+- Out of scope in Phase 1:
+  - no full-app refactor
+  - no replacement of module engines
+  - no remote memory service
+  - no non-deterministic hidden classifier layer
+
+## TIEKAT Phase 2 (Gravity Bootstrap Oracle Layer)
+- TIEKAT now computes a **Gravity Bootstrap** internal signal for Assistant flows as a deterministic modeled/theoretical layer.
+- This layer follows a conceptual modified-Poisson framing and computes a predicted `deltaGPredicted` from symbolic/context signals, but remains an internal model variable.
+- Important safety/provenance: this does **not** measure physical gravity, does not read hardware sensors, and must not be interpreted as a real-world gravity reading.
+- Inputs are drawn from existing TIEKAT state (anchors, module diversity, coherence, memory continuity, redaction/issue penalties) with transparent deterministic weights.
+- Outputs include explicit model labeling (`status`, `sourceMode`, `confidenceNote`) for traceability and future comparison with potential experimental validation work.
+
+## TIEKAT Phase 3 (Transparency, Migration, Longitudinal Memory)
+- Gravity Bootstrap now supports **optional diagnostics mode** (default OFF) so normal responses stay compact while debug requests can include deterministic feature/weight/intermediate breakdowns.
+- Gravity scoring now includes explicit **`scoringVersion` metadata** and migration normalization helpers for future compatibility across stored rows.
+- Compact gravity history is now persisted in local IndexedDB (`gravityHistory`) when memory is enabled, making backup/restore-compatible longitudinal comparison possible.
+- History utilities support local-only trend summaries and grouping by scoring version for lightweight diagnostics UI surfaces.
+- Privacy/consent guarantees remain enforced: no raw private ancestry/name payloads are stored in diagnostics/history, and memory-disabled mode prevents history persistence.
+- This remains a **theoretical modeled layer only** and does not measure physical gravity or use hardware sensors.
+
+## TIEKAT Phase 4 (Canonical v54 Alignment)
+- GypsyAI gravity metadata is now explicitly aligned to canonical **TIEKAT v54** terminology through a TypeScript v54 metadata/spec module.
+- Responses include canonical spec/scoring alignment fields and consistent anti-overclaim provenance wording.
+- Added compact helpers for per-version comparison and drift summaries across gravity history snapshots.
+- Diagnostics mode now supports a lightweight local sparkline for recent modeled Δg values.
+- Mixed-version history normalization is strengthened for legacy/missing-version rows and future-safe defaults.
+- The system remains deterministic, local-first, privacy-safe, and explicitly theoretical (no hardware/physical measurement claims).
