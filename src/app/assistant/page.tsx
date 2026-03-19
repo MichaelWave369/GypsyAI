@@ -6,9 +6,10 @@ import { buildContextCapsule } from '@/lib/assistant/context';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
 import { loadAncestry } from '@/lib/ancestry/storage';
 import { loadSettings } from '@/lib/local/settings';
-import { appendGravityHistoryEntry, getRecentGravityHistory, summarizeGravityTrend } from '@/lib/tiekat/gravityHistory';
+import { appendGravityHistoryEntry, buildVersionComparisonSummary, getRecentGravityHistory, summarizeGravityTrend } from '@/lib/tiekat/gravityHistory';
 import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
 import { TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
+import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
@@ -21,6 +22,7 @@ export default function AssistantPage() {
   const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
   const [gravityTrend, setGravityTrend] = useState<string>('stable');
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
+  const [versionComparisonSummary, setVersionComparisonSummary] = useState<{ state: string; versionCount: number; drift: unknown } | null>(null);
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -36,6 +38,8 @@ export default function AssistantPage() {
     getRecentGravityHistory(5).then((history) => {
       setRecentGravity(history);
       setGravityTrend(summarizeGravityTrend(history).trend);
+      const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
+      setVersionComparisonSummary({ state: summary.state, versionCount: summary.versionCount, drift: summary.drift });
     });
   }, []);
 
@@ -144,6 +148,8 @@ export default function AssistantPage() {
         const history = await getRecentGravityHistory(5);
         setRecentGravity(history);
         setGravityTrend(summarizeGravityTrend(history).trend);
+        const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
+        setVersionComparisonSummary({ state: summary.state, versionCount: summary.versionCount, drift: summary.drift });
       }
 
       await persist(withAssistant);
@@ -212,6 +218,8 @@ export default function AssistantPage() {
               </svg>
             </>
           ) : <p>No local gravity history yet.</p>}
+          {versionComparisonSummary ? <p className="rounded border border-zinc-600 px-2 py-1">Version Comparison • current {TIEKAT_V54_SCORING_VERSION} • versions {versionComparisonSummary.versionCount} • state {versionComparisonSummary.state} (modeled/theoretical)</p> : null}
+          {versionComparisonSummary?.state === 'drift_detected' && versionComparisonSummary.drift && typeof versionComparisonSummary.drift === 'object' ? <p>Drift: {(versionComparisonSummary.drift as { from: string; to: string; informationIntegralDrift: number; deltaGDrift: number }).from} → {(versionComparisonSummary.drift as { from: string; to: string; informationIntegralDrift: number; deltaGDrift: number }).to}, ΔI {(versionComparisonSummary.drift as { informationIntegralDrift: number }).informationIntegralDrift.toFixed(4)}, ΔΔg {(versionComparisonSummary.drift as { deltaGDrift: number }).deltaGDrift.toExponential(2)}</p> : null}
           {gravityDiagnostics ? <pre className="whitespace-pre-wrap">{gravityDiagnostics}</pre> : <p>Diagnostics hidden in response until next request.</p>}
         </div>
       ) : null}

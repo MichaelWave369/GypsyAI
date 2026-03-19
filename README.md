@@ -140,3 +140,10 @@ MIT (existing LICENSE preserved).
 - Diagnostics mode now supports a lightweight local sparkline for recent modeled Δg values.
 - Mixed-version history normalization is strengthened for legacy/missing-version rows and future-safe defaults.
 - The system remains deterministic, local-first, privacy-safe, and explicitly theoretical (no hardware/physical measurement claims).
+
+## TIEKAT Phase 5 (Version Comparison Presentation)
+- Assistant diagnostics now includes a compact version-comparison summary chip using local modeled gravity history.
+- The chip reports current scoring version, number of versions present, and summary state (`insufficient_data`, `single_version`, `mixed_versions`, `drift_detected`).
+- When drift is detected across versions, diagnostics can show a short text summary of average `informationIntegral` and `deltaGPredicted` drift.
+- Added deterministic mixed-version backup fixture tests to validate normalization defaults for missing legacy fields (`scoringVersion`, `rowVersion`, `canonicalSpecVersion`).
+- Comparison UI remains diagnostics-only and gravity interpretation remains explicitly modeled/theoretical.

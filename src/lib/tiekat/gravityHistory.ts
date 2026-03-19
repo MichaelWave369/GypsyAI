@@ -102,3 +102,45 @@ export function summarizeGravityVersionDrift(history: TiekatGravityHistoryEntry[
     deltaGDrift: Number((last.avgDeltaGPredicted - first.avgDeltaGPredicted).toExponential(6))
   };
 }
+
+
+export type GravityComparisonState = 'single_version' | 'mixed_versions' | 'drift_detected' | 'insufficient_data';
+
+export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry[], currentScoringVersion: string) {
+  const versionCount = Object.keys(groupGravityHistoryByScoringVersion(history)).length;
+  if (history.length < 2) {
+    return {
+      state: 'insufficient_data' as GravityComparisonState,
+      currentScoringVersion,
+      versionCount,
+      drift: null
+    };
+  }
+
+  if (versionCount <= 1) {
+    return {
+      state: 'single_version' as GravityComparisonState,
+      currentScoringVersion,
+      versionCount,
+      drift: null
+    };
+  }
+
+  const drift = summarizeGravityVersionDrift(history);
+  if (!drift.comparable) {
+    return {
+      state: 'mixed_versions' as GravityComparisonState,
+      currentScoringVersion,
+      versionCount,
+      drift: null
+    };
+  }
+
+  const driftDetected = Math.abs(drift.informationIntegralDrift) > 0 || Math.abs(drift.deltaGDrift) > 0;
+  return {
+    state: (driftDetected ? 'drift_detected' : 'mixed_versions') as GravityComparisonState,
+    currentScoringVersion,
+    versionCount,
+    drift
+  };
+}

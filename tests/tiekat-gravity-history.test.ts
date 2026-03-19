@@ -19,7 +19,8 @@ import {
   groupGravityHistoryByScoringVersion,
   loadGravityHistory,
   summarizeGravityTrend,
-  summarizeGravityVersionDrift
+  summarizeGravityVersionDrift,
+  buildVersionComparisonSummary
 } from '@/lib/tiekat/gravityHistory';
 import { normalizeGravityHistory } from '@/lib/tiekat/gravityVersioning';
 
@@ -113,5 +114,47 @@ describe('tiekat gravity history', () => {
 
     const drift = summarizeGravityVersionDrift(normalized);
     expect(drift.comparable).toBe(true);
+  });
+
+
+  it('computes summary chip states deterministically', () => {
+    const insufficient = buildVersionComparisonSummary([], 'v54-gb-v1');
+    expect(insufficient.state).toBe('insufficient_data');
+
+    const single = buildVersionComparisonSummary([
+      {
+        id: 'a',
+        sessionId: 's',
+        timestamp: '2026-01-01T00:00:00.000Z',
+        status: 'theoretical',
+        scoringVersion: 'v54-gb-v1',
+        informationIntegral: 0.2,
+        deltaGPredicted: 1e-10,
+        deltaGBand: { min: 0.9e-10, max: 1.1e-10 },
+        contributingModules: ['assistant'],
+        route: 'assistant_synthesis',
+        mode: 'assistant_synthesis',
+        sourceMode: 'modeled_internal_signal',
+        rowVersion: 1,
+        canonicalSpecVersion: 'TIEKAT-v54'
+      },
+      {
+        id: 'b',
+        sessionId: 's',
+        timestamp: '2026-01-02T00:00:00.000Z',
+        status: 'theoretical',
+        scoringVersion: 'v54-gb-v1',
+        informationIntegral: 0.2,
+        deltaGPredicted: 1e-10,
+        deltaGBand: { min: 0.9e-10, max: 1.1e-10 },
+        contributingModules: ['assistant'],
+        route: 'assistant_synthesis',
+        mode: 'assistant_synthesis',
+        sourceMode: 'modeled_internal_signal',
+        rowVersion: 1,
+        canonicalSpecVersion: 'TIEKAT-v54'
+      }
+    ], 'v54-gb-v1');
+    expect(single.state).toBe('single_version');
   });
 });
