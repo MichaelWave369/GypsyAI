@@ -67,6 +67,7 @@ export interface TiekatGravityBootstrapResult {
   modelVersion: 'gravity-bootstrap-v1';
   scoringVersion: string;
   diagnostics?: TiekatGravityDiagnostics;
+  canonicalSpecVersion: string;
 }
 
 export interface TiekatGravityHistoryEntry {
@@ -83,6 +84,7 @@ export interface TiekatGravityHistoryEntry {
   mode: TiekatReflectionMode;
   sourceMode: 'modeled_internal_signal';
   rowVersion: 1;
+  canonicalSpecVersion: string;
 }
 
 export interface TiekatConsentState {

@@ -22,7 +22,8 @@ describe('assistant route with tiekat', () => {
     const res = await POST(req);
     const data = await res.json();
     expect(data.tiekat.gravityBootstrap.status).toBe('theoretical');
-    expect(data.tiekat.gravityBootstrap.scoringVersion).toBe('v1');
+    expect(data.tiekat.gravityBootstrap.scoringVersion).toBe('v54-gb-v1');
+    expect(data.tiekat.v54.specVersion).toBe('TIEKAT-v54');
     expect(data.tiekat.gravityBootstrap.diagnostics).toBeUndefined();
 
     vi.unstubAllEnvs();
@@ -50,7 +51,7 @@ describe('assistant route with tiekat', () => {
     expect(data.tiekat.gravityBootstrap.diagnostics.enabled).toBe(true);
     expect(data.tiekat.gravityBootstrap.diagnostics.features.redactionPenalty).toBeGreaterThan(0);
     expect(data.tiekat.gravityBootstrap.sourceMode).toBe('modeled_internal_signal');
-    expect(data.tiekat.gravityBootstrap.confidenceNote).toContain('not a physical sensor measurement');
+    expect(data.tiekat.gravityBootstrap.confidenceNote).toContain('Theoretical only');
 
     vi.unstubAllEnvs();
   });

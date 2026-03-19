@@ -15,6 +15,7 @@ import { buildTiekatContextEnvelope, buildTiekatReflectionPlan, buildTiekatSessi
 import { TiekatConsentState } from '@/lib/tiekat/schema';
 import { verifyTiekatOutput } from '@/lib/tiekat/verification';
 import { computeGravityBootstrap } from '@/lib/tiekat/gravity';
+import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
 
 const consentSchema = z.object({
   allowAncestry: z.boolean().default(false),
@@ -69,6 +70,8 @@ const schema = z.object({
   tiekat: tiekatSchema
 });
 
+const v54Metadata = getTiekatV54Metadata();
+
 const defaultConsent: TiekatConsentState = {
   allowAncestry: false,
   includeNames: false,
@@ -106,7 +109,8 @@ export async function POST(req: NextRequest) {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
         verification,
-        gravityBootstrap
+        gravityBootstrap,
+        v54: v54Metadata
       }
     });
   }
@@ -144,7 +148,8 @@ export async function POST(req: NextRequest) {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
         verification,
-        gravityBootstrap
+        gravityBootstrap,
+        v54: v54Metadata
       }
     });
   }
@@ -183,7 +188,8 @@ export async function POST(req: NextRequest) {
       route: tiekatSession.routing.route,
       plan: tiekatPlan,
       verification,
-      gravityBootstrap
+      gravityBootstrap,
+      v54: v54Metadata
     }
   });
 }

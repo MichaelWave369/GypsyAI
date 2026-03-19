@@ -1,6 +1,7 @@
 import { dbGet, dbSet } from '@/lib/local/db';
 import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatReflectionMode } from '@/lib/tiekat/schema';
 import { normalizeGravityHistory, TIEKAT_GRAVITY_SCORING_VERSION, TIEKAT_GRAVITY_HISTORY_ROW_VERSION } from '@/lib/tiekat/gravityVersioning';
+import { TIEKAT_V54_SPEC_VERSION } from '@/lib/tiekat/v54';
 
 const MAX_HISTORY_ROWS = 250;
 
@@ -35,7 +36,8 @@ export async function appendGravityHistoryEntry(args: {
     route: args.route,
     mode: args.mode,
     sourceMode: 'modeled_internal_signal',
-    rowVersion: TIEKAT_GRAVITY_HISTORY_ROW_VERSION
+    rowVersion: TIEKAT_GRAVITY_HISTORY_ROW_VERSION,
+    canonicalSpecVersion: args.gravity.canonicalSpecVersion || TIEKAT_V54_SPEC_VERSION
   };
 
   const previous = await loadGravityHistory();
@@ -66,4 +68,37 @@ export function summarizeGravityTrend(history: TiekatGravityHistoryEntry[]) {
   if (delta > 0) return { trend: 'rising' as const, delta };
   if (delta < 0) return { trend: 'falling' as const, delta };
   return { trend: 'stable' as const, delta: 0 };
+}
+
+export function compareGravitySnapshots(a: TiekatGravityHistoryEntry, b: TiekatGravityHistoryEntry) {
+  return {
+    sameScoringVersion: a.scoringVersion === b.scoringVersion,
+    deltaInformationIntegral: Number((b.informationIntegral - a.informationIntegral).toExponential(4)),
+    deltaDeltaGPredicted: Number((b.deltaGPredicted - a.deltaGPredicted).toExponential(4))
+  };
+}
+
+export function compareGravityVersions(history: TiekatGravityHistoryEntry[]) {
+  const grouped = groupGravityHistoryByScoringVersion(history);
+  return Object.entries(grouped).map(([version, rows]) => ({
+    version,
+    count: rows.length,
+    avgInformationIntegral: Number((rows.reduce((sum, row) => sum + row.informationIntegral, 0) / rows.length).toFixed(6)),
+    avgDeltaGPredicted: Number((rows.reduce((sum, row) => sum + row.deltaGPredicted, 0) / rows.length).toExponential(6))
+  }));
+}
+
+export function summarizeGravityVersionDrift(history: TiekatGravityHistoryEntry[]) {
+  const byVersion = compareGravityVersions(history);
+  if (byVersion.length < 2) return { comparable: false, message: 'Only one scoring version present.' };
+  const sorted = [...byVersion].sort((a, b) => a.version.localeCompare(b.version));
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  return {
+    comparable: true,
+    from: first.version,
+    to: last.version,
+    informationIntegralDrift: Number((last.avgInformationIntegral - first.avgInformationIntegral).toFixed(6)),
+    deltaGDrift: Number((last.avgDeltaGPredicted - first.avgDeltaGPredicted).toExponential(6))
+  };
 }

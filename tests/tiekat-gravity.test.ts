@@ -24,7 +24,7 @@ describe('tiekat gravity bootstrap', () => {
     expect(result.status).toBe('theoretical');
     expect(result.scoringVersion).toBe(TIEKAT_GRAVITY_SCORING_VERSION);
     expect(result.sourceMode).toBe('modeled_internal_signal');
-    expect(result.confidenceNote).toContain('not a physical sensor measurement');
+    expect(result.confidenceNote).toContain('Theoretical only');
     expect(typeof result.deltaGPredicted).toBe('number');
     expect(result.deltaGBand.min).toBeLessThan(result.deltaGBand.max);
   });

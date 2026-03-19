@@ -1,6 +1,7 @@
 import { TiekatGravityHistoryEntry, TiekatModuleKey } from '@/lib/tiekat/schema';
+import { TIEKAT_V54_SCORING_VERSION, TIEKAT_V54_SPEC_VERSION } from '@/lib/tiekat/v54';
 
-export const TIEKAT_GRAVITY_SCORING_VERSION = 'v1';
+export const TIEKAT_GRAVITY_SCORING_VERSION = TIEKAT_V54_SCORING_VERSION;
 export const TIEKAT_GRAVITY_HISTORY_ROW_VERSION = 1 as const;
 
 function toNumber(value: unknown, fallback = 0) {
@@ -38,7 +39,8 @@ export function normalizeGravityHistoryEntry(row: unknown): TiekatGravityHistory
     route: typeof source.route === 'string' ? source.route : 'assistant_synthesis',
     mode: source.mode === 'single_module' || source.mode === 'blended' || source.mode === 'assistant_synthesis' ? source.mode : 'assistant_synthesis',
     sourceMode: 'modeled_internal_signal',
-    rowVersion: 1
+    rowVersion: 1,
+    canonicalSpecVersion: typeof source.canonicalSpecVersion === 'string' ? source.canonicalSpecVersion : TIEKAT_V54_SPEC_VERSION
   };
 }
 

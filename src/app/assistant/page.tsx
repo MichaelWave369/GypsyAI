@@ -41,6 +41,20 @@ export default function AssistantPage() {
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
 
+  const sparklinePoints = useMemo(() => {
+    if (!recentGravity.length) return '';
+    const values = recentGravity.map((row) => row.deltaGPredicted);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return values
+      .map((value, i) => {
+        const x = (i / Math.max(values.length - 1, 1)) * 100;
+        const y = max === min ? 20 : 40 - ((value - min) / (max - min)) * 40;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }, [recentGravity]);
+
   const persist = async (nextMessages: { role: 'user' | 'assistant'; content: string; sources?: string[] }[]) => {
     const base = sessions.filter((s) => s.id !== activeId);
     const id = activeId || crypto.randomUUID();
@@ -190,7 +204,14 @@ export default function AssistantPage() {
       {showGravityDiagnostics ? (
         <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-300">
           <p>Recent modeled gravity trend: {gravityTrend}</p>
-          {recentGravity.length ? <p>Recent snapshots: {recentGravity.map((row) => `${row.deltaGPredicted.toExponential(2)}@${new Date(row.timestamp).toLocaleTimeString()}`).join(' | ')}</p> : <p>No local gravity history yet.</p>}
+          {recentGravity.length ? (
+            <>
+              <p>Recent snapshots: {recentGravity.map((row) => `${row.deltaGPredicted.toExponential(2)}@${new Date(row.timestamp).toLocaleTimeString()}`).join(' | ')}</p>
+              <svg viewBox="0 0 100 40" className="h-10 w-full" role="img" aria-label="Modeled gravity sparkline">
+                <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points={sparklinePoints} />
+              </svg>
+            </>
+          ) : <p>No local gravity history yet.</p>}
           {gravityDiagnostics ? <pre className="whitespace-pre-wrap">{gravityDiagnostics}</pre> : <p>Diagnostics hidden in response until next request.</p>}
         </div>
       ) : null}

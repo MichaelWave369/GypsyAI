@@ -132,3 +132,11 @@ MIT (existing LICENSE preserved).
 - History utilities support local-only trend summaries and grouping by scoring version for lightweight diagnostics UI surfaces.
 - Privacy/consent guarantees remain enforced: no raw private ancestry/name payloads are stored in diagnostics/history, and memory-disabled mode prevents history persistence.
 - This remains a **theoretical modeled layer only** and does not measure physical gravity or use hardware sensors.
+
+## TIEKAT Phase 4 (Canonical v54 Alignment)
+- GypsyAI gravity metadata is now explicitly aligned to canonical **TIEKAT v54** terminology through a TypeScript v54 metadata/spec module.
+- Responses include canonical spec/scoring alignment fields and consistent anti-overclaim provenance wording.
+- Added compact helpers for per-version comparison and drift summaries across gravity history snapshots.
+- Diagnostics mode now supports a lightweight local sparkline for recent modeled Δg values.
+- Mixed-version history normalization is strengthened for legacy/missing-version rows and future-safe defaults.
+- The system remains deterministic, local-first, privacy-safe, and explicitly theoretical (no hardware/physical measurement claims).

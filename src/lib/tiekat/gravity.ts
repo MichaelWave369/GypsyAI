@@ -7,6 +7,7 @@ import {
   TiekatVerificationResult
 } from '@/lib/tiekat/schema';
 import { TIEKAT_GRAVITY_SCORING_VERSION } from '@/lib/tiekat/gravityVersioning';
+import { TIEKAT_V54_CONFIDENCE_NOTE, TIEKAT_V54_SPEC_VERSION } from '@/lib/tiekat/v54';
 
 const FOUR_PI_G = 4 * Math.PI * 6.6743e-11;
 
@@ -95,12 +96,13 @@ export function computeGravityBootstrap(args: {
       deltaGPredicted: 0,
       deltaGBand: { min: 0, max: 0 },
       classicalLimitReached: true,
-      confidenceNote: 'Gravity bootstrap is disabled; no modeled anomaly term is produced.',
+      confidenceNote: `${TIEKAT_V54_CONFIDENCE_NOTE} Gravity bootstrap disabled; anomaly term not produced.`,
       sourceMode: 'modeled_internal_signal',
       contributingAnchors: [],
       contributingModules: args.session.activeModules,
       modelVersion: 'gravity-bootstrap-v1',
-      scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION
+      scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION,
+      canonicalSpecVersion: TIEKAT_V54_SPEC_VERSION
     };
   }
 
@@ -133,7 +135,7 @@ export function computeGravityBootstrap(args: {
         notes: [
           'Deterministic internal scoring; no hardware sensor input.',
           'Redaction and contradiction signals reduce modeled information integral.',
-          'Modeled symbolic layer only; not a physical gravity claim.'
+          'Anti-overclaim rule: no physical gravimetry or hardware-sensor claims.'
         ]
       }
     : undefined;
@@ -150,12 +152,13 @@ export function computeGravityBootstrap(args: {
       max: Number((deltaG + bandWidth).toExponential(6))
     },
     classicalLimitReached,
-    confidenceNote: 'Experimental symbolic gravity layer; not a physical sensor measurement.',
+    confidenceNote: TIEKAT_V54_CONFIDENCE_NOTE,
     sourceMode: 'modeled_internal_signal',
     contributingAnchors: args.envelope.symbolicAnchors.slice(0, 10),
     contributingModules: args.session.activeModules,
     modelVersion: 'gravity-bootstrap-v1',
     scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION,
-    diagnostics
+    diagnostics,
+    canonicalSpecVersion: TIEKAT_V54_SPEC_VERSION
   };
 }
