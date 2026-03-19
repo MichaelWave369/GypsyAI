@@ -3,8 +3,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
+import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
+import { getPromptPresetGroup } from '@/lib/tiekat/promptPresets';
 
 describe('session mode and artifact replay ui', () => {
   it('renders mode selector and artifact replay components', () => {
@@ -31,14 +33,22 @@ describe('session mode and artifact replay ui', () => {
     const replayHtml = renderToStaticMarkup(
       React.createElement(OracleArtifactReplayCard, {
         artifact,
-        comparisonText: 'Compared to previous',
+        diffView: { title: 'What changed', lines: ['Session mode: A → B', 'ΔI 0.020000'] },
         onExport: vi.fn(),
         onDelete: vi.fn()
+      })
+    );
+    const presetsHtml = renderToStaticMarkup(
+      React.createElement(PromptPresetChips, {
+        group: getPromptPresetGroup('open_reflection', false),
+        onChoose: vi.fn()
       })
     );
 
     expect(selectorHtml).toContain('Ritual Session Mode');
     expect(listHtml).toContain('Synthesis Oracle');
     expect(replayHtml).toContain('mode key: synthesis_oracle');
+    expect(replayHtml).toContain('What changed');
+    expect(presetsHtml).toContain('Open Reflection Prompts');
   });
 });

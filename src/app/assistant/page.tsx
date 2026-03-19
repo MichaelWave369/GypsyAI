@@ -12,20 +12,22 @@ import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatMemoryEn
 import { buildOraclePresentation, OracleVersionSummary, shouldShowOraclePresentation, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
 import {
   appendOracleArtifact,
+  buildOracleArtifactDiffView,
   buildOracleArtifact,
-  compareOracleArtifacts,
   deleteOracleArtifact,
   exportOracleArtifactJson,
   getRecentOracleArtifacts,
   importOracleArtifactJson,
   TiekatOracleArtifact
 } from '@/lib/tiekat/oracleArtifact';
+import { getPromptPresetGroup } from '@/lib/tiekat/promptPresets';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
 import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
 import { OracleCard } from '@/components/assistant/OracleCard';
+import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
@@ -79,10 +81,14 @@ export default function AssistantPage() {
     const selectedIndex = oracleArtifacts.findIndex((row) => row.id === selectedArtifact.id);
     return selectedIndex >= 0 ? oracleArtifacts[selectedIndex + 1] ?? null : null;
   }, [oracleArtifacts, selectedArtifact]);
-  const artifactComparison = useMemo(() => {
+  const artifactDiffView = useMemo(() => {
     if (!selectedArtifact || !previousArtifact) return null;
-    return compareOracleArtifacts(previousArtifact, selectedArtifact);
+    return buildOracleArtifactDiffView(previousArtifact, selectedArtifact);
   }, [selectedArtifact, previousArtifact]);
+  const presetGroup = useMemo(() => {
+    const settings = loadSettings();
+    return getPromptPresetGroup(sessionMode, settings.allowAncestryAi);
+  }, [sessionMode]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -334,6 +340,10 @@ export default function AssistantPage() {
       {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
+      <PromptPresetChips
+        group={presetGroup}
+        onChoose={(text) => setInput((prev) => (prev.trim().length ? `${prev}\n${text}` : text))}
+      />
       <label className="flex items-center gap-2 text-xs text-zinc-400">
         <input type="checkbox" checked={enableV55Framing} onChange={(e) => setEnableV55Framing(e.target.checked)} />
         Enable v55 master-action framing (conceptual)
@@ -366,7 +376,7 @@ export default function AssistantPage() {
           {selectedArtifact ? (
             <OracleArtifactReplayCard
               artifact={selectedArtifact}
-              comparisonText={artifactComparison ? `Compared to previous: ΔI ${artifactComparison.informationIntegralDelta.toFixed(6)}, ΔΔg ${artifactComparison.deltaGPredictedDelta.toExponential(2)}, route changed ${artifactComparison.routeChanged ? 'yes' : 'no'}, scoring version changed ${artifactComparison.scoringVersionChanged ? 'yes' : 'no'}, mode changed ${artifactComparison.sessionModeChanged ? 'yes' : 'no'}` : undefined}
+              diffView={artifactDiffView ?? undefined}
               onExport={() => exportArtifact(selectedArtifact)}
               onDelete={() => removeArtifact(selectedArtifact.id)}
             />

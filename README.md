@@ -182,3 +182,11 @@ MIT (existing LICENSE preserved).
 - Artifact replay/list UI was extracted into reusable components (`OracleArtifactList`, `OracleArtifactReplayCard`, `SessionModeBadge`) for cleaner Assistant composition.
 - Added optional local artifact import path (single JSON file), with deterministic validation/normalization and memory-enabled gating.
 - Maintained local-first behavior, additive API metadata, and explicit v54 operational + v55 conceptual distinction.
+
+## TIEKAT Phase 10 (Ritual Presets + Artifact Diff Layer)
+- Added typed, static prompt preset maps per session mode (`promptPresets.ts`) to make ritual/session entry faster without changing scoring or routing internals.
+- Presets are mode-aware and compact; ancestry-sensitive presets are filtered when ancestry consent is not allowed.
+- Assistant UI now shows lightweight preset chips for the active mode; selecting a preset appends/prefills the prompt input.
+- Added compact artifact diff view helper (`buildOracleArtifactDiffView`) to summarize mode/route/module/version and gravity deltas in a scan-friendly “What changed” block.
+- Replay UI now renders structured diff lines (up to 8 concise items) instead of a single long comparison sentence.
+- All diff/preset behavior uses local metadata only and preserves modeled/theoretical framing (no hardware/physical claims).

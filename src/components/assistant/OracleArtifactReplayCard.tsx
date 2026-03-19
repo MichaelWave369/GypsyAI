@@ -4,7 +4,7 @@ import { SessionModeBadge } from './SessionModeBadge';
 
 export function OracleArtifactReplayCard(props: {
   artifact: TiekatOracleArtifact;
-  comparisonText?: string;
+  diffView?: { title: string; lines: string[] };
   onExport: () => void;
   onDelete: () => void;
 }) {
@@ -21,7 +21,14 @@ export function OracleArtifactReplayCard(props: {
       <p className="text-zinc-400">Prompt: {artifact.summary.promptSummary}</p>
       <p className="text-zinc-400">Response: {artifact.summary.responseSummary}</p>
       <p className="text-zinc-400">Trend {artifact.trend || 'stable'} • Version state {artifact.versionSummaryState || 'insufficient_data'} • v55 framing {artifact.v55?.enabled ? 'on' : 'off'}</p>
-      {props.comparisonText ? <p className="text-zinc-400">{props.comparisonText}</p> : null}
+      {props.diffView ? (
+        <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="artifact-diff-view">
+          <p className="font-semibold">{props.diffView.title}</p>
+          <ul className="list-disc pl-4">
+            {props.diffView.lines.slice(0, 8).map((line) => <li key={line}>{line}</li>)}
+          </ul>
+        </div>
+      ) : null}
       <div className="flex gap-2 pt-1">
         <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onExport}>Export Artifact JSON</button>
         <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onDelete}>Delete Artifact</button>

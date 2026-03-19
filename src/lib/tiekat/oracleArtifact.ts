@@ -261,3 +261,21 @@ export function compareOracleArtifacts(a: TiekatOracleArtifact, b: TiekatOracleA
     v55FramingChanged: Boolean(a.v55?.enabled) !== Boolean(b.v55?.enabled)
   };
 }
+
+export function buildOracleArtifactDiffView(a: TiekatOracleArtifact, b: TiekatOracleArtifact) {
+  const comparison = compareOracleArtifacts(a, b);
+  const lines = [
+    `Session mode: ${a.sessionMode.label} → ${b.sessionMode.label}`,
+    `Route: ${a.route} → ${b.route}`,
+    `Modules +${comparison.moduleDelta.added.join(', ') || 'none'} / -${comparison.moduleDelta.removed.join(', ') || 'none'}`,
+    `ΔI ${comparison.informationIntegralDelta.toFixed(6)}`,
+    `ΔΔg ${comparison.deltaGPredictedDelta.toExponential(2)}`,
+    `Scoring version changed: ${comparison.scoringVersionChanged ? 'yes' : 'no'}`,
+    `Trend changed: ${comparison.trendChanged ? 'yes' : 'no'}`,
+    `v55 framing changed: ${comparison.v55FramingChanged ? 'yes' : 'no'}`
+  ];
+  return {
+    title: 'What changed',
+    lines
+  };
+}
