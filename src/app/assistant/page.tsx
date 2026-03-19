@@ -51,6 +51,7 @@ import {
   unpinHabitatProfile,
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
+import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -130,6 +131,12 @@ export default function AssistantPage() {
   const [habitatProfileNote, setHabitatProfileNote] = useState('');
   const [habitatProfileError, setHabitatProfileError] = useState('');
   const controllerRef = useRef<AbortController | null>(null);
+  const habitatShortcutHandlersRef = useRef<{
+    apply: () => void;
+    togglePin: () => Promise<void> | void;
+    moveUp: () => Promise<void> | void;
+    moveDown: () => Promise<void> | void;
+  } | null>(null);
 
   useEffect(() => {
     loadAssistantSessions().then((s) => {
@@ -248,6 +255,31 @@ export default function AssistantPage() {
     });
     const settings = loadSettings();
     return buildHabitatProfileDiff({
+      current,
+      target: selectedHabitatProfile,
+      allowAncestry: settings.allowAncestryAi
+    });
+  }, [selectedHabitatProfile, sessionMode, councilMode, preferProviderBackedCouncil, showGeometry, showGravityDiagnostics, enableV55Framing, constellationFilters, ritualDeckFilters]);
+  const habitatTransitionPreview = useMemo(() => {
+    if (!selectedHabitatProfile) return null;
+    const current = buildHabitatProfile({
+      id: 'habitat-current-runtime',
+      name: 'Current Habitat',
+      description: 'Current runtime profile',
+      preferences: {
+        sessionMode,
+        councilMode,
+        preferProviderBackedCouncil,
+        showGeometry,
+        showDiagnostics: showGravityDiagnostics,
+        enableV55Framing,
+        constellationFilters,
+        ritualDeckFilters,
+        promptPresetMode: sessionMode
+      }
+    });
+    const settings = loadSettings();
+    return buildHabitatTransition({
       current,
       target: selectedHabitatProfile,
       allowAncestry: settings.allowAncestryAi
@@ -631,7 +663,8 @@ export default function AssistantPage() {
     setConstellationFilters(applied.profile.preferences.constellationFilters);
     saveConstellationFilters(applied.profile.preferences.constellationFilters);
     setRitualDeckFilters(applied.profile.preferences.ritualDeckFilters);
-    setHabitatProfileNote(applied.note);
+    const summaryLine = habitatTransitionPreview?.summary.line;
+    setHabitatProfileNote(`Transition complete: ${selectedHabitatProfile.name}. ${summaryLine || applied.note}`);
     setHabitatProfileError('');
   };
 
@@ -713,6 +746,43 @@ export default function AssistantPage() {
     await refreshHabitatProfiles(selectedHabitatProfile.id);
   };
 
+  useEffect(() => {
+    habitatShortcutHandlersRef.current = {
+      apply: applySelectedHabitatProfile,
+      togglePin: () => togglePinSelectedHabitatProfile(),
+      moveUp: () => reorderSelectedHabitatProfile('up'),
+      moveDown: () => reorderSelectedHabitatProfile('down')
+    };
+  });
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const action = resolveHabitatShortcut({
+        key: event.key,
+        altKey: event.altKey,
+        shiftKey: event.shiftKey,
+        targetTag: target?.tagName,
+        isContentEditable: target?.isContentEditable
+      });
+      if (action === 'toggle_pin') {
+        event.preventDefault();
+        void habitatShortcutHandlersRef.current?.togglePin();
+      } else if (action === 'apply') {
+        event.preventDefault();
+        habitatShortcutHandlersRef.current?.apply();
+      } else if (action === 'move_up') {
+        event.preventDefault();
+        void habitatShortcutHandlersRef.current?.moveUp();
+      } else if (action === 'move_down') {
+        event.preventDefault();
+        void habitatShortcutHandlersRef.current?.moveDown();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
@@ -745,6 +815,8 @@ export default function AssistantPage() {
         onMoveUp={() => reorderSelectedHabitatProfile('up')}
         onMoveDown={() => reorderSelectedHabitatProfile('down')}
         diffPreview={habitatApplyPreview}
+        transitionSummary={habitatTransitionPreview?.summary ?? null}
+        transitionChips={habitatTransitionPreview?.chips ?? []}
         note={habitatProfileNote}
         error={habitatProfileError}
       />

@@ -26,6 +26,11 @@ describe('habitat profile ui', () => {
         onMoveUp: vi.fn(),
         onMoveDown: vi.fn(),
         diffPreview: { lines: ['Session mode: open_reflection → synthesis_oracle'], ancestryFallbackLine: 'Consent-safe fallback on apply: ancestral_listening → open_reflection.' },
+        transitionSummary: {
+          headline: 'Transitioning from Quiet Reflection to Synthesis Oracle.',
+          line: 'This shift emphasizes: Session mode: open_reflection → synthesis_oracle.'
+        },
+        transitionChips: [{ key: 'session_mode', label: 'Session mode: open_reflection → synthesis_oracle', severity: 'high' }],
         note: 'Applied habitat profile Quiet Reflection.',
         error: ''
       })
@@ -37,6 +42,8 @@ describe('habitat profile ui', () => {
     expect(html).toContain('This profile will change:');
     expect(html).toContain('Consent-safe fallback on apply');
     expect(html).toContain('Move Up');
+    expect(html).toContain('Transitioning from Quiet Reflection');
+    expect(html).toContain('Shortcuts: Alt+Shift+P');
     expect(html).toContain('preferences/configuration, no transcript');
     expect(html).toContain('Modeled/theoretical posture is unchanged');
   });

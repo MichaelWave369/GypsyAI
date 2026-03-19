@@ -278,3 +278,10 @@ MIT (existing LICENSE preserved).
 - Habitat profiles now support additive local-only pinning/order metadata (`pinned`, `sortOrder`) with normalization-safe defaults for legacy profiles.
 - Added compact habitat UI controls for pin/unpin and light move up/down ordering without introducing a large management dashboard.
 - Pinned/ordered profile data persists locally and round-trips through import/export while remaining configuration-only and privacy-safe.
+
+## TIEKAT Phase 23 (Habitat Transition Layer)
+- Added deterministic habitat transition modeling (`habitatTransition.ts`) that derives compact transition summaries and chip previews from existing profile diff/consent-safe mode resolution.
+- Added compressed high-priority diff chips (session/council/diagnostics/geometry/v55/fallback) capped to a compact preview set by default.
+- Added ritual-style transition summary copy before apply and compact transition-complete acknowledgment after apply.
+- Added optional lightweight keyboard shortcuts for habitat management (`Alt+Shift+P`, `Alt+Shift+↑/↓`, `Alt+Shift+A`) with input/textarea safety guards.
+- Transition tooling remains local-only, configuration-only, privacy-safe, and modeled/theoretical (no transcript-aware logic, no telemetry, no scoring changes).

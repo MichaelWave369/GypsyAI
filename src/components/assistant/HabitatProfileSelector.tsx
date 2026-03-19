@@ -21,6 +21,8 @@ export function HabitatProfileSelector(props: {
   onMoveUp: () => void;
   onMoveDown: () => void;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
+  transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
+  transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
   note?: string;
   error?: string;
 }) {
@@ -76,8 +78,23 @@ export function HabitatProfileSelector(props: {
           {props.diffPreview?.ancestryFallbackLine ? <p className="pt-1 text-zinc-500">{props.diffPreview.ancestryFallbackLine}</p> : null}
         </div>
       ) : null}
+      {props.transitionSummary ? (
+        <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="habitat-transition-summary">
+          <p className="font-semibold">{props.transitionSummary.headline}</p>
+          <p>{props.transitionSummary.line}</p>
+          {props.transitionSummary.fallbackLine ? <p className="text-zinc-500">{props.transitionSummary.fallbackLine}</p> : null}
+          {props.transitionChips?.length ? (
+            <div className="flex flex-wrap gap-1 pt-1">
+              {props.transitionChips.slice(0, 5).map((chip) => (
+                <span key={chip.key} className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]">{chip.label}</span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       {props.note ? <p className="text-zinc-500">{props.note}</p> : null}
       {props.error ? <p className="text-xs text-rose-400">{props.error}</p> : null}
+      <p className="text-zinc-500">Shortcuts: Alt+Shift+P (pin), Alt+Shift+↑/↓ (reorder), Alt+Shift+A (apply).</p>
       <p className="text-zinc-500">Modeled/theoretical posture is unchanged by profile switching.</p>
     </section>
   );
