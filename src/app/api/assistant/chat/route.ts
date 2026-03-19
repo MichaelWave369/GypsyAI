@@ -15,7 +15,7 @@ import { buildTiekatContextEnvelope, buildTiekatReflectionPlan, buildTiekatSessi
 import { TiekatConsentState } from '@/lib/tiekat/schema';
 import { verifyTiekatOutput } from '@/lib/tiekat/verification';
 import { computeGravityBootstrap } from '@/lib/tiekat/gravity';
-import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
+import { getTiekatV54Metadata, TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 import { buildSessionModePromptFrame, getDefaultSessionMode, resolveSessionMode } from '@/lib/tiekat/sessionMode';
 import { buildCouncilInputEnvelope, runOracleCouncil, TiekatCouncilMode } from '@/lib/tiekat/oracleCouncil';
 
@@ -52,14 +52,14 @@ const tiekatSchema = z
           updatedAt: z.string(),
           gravitySummary: z
             .object({
-              deltaGPredicted: z.number(),
-              informationIntegral: z.number(),
-              contributingModules: z.array(z.enum(['assistant', 'tarot', 'astrology', 'genekeys', 'ancestry'])),
-              status: z.enum(['disabled', 'theoretical', 'simulated']),
-              scoringVersion: z.string().optional()
+                  deltaGPredicted: z.number(),
+                  informationIntegral: z.number(),
+                  contributingModules: z.array(z.enum(['assistant', 'tarot', 'astrology', 'genekeys', 'ancestry'])),
+                  status: z.enum(['disabled', 'theoretical', 'simulated']),
+                  scoringVersion: z.string().default(TIEKAT_V54_SCORING_VERSION)
+                })
+                .optional()
             })
-            .optional()
-        })
       )
       .optional()
   })
