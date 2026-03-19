@@ -32,13 +32,21 @@ import {
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import {
+  appendRitualDeck,
+  buildFilteredRitualDeck,
   buildRecentRitualDeck,
   buildRitualDeck,
+  deleteRitualDeck,
   exportRitualCardJson,
   exportRitualDeckJson,
   exportRitualDeckMarkdown,
+  getRecentRitualDecks,
+  getRitualDeckFilterOptions,
+  importRitualDeckJson,
+  normalizeRitualDeckFilterState,
   summarizeRitualDeck,
-  TiekatRitualDeck
+  TiekatRitualDeck,
+  TiekatRitualDeckFilterState
 } from '@/lib/tiekat/ritualDeck';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ConstellationFilterChips } from '@/components/assistant/ConstellationFilterChips';
@@ -79,6 +87,9 @@ export default function AssistantPage() {
   const [artifactImportError, setArtifactImportError] = useState<string>('');
   const [constellationFilters, setConstellationFilters] = useState<TiekatConstellationFilterState>({ mode: 'all', scoringVersion: 'all', shiftType: 'all' });
   const [ritualDeck, setRitualDeck] = useState<TiekatRitualDeck | null>(null);
+  const [recentRitualDecks, setRecentRitualDecks] = useState<TiekatRitualDeck[]>([]);
+  const [ritualDeckFilters, setRitualDeckFilters] = useState<TiekatRitualDeckFilterState>(normalizeRitualDeckFilterState());
+  const [ritualDeckImportError, setRitualDeckImportError] = useState('');
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -100,6 +111,7 @@ export default function AssistantPage() {
       setOracleArtifacts(rows);
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
+    getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows));
     setShowGeometry(loadGeometryVisibilityPreference(false));
     setConstellationFilters(loadConstellationFilters());
   }, []);
@@ -144,6 +156,7 @@ export default function AssistantPage() {
     return getConstellationFilterOptions(constellationState);
   }, [constellationState]);
   const ritualDeckSummary = useMemo(() => (ritualDeck ? summarizeRitualDeck(ritualDeck) : null), [ritualDeck]);
+  const ritualDeckFilterOptions = useMemo(() => getRitualDeckFilterOptions(oracleArtifacts), [oracleArtifacts]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -383,16 +396,32 @@ export default function AssistantPage() {
 
   const buildRecentDeck = () => {
     if (!oracleArtifacts.length) return;
-    setRitualDeck(buildRecentRitualDeck(oracleArtifacts, 5));
+    const next = buildRecentRitualDeck(oracleArtifacts, 5);
+    setRitualDeck(next);
+    const s = loadSettings();
+    appendRitualDeck({ enabled: s.useSessionsInAssistant, deck: next }).then(() => getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows)));
   };
 
   const buildSelectedDeck = () => {
     if (!selectedArtifact) return;
-    setRitualDeck(buildRitualDeck({
+    const next = buildRitualDeck({
       title: `Selected Ritual Deck (${selectedArtifact.sessionMode.label})`,
       source: 'selected',
       artifacts: [selectedArtifact]
-    }));
+    });
+    setRitualDeck(next);
+    const s = loadSettings();
+    appendRitualDeck({ enabled: s.useSessionsInAssistant, deck: next }).then(() => getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows)));
+  };
+
+  const buildFilteredDeck = () => {
+    const next = buildFilteredRitualDeck({
+      artifacts: oracleArtifacts,
+      filters: ritualDeckFilters
+    });
+    setRitualDeck(next);
+    const s = loadSettings();
+    appendRitualDeck({ enabled: s.useSessionsInAssistant, deck: next }).then(() => getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows)));
   };
 
   const exportDeckJson = () => {
@@ -407,6 +436,36 @@ export default function AssistantPage() {
 
   const exportRitualCard = (indexCard: TiekatRitualDeck['cards'][number]) => {
     downloadText(`ritual-card-${indexCard.artifactId.replace(/[:.]/g, '-')}.json`, exportRitualCardJson(indexCard), 'application/json');
+  };
+
+  const importRitualDeck = async (file?: File) => {
+    if (!file) return;
+    try {
+      const parsed = importRitualDeckJson(await file.text());
+      setRitualDeck(parsed);
+      const s = loadSettings();
+      if (s.useSessionsInAssistant) {
+        await appendRitualDeck({ enabled: true, deck: parsed });
+        const rows = await getRecentRitualDecks(8);
+        setRecentRitualDecks(rows);
+      }
+      setRitualDeckImportError('');
+    } catch (error) {
+      setRitualDeckImportError(error instanceof Error ? error.message : 'Failed to import ritual deck');
+    }
+  };
+
+  const selectRitualDeck = (deckId: string) => {
+    const found = recentRitualDecks.find((deck) => deck.id === deckId);
+    if (!found) return;
+    setRitualDeck(found);
+  };
+
+  const removeRitualDeck = async (deckId: string) => {
+    await deleteRitualDeck(deckId);
+    const rows = await getRecentRitualDecks(8);
+    setRecentRitualDecks(rows);
+    if (ritualDeck?.id === deckId) setRitualDeck(rows[0] ?? null);
   };
 
   const importArtifact = async (file?: File) => {
@@ -530,11 +589,20 @@ export default function AssistantPage() {
             summary={ritualDeckSummary}
             onBuildRecentDeck={buildRecentDeck}
             onBuildSelectedDeck={buildSelectedDeck}
+            onBuildFilteredDeck={buildFilteredDeck}
             onExportDeckJson={exportDeckJson}
             onExportDeckMarkdown={exportDeckMarkdown}
             onExportCard={exportRitualCard}
+            onImportDeck={importRitualDeck}
+            onSelectDeck={selectRitualDeck}
+            onDeleteDeck={removeRitualDeck}
+            filterOptions={ritualDeckFilterOptions}
+            filters={ritualDeckFilters}
+            onFiltersChange={setRitualDeckFilters}
+            recentDecks={recentRitualDecks}
             disabled={!oracleArtifacts.length}
           />
+          {ritualDeckImportError ? <p className="text-xs text-red-400">{ritualDeckImportError}</p> : null}
           <div className="max-h-[500px] overflow-auto space-y-2">
             {messages.map((m, i) => <div key={i} className="rounded border border-zinc-700 p-2 text-sm"><b>{m.role}</b><pre className="whitespace-pre-wrap">{m.content}</pre>{m.sources?.length ? <p className="text-xs text-zinc-400">Sources: {m.sources.join(', ')}</p> : null}</div>)}
           </div>

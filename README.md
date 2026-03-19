@@ -228,3 +228,10 @@ MIT (existing LICENSE preserved).
 - Added local-only export helpers for ritual card/deck JSON plus compact deck markdown summaries with explicit modeled/theoretical footer language.
 - Added lightweight Assistant ritual deck panel for creating a recent or selected deck and exporting deck/card artifacts.
 - This phase remains additive/local-first: no cloud sync/sharing, no new scoring math, and no hardware/physical measurement claims.
+
+## TIEKAT Phase 16 (Ritual Deck Memory + Round-Trip)
+- Added optional memory-gated local ritual deck persistence (`ritualDecks` IndexedDB store) with deterministic normalization and recent list/delete helpers.
+- Added compact deck-build filters (mode, scoring version, time window) with deterministic artifact filtering and filtered deck generation.
+- Added ritual deck JSON import validation + normalization for local round-trip reuse, with unsupported-version rejection.
+- Deck import/build remains local-only and summary-level; no raw transcript persistence paths were added.
+- Assistant ritual deck panel now includes filter controls, local recent-deck replay shortcuts, import, and delete actions while preserving modeled/theoretical footer language.
