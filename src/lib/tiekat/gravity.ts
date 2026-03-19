@@ -6,6 +6,7 @@ import {
   TiekatSessionState,
   TiekatVerificationResult
 } from '@/lib/tiekat/schema';
+import { TIEKAT_GRAVITY_SCORING_VERSION } from '@/lib/tiekat/gravityVersioning';
 
 const FOUR_PI_G = 4 * Math.PI * 6.6743e-11;
 
@@ -80,6 +81,7 @@ export function computeGravityBootstrap(args: {
   envelope: TiekatContextEnvelope;
   verification: TiekatVerificationResult;
   config?: Partial<TiekatGravityBootstrapConfig>;
+  includeDiagnostics?: boolean;
 }): TiekatGravityBootstrapResult {
   const config = { ...defaultGravityBootstrapConfig, ...args.config };
 
@@ -97,7 +99,8 @@ export function computeGravityBootstrap(args: {
       sourceMode: 'modeled_internal_signal',
       contributingAnchors: [],
       contributingModules: args.session.activeModules,
-      modelVersion: 'gravity-bootstrap-v1'
+      modelVersion: 'gravity-bootstrap-v1',
+      scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION
     };
   }
 
@@ -108,6 +111,32 @@ export function computeGravityBootstrap(args: {
   const deltaG = Number((FOUR_PI_G * config.lambdaI * informationIntegral).toExponential(6));
   const bandWidth = Math.max(Math.abs(deltaG) * 0.15, 1e-14);
   const classicalLimitReached = informationIntegral === 0;
+
+  const diagnostics = args.includeDiagnostics
+    ? {
+        enabled: true,
+        scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION,
+        features: {
+          anchorStrength: state.anchorStrength,
+          moduleDiversity: state.moduleDiversity,
+          coherenceFactor: state.coherenceFactor,
+          memoryContinuity: state.memoryContinuity,
+          redactionPenalty: state.redactionPenalty,
+          contradictionPenalty: state.contradictionPenalty,
+          symbolicMarkerBoost: state.markerBoost
+        },
+        weights: WEIGHTS,
+        intermediate: {
+          informationIntegral,
+          classicalLimitReached
+        },
+        notes: [
+          'Deterministic internal scoring; no hardware sensor input.',
+          'Redaction and contradiction signals reduce modeled information integral.',
+          'Modeled symbolic layer only; not a physical gravity claim.'
+        ]
+      }
+    : undefined;
 
   return {
     status: config.status,
@@ -125,6 +154,8 @@ export function computeGravityBootstrap(args: {
     sourceMode: 'modeled_internal_signal',
     contributingAnchors: args.envelope.symbolicAnchors.slice(0, 10),
     contributingModules: args.session.activeModules,
-    modelVersion: 'gravity-bootstrap-v1'
+    modelVersion: 'gravity-bootstrap-v1',
+    scoringVersion: TIEKAT_GRAVITY_SCORING_VERSION,
+    diagnostics
   };
 }

@@ -33,11 +33,13 @@ describe('tiekat memory stateless mode', () => {
         sourceMode: 'modeled_internal_signal',
         contributingAnchors: ['tarot'],
         contributingModules: ['assistant', 'tarot'],
-        modelVersion: 'gravity-bootstrap-v1'
+        modelVersion: 'gravity-bootstrap-v1',
+        scoringVersion: 'v1'
       }
     );
 
     expect(entry.gravitySummary?.deltaGPredicted).toBe(1.23e-10);
     expect(entry.gravitySummary?.status).toBe('theoretical');
+    expect(entry.gravitySummary?.scoringVersion).toBe('v1');
   });
 });

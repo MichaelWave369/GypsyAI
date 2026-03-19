@@ -38,7 +38,8 @@ export function createTiekatMemoryEntry(
           deltaGPredicted: gravity.deltaGPredicted,
           informationIntegral: gravity.informationIntegral,
           contributingModules: gravity.contributingModules,
-          status: gravity.status
+          status: gravity.status,
+          scoringVersion: gravity.scoringVersion
         }
       : undefined
   };

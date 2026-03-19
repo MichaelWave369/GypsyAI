@@ -23,6 +23,34 @@ export interface TiekatGravityBootstrapState {
   markerBoost: number;
 }
 
+export interface TiekatGravityDiagnostics {
+  enabled: boolean;
+  scoringVersion: string;
+  features: {
+    anchorStrength: number;
+    moduleDiversity: number;
+    coherenceFactor: number;
+    memoryContinuity: number;
+    redactionPenalty: number;
+    contradictionPenalty: number;
+    symbolicMarkerBoost: number;
+  };
+  weights: {
+    anchorStrength: number;
+    moduleDiversity: number;
+    coherenceFactor: number;
+    memoryContinuity: number;
+    markerBoost: number;
+    redactionPenalty: number;
+    contradictionPenalty: number;
+  };
+  intermediate: {
+    informationIntegral: number;
+    classicalLimitReached: boolean;
+  };
+  notes: string[];
+}
+
 export interface TiekatGravityBootstrapResult {
   status: TiekatGravityBootstrapStatus;
   enabled: boolean;
@@ -37,6 +65,24 @@ export interface TiekatGravityBootstrapResult {
   contributingAnchors: string[];
   contributingModules: TiekatModuleKey[];
   modelVersion: 'gravity-bootstrap-v1';
+  scoringVersion: string;
+  diagnostics?: TiekatGravityDiagnostics;
+}
+
+export interface TiekatGravityHistoryEntry {
+  id: string;
+  sessionId: string;
+  timestamp: string;
+  status: TiekatGravityBootstrapStatus;
+  scoringVersion: string;
+  informationIntegral: number;
+  deltaGPredicted: number;
+  deltaGBand: { min: number; max: number };
+  contributingModules: TiekatModuleKey[];
+  route: string;
+  mode: TiekatReflectionMode;
+  sourceMode: 'modeled_internal_signal';
+  rowVersion: 1;
 }
 
 export interface TiekatConsentState {
@@ -65,6 +111,7 @@ export interface TiekatMemoryEntry {
     informationIntegral: number;
     contributingModules: TiekatModuleKey[];
     status: TiekatGravityBootstrapStatus;
+    scoringVersion: string;
   };
 }
 

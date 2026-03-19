@@ -35,6 +35,7 @@ const tiekatSchema = z
         ancestry: z.any().optional()
       })
       .optional(),
+    gravityDiagnostics: z.boolean().optional(),
     memoryEntries: z
       .array(
         z.object({
@@ -48,7 +49,8 @@ const tiekatSchema = z
               deltaGPredicted: z.number(),
               informationIntegral: z.number(),
               contributingModules: z.array(z.enum(['assistant', 'tarot', 'astrology', 'genekeys', 'ancestry'])),
-              status: z.enum(['disabled', 'theoretical', 'simulated'])
+              status: z.enum(['disabled', 'theoretical', 'simulated']),
+              scoringVersion: z.string().optional()
             })
             .optional()
         })
@@ -95,7 +97,7 @@ export async function POST(req: NextRequest) {
   if (isTestMode() || demoMode) {
     const content = `Demo assistant (${intent}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`;
     const verification = verifyTiekatOutput(content, tiekatPlan, consent);
-    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
+    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification, includeDiagnostics: Boolean(tiekat?.gravityDiagnostics) });
     return NextResponse.json({
       content,
       intent,
@@ -132,7 +134,7 @@ export async function POST(req: NextRequest) {
     }
     const content = await callModel({ provider, model, prompt: `Conversational mode. Be warm and practical.\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}`, temperature: 0.2 });
     const verification = verifyTiekatOutput(content, tiekatPlan, consent);
-    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
+    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification, includeDiagnostics: Boolean(tiekat?.gravityDiagnostics) });
     return NextResponse.json({
       content,
       intent,
@@ -171,7 +173,7 @@ export async function POST(req: NextRequest) {
   }
 
   const verification = verifyTiekatOutput(reading, tiekatPlan, consent);
-  const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
+  const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification, includeDiagnostics: Boolean(tiekat?.gravityDiagnostics) });
   return NextResponse.json({
     content: reading,
     intent,

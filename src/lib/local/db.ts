@@ -1,9 +1,10 @@
 import { AncestryData } from '@/lib/ancestry/types';
 import { AssistantSession } from '@/lib/assistant/storage';
+import { TiekatGravityHistoryEntry } from '@/lib/tiekat/schema';
 import { BirthProfile, GeneKeysSession, TarotSession } from '@/lib/local/storage';
 
 export const DB_NAME = 'gypsy-ai-local';
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
 type StoreMap = {
   profiles: BirthProfile[];
@@ -12,6 +13,7 @@ type StoreMap = {
   geneKeysSessions: GeneKeysSession[];
   ancestry: AncestryData | null;
   assistantChats: AssistantSession[];
+  gravityHistory: TiekatGravityHistoryEntry[];
   meta: { schemaVersion: number; appVersion: string; updatedAt: string };
 };
 
@@ -22,6 +24,7 @@ const stores: Array<keyof StoreMap> = [
   'geneKeysSessions',
   'ancestry',
   'assistantChats',
+  'gravityHistory',
   'meta'
 ];
 

@@ -124,3 +124,11 @@ MIT (existing LICENSE preserved).
 - Important safety/provenance: this does **not** measure physical gravity, does not read hardware sensors, and must not be interpreted as a real-world gravity reading.
 - Inputs are drawn from existing TIEKAT state (anchors, module diversity, coherence, memory continuity, redaction/issue penalties) with transparent deterministic weights.
 - Outputs include explicit model labeling (`status`, `sourceMode`, `confidenceNote`) for traceability and future comparison with potential experimental validation work.
+
+## TIEKAT Phase 3 (Transparency, Migration, Longitudinal Memory)
+- Gravity Bootstrap now supports **optional diagnostics mode** (default OFF) so normal responses stay compact while debug requests can include deterministic feature/weight/intermediate breakdowns.
+- Gravity scoring now includes explicit **`scoringVersion` metadata** and migration normalization helpers for future compatibility across stored rows.
+- Compact gravity history is now persisted in local IndexedDB (`gravityHistory`) when memory is enabled, making backup/restore-compatible longitudinal comparison possible.
+- History utilities support local-only trend summaries and grouping by scoring version for lightweight diagnostics UI surfaces.
+- Privacy/consent guarantees remain enforced: no raw private ancestry/name payloads are stored in diagnostics/history, and memory-disabled mode prevents history persistence.
+- This remains a **theoretical modeled layer only** and does not measure physical gravity or use hardware sensors.
