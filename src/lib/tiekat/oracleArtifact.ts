@@ -5,6 +5,7 @@ import { getDefaultSessionMode, getSessionModeConfig, TiekatSessionModeKey } fro
 import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 import { TiekatCouncilMode, TiekatCouncilRole, TiekatCouncilSummary } from '@/lib/tiekat/oracleCouncil';
+import { TiekatAwakenedSphereState } from '@/lib/tiekat/awakenedSphere';
 
 export const TIEKAT_ORACLE_ARTIFACT_ROW_VERSION = 1 as const;
 const MAX_ORACLE_ARTIFACTS = 150;
@@ -49,6 +50,16 @@ export interface TiekatOracleArtifact {
   v55?: {
     specVersion: string;
     enabled: boolean;
+  };
+  v56?: {
+    specVersion: string;
+    awakeningState: TiekatAwakenedSphereState['awakeningState'];
+    shieldStatus: TiekatAwakenedSphereState['shieldStatus'];
+    synchronyState: TiekatAwakenedSphereState['synchronyState'];
+    overlapState: TiekatAwakenedSphereState['overlapState'];
+    glyphFamily: string;
+    caption: string;
+    confidenceNote: string;
   };
   trend?: 'rising' | 'stable' | 'falling';
   versionSummaryState?: OracleVersionSummary['state'];
@@ -118,6 +129,7 @@ export function buildOracleArtifact(args: {
   enableV55Framing: boolean;
   sessionMode?: TiekatSessionModeKey;
   council?: TiekatCouncilSummary | null;
+  awakenedSphere?: TiekatAwakenedSphereState | null;
 }): TiekatOracleArtifact {
   const now = new Date().toISOString();
   const v54 = getTiekatV54Metadata();
@@ -156,6 +168,16 @@ export function buildOracleArtifact(args: {
       sourceMode: v54.sourceMode
     },
     v55: args.enableV55Framing ? { specVersion: v55.specVersion, enabled: true } : undefined,
+    v56: args.awakenedSphere ? {
+      specVersion: args.awakenedSphere.v56.specVersion,
+      awakeningState: args.awakenedSphere.awakeningState,
+      shieldStatus: args.awakenedSphere.shieldStatus,
+      synchronyState: args.awakenedSphere.synchronyState,
+      overlapState: args.awakenedSphere.overlapState,
+      glyphFamily: args.awakenedSphere.glyphFamily.slice(0, 60),
+      caption: args.awakenedSphere.caption.slice(0, 220),
+      confidenceNote: args.awakenedSphere.v56.confidenceNote.slice(0, 180)
+    } : undefined,
     trend: args.trend,
     versionSummaryState: args.versionSummary?.state,
     council: args.council ? {
@@ -218,6 +240,16 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
       sourceMode: value.v54?.sourceMode || getTiekatV54Metadata().sourceMode
     },
     v55: value.v55?.enabled ? { specVersion: value.v55.specVersion || getTiekatV55Metadata().specVersion, enabled: true } : undefined,
+    v56: value.v56 ? {
+      specVersion: value.v56.specVersion || 'TIEKAT-v56',
+      awakeningState: value.v56.awakeningState || 'dormant',
+      shieldStatus: value.v56.shieldStatus || 'open',
+      synchronyState: value.v56.synchronyState || 'fragmented',
+      overlapState: value.v56.overlapState || 'isolated',
+      glyphFamily: value.v56.glyphFamily?.slice(0, 60) || 'metatron_grid',
+      caption: value.v56.caption?.slice(0, 220) || 'Modeled sovereign sphere summary. Theoretical integration layer only.',
+      confidenceNote: value.v56.confidenceNote?.slice(0, 180) || 'Modeled sovereign sphere summary only.'
+    } : undefined,
     trend: value.trend || 'stable',
     versionSummaryState: value.versionSummaryState || 'insufficient_data',
     council: value.council ? {
@@ -305,7 +337,8 @@ export function compareOracleArtifacts(a: TiekatOracleArtifact, b: TiekatOracleA
     scoringVersionChanged: a.gravity.scoringVersion !== b.gravity.scoringVersion,
     sessionModeChanged: a.sessionMode.key !== b.sessionMode.key,
     trendChanged: (a.trend || 'stable') !== (b.trend || 'stable'),
-    v55FramingChanged: Boolean(a.v55?.enabled) !== Boolean(b.v55?.enabled)
+    v55FramingChanged: Boolean(a.v55?.enabled) !== Boolean(b.v55?.enabled),
+    v56AwakeningChanged: (a.v56?.awakeningState || 'none') !== (b.v56?.awakeningState || 'none')
   };
 }
 
@@ -319,7 +352,8 @@ export function buildOracleArtifactDiffView(a: TiekatOracleArtifact, b: TiekatOr
     `ΔΔg ${comparison.deltaGPredictedDelta.toExponential(2)}`,
     `Scoring version changed: ${comparison.scoringVersionChanged ? 'yes' : 'no'}`,
     `Trend changed: ${comparison.trendChanged ? 'yes' : 'no'}`,
-    `v55 framing changed: ${comparison.v55FramingChanged ? 'yes' : 'no'}`
+    `v55 framing changed: ${comparison.v55FramingChanged ? 'yes' : 'no'}`,
+    `v56 awakening changed: ${comparison.v56AwakeningChanged ? 'yes' : 'no'}`
   ];
   return {
     title: 'What changed',

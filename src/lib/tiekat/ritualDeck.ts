@@ -37,6 +37,12 @@ export interface TiekatRitualCard {
     sourceMode: string;
   };
   v55FramingEnabled: boolean;
+  v56?: {
+    awakeningState: string;
+    shieldStatus: string;
+    glyphFamily: string;
+    sphereCaption: string;
+  };
   footer: string;
   exportVersion: TiekatRitualDeckExportVersion;
 }
@@ -112,6 +118,12 @@ function normalizeRitualCard(value: Partial<TiekatRitualCard>): TiekatRitualCard
       sourceMode: value.v54?.sourceMode || 'modeled'
     },
     v55FramingEnabled: Boolean(value.v55FramingEnabled),
+    v56: value.v56 ? {
+      awakeningState: value.v56.awakeningState || 'dormant',
+      shieldStatus: value.v56.shieldStatus || 'open',
+      glyphFamily: value.v56.glyphFamily || 'metatron_grid',
+      sphereCaption: value.v56.sphereCaption || 'Modeled sovereign sphere summary. Theoretical integration layer only.'
+    } : undefined,
     footer: value.footer || RITUAL_EXPORT_FOOTER,
     exportVersion: 'TIEKAT-ritual-deck-v1'
   };
@@ -191,6 +203,12 @@ export function buildRitualCardFromArtifact(artifact: TiekatOracleArtifact): Tie
       sourceMode: normalized.v54.sourceMode
     },
     v55FramingEnabled: Boolean(normalized.v55?.enabled),
+    v56: normalized.v56 ? {
+      awakeningState: normalized.v56.awakeningState,
+      shieldStatus: normalized.v56.shieldStatus,
+      glyphFamily: normalized.v56.glyphFamily,
+      sphereCaption: normalized.v56.caption
+    } : undefined,
     footer: RITUAL_EXPORT_FOOTER,
     exportVersion: 'TIEKAT-ritual-deck-v1'
   };

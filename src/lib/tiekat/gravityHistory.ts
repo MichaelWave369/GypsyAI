@@ -88,7 +88,17 @@ export function compareGravityVersions(history: TiekatGravityHistoryEntry[]) {
   }));
 }
 
-export function summarizeGravityVersionDrift(history: TiekatGravityHistoryEntry[]) {
+type GravityVersionDriftSummary =
+  | { comparable: false; message: string }
+  | {
+    comparable: true;
+    from: string;
+    to: string;
+    informationIntegralDrift: number;
+    deltaGDrift: number;
+  };
+
+export function summarizeGravityVersionDrift(history: TiekatGravityHistoryEntry[]): GravityVersionDriftSummary {
   const byVersion = compareGravityVersions(history);
   if (byVersion.length < 2) return { comparable: false, message: 'Only one scoring version present.' };
   const sorted = [...byVersion].sort((a, b) => a.version.localeCompare(b.version));
@@ -138,8 +148,8 @@ export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry
     };
   }
 
-  const drift = summarizeGravityVersionDrift(history);
-  if (!drift.comparable) {
+  const rawDrift = summarizeGravityVersionDrift(history);
+  if (!rawDrift.comparable) {
     return {
       state: 'mixed_versions' as GravityComparisonState,
       currentScoringVersion,
@@ -148,16 +158,19 @@ export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry
     };
   }
 
-  const driftDetected = Math.abs(drift.informationIntegralDrift) > 0 || Math.abs(drift.deltaGDrift) > 0;
+  const normalizedDrift = rawDrift.comparable
+    ? {
+      from: rawDrift.from,
+      to: rawDrift.to,
+      informationIntegralDrift: rawDrift.informationIntegralDrift,
+      deltaGDrift: rawDrift.deltaGDrift
+    }
+    : null;
+  const driftDetected = normalizedDrift ? (Math.abs(normalizedDrift.informationIntegralDrift) > 0 || Math.abs(normalizedDrift.deltaGDrift) > 0) : false;
   return {
     state: (driftDetected ? 'drift_detected' : 'mixed_versions') as GravityComparisonState,
     currentScoringVersion,
     versionCount,
-    drift: {
-      from: drift.from,
-      to: drift.to,
-      informationIntegralDrift: drift.informationIntegralDrift,
-      deltaGDrift: drift.deltaGDrift
-    }
+    drift: normalizedDrift
   };
 }

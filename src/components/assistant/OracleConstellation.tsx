@@ -14,14 +14,17 @@ export function OracleConstellation({ state }: { state: TiekatConstellationState
           return <line key={`${edge.from}-${edge.to}`} x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke="currentColor" strokeDasharray={dash} strokeOpacity="0.6" />;
         })}
         {state.nodes.map((node) => (
-          <circle
-            key={node.id}
-            cx={node.x}
-            cy={node.y}
-            r={node.intensityBucket === 'high' ? 3.5 : node.intensityBucket === 'medium' ? 2.8 : 2.2}
-            fill="currentColor"
-            fillOpacity={node.v55 ? 0.9 : 0.65}
-          />
+          <g key={node.id}>
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r={node.intensityBucket === 'high' ? 3.5 : node.intensityBucket === 'medium' ? 2.8 : 2.2}
+              fill="currentColor"
+              fillOpacity={node.v55 ? 0.9 : 0.65}
+            >
+              {node.v56AwakeningState ? <title>{`v56 ${node.v56AwakeningState} (${node.v56GlyphFamily || 'glyph'})`}</title> : null}
+            </circle>
+          </g>
         ))}
       </svg>
       <figcaption>{state.caption}</figcaption>

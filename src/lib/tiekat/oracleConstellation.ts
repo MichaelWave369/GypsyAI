@@ -8,12 +8,14 @@ export interface TiekatConstellationNode {
   intensityBucket: 'low' | 'medium' | 'high';
   scoringVersion: string;
   v55: boolean;
+  v56AwakeningState?: string;
+  v56GlyphFamily?: string;
 }
 
 export interface TiekatConstellationEdge {
   from: string;
   to: string;
-  type: 'continuity' | 'mode_shift' | 'version_shift' | 'gravity_delta';
+  type: 'continuity' | 'mode_shift' | 'version_shift' | 'gravity_delta' | 'sphere_shift';
 }
 
 export interface TiekatConstellationState {
@@ -32,6 +34,11 @@ export interface TiekatConstellationFilterOptions {
   modes: string[];
   scoringVersions: string[];
   shiftTypes: TiekatConstellationEdge['type'][];
+}
+
+export interface SphereContinuitySummary {
+  state: 'insufficient_sphere_history' | 'stable_sphere_continuity' | 'awakening_shift_detected' | 'shield_shift_detected' | 'synchrony_shift_detected';
+  line: string;
 }
 
 export interface TiekatConstellationInput {
@@ -55,7 +62,9 @@ export function buildConstellationNodes(artifacts: TiekatOracleArtifact[]): Tiek
     mode: artifact.sessionMode.key,
     intensityBucket: bucketIntensity(artifact.gravity.informationIntegral),
     scoringVersion: artifact.gravity.scoringVersion,
-    v55: Boolean(artifact.v55?.enabled)
+    v55: Boolean(artifact.v55?.enabled),
+    v56AwakeningState: artifact.v56?.awakeningState,
+    v56GlyphFamily: artifact.v56?.glyphFamily
   }));
 }
 
@@ -67,6 +76,7 @@ export function buildConstellationEdges(artifacts: TiekatOracleArtifact[]): Tiek
     let type: TiekatConstellationEdge['type'] = 'continuity';
     if (prev.sessionMode.key !== curr.sessionMode.key) type = 'mode_shift';
     else if (prev.gravity.scoringVersion !== curr.gravity.scoringVersion) type = 'version_shift';
+    else if ((prev.v56?.awakeningState || 'none') !== (curr.v56?.awakeningState || 'none')) type = 'sphere_shift';
     else if (Math.abs(curr.gravity.informationIntegral - prev.gravity.informationIntegral) > 0.08) type = 'gravity_delta';
     edges.push({ from: prev.id, to: curr.id, type });
   }
@@ -76,9 +86,49 @@ export function buildConstellationEdges(artifacts: TiekatOracleArtifact[]): Tiek
 export function formatConstellationCaption(state: Pick<TiekatConstellationState, 'nodes' | 'edges'>) {
   const modeShift = state.edges.some((edge) => edge.type === 'mode_shift');
   const versionShift = state.edges.some((edge) => edge.type === 'version_shift');
+  const sphereShift = state.edges.some((edge) => edge.type === 'sphere_shift');
   if (modeShift) return `Recent modeled oracle constellation shows a session-mode shift across ${state.nodes.length} local artifacts.`;
   if (versionShift) return `Recent modeled oracle constellation shows mixed scoring-version continuity across ${state.nodes.length} local artifacts.`;
+  if (sphereShift) return `Recent modeled oracle constellation shows a v56 sphere-state shift across ${state.nodes.length} local artifacts.`;
   return `Recent modeled oracle continuity appears stable across ${state.nodes.length} local artifacts.`;
+}
+
+export function buildSphereContinuitySummary(artifacts: TiekatOracleArtifact[]): SphereContinuitySummary {
+  const rows = [...artifacts]
+    .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+    .map((artifact) => artifact.v56)
+    .filter((v56): v56 is NonNullable<TiekatOracleArtifact['v56']> => Boolean(v56))
+    .slice(-6);
+  if (rows.length < 2) {
+    return {
+      state: 'insufficient_sphere_history',
+      line: 'Insufficient modeled sphere history for continuity summary.'
+    };
+  }
+  const first = rows[0];
+  const last = rows[rows.length - 1];
+  if (first.awakeningState !== last.awakeningState) {
+    return {
+      state: 'awakening_shift_detected',
+      line: `Modeled sovereign sphere continuity indicates awakening shift ${first.awakeningState} → ${last.awakeningState}.`
+    };
+  }
+  if (first.shieldStatus !== last.shieldStatus) {
+    return {
+      state: 'shield_shift_detected',
+      line: `Modeled sovereign sphere continuity indicates shield shift ${first.shieldStatus} → ${last.shieldStatus}.`
+    };
+  }
+  if (first.synchronyState !== last.synchronyState) {
+    return {
+      state: 'synchrony_shift_detected',
+      line: `Modeled sovereign sphere continuity indicates synchrony shift ${first.synchronyState} → ${last.synchronyState}.`
+    };
+  }
+  return {
+    state: 'stable_sphere_continuity',
+    line: 'Modeled sovereign sphere continuity appears stable across recent local artifacts.'
+  };
 }
 
 export function buildOracleConstellationState(input: TiekatConstellationInput): TiekatConstellationState {

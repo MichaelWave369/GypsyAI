@@ -54,7 +54,19 @@ function mk(id: string, ts: string, mode = 'open_reflection', scoring = 'v54-gb-
       includeNames: false,
       allowAncestry: false,
       hideLivingPersons: true
-    }
+    },
+    v56: id === 'c'
+      ? {
+        specVersion: 'TIEKAT-v56',
+        awakeningState: 'awakened',
+        shieldStatus: 'reinforced',
+        synchronyState: 'aligned',
+        overlapState: 'merged',
+        glyphFamily: 'lattice_bloom',
+        caption: 'Modeled sovereign sphere summary. Theoretical integration layer only.',
+        confidenceNote: 'Modeled sovereign sphere summary only.'
+      }
+      : undefined
   });
 }
 
@@ -75,6 +87,17 @@ describe('tiekat ritual deck round-trip + persistence', () => {
     expect(card.responseSummary).toBe('response summary');
     expect(card.footer).toContain('not a physical measurement');
     expect((card as any).prompt).toBeUndefined();
+  });
+
+  it('carries compact v56 summary fields in ritual cards/deck exports when present', () => {
+    const card = buildRitualCardFromArtifact(artifacts[2]);
+    expect(card.v56?.awakeningState).toBe('awakened');
+    expect(card.v56?.glyphFamily).toBe('lattice_bloom');
+
+    const deck = buildRitualDeck({ title: 'Deck with Sphere', source: 'selected', artifacts });
+    const exported = exportRitualDeckJson(deck);
+    expect(exported).toContain('"v56"');
+    expect(exported).toContain('"awakeningState": "awakened"');
   });
 
   it('filters artifacts by mode/version/window and builds filtered deck', () => {

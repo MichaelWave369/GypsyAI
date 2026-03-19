@@ -70,6 +70,28 @@ describe('tiekat oracle artifact', () => {
     expect(artifact.version.artifactSpecVersion).toBe('TIEKAT-oracle-artifact-v2');
   });
 
+  it('normalizes v56 summary defaults for legacy artifacts and keeps compact shape', () => {
+    const withoutV56 = normalizeOracleArtifact({ id: 'legacy-v56', sessionId: 's1' } as any);
+    expect(withoutV56.v56).toBeUndefined();
+
+    const withV56 = normalizeOracleArtifact({
+      id: 'with-v56',
+      sessionId: 's1',
+      v56: {
+        specVersion: 'TIEKAT-v56',
+        awakeningState: 'awakened',
+        shieldStatus: 'reinforced',
+        synchronyState: 'aligned',
+        overlapState: 'merged',
+        glyphFamily: 'lattice_bloom',
+        caption: 'Modeled sovereign sphere summary. Theoretical integration layer only.',
+        confidenceNote: 'Modeled sovereign sphere summary only.'
+      }
+    } as any);
+    expect(withV56.v56?.awakeningState).toBe('awakened');
+    expect(withV56.v56?.caption.toLowerCase()).toContain('theoretical');
+  });
+
   it('builds compact summary fields and keeps payload privacy-safe', () => {
     const summary = buildOracleArtifactSummary({
       prompt: 'Please include ancestor name and private family tree details',
@@ -139,5 +161,45 @@ describe('tiekat oracle artifact', () => {
     expect(imported.id).toBe('b');
     expect(imported.sessionMode.key).toBe('open_reflection');
     expect(() => importOracleArtifactJson('{"summary":"bad"}')).toThrowError();
+  });
+
+  it('builds deterministic v56 summary from awakened sphere state without private trace leakage', () => {
+    const input = {
+      sessionId: 's1',
+      route: 'assistant_synthesis',
+      mode: 'assistant_synthesis' as const,
+      activeModules: ['assistant'] as const,
+      prompt: 'Check sovereign sphere continuity for [name]',
+      response: 'Modeled answer',
+      gravity: gravity as any,
+      consent: { memoryEnabled: true, includeNames: false, allowAncestry: false, hideLivingPersons: true },
+      enableV55Framing: true,
+      awakenedSphere: {
+        awakeningState: 'coherent',
+        shieldStatus: 'stable',
+        synchronyState: 'resonant',
+        overlapState: 'bridged',
+        glyphFamily: 'metatron_grid',
+        caption: 'Modeled sovereign sphere summary. Theoretical integration layer only.',
+        trace: {
+          awakeningReason: 'private lineage raw value',
+          shieldReason: 'private lineage raw value',
+          synchronyReason: 'private lineage raw value',
+          overlapReason: 'private lineage raw value'
+        },
+        v56: {
+          specVersion: 'TIEKAT-v56',
+          scoringVersion: 'v56-ss-v1',
+          confidenceNote: 'Modeled sovereign sphere summary only.',
+          canonicalHierarchy: { v54: '', v55: '', v56: '' },
+          disclaimers: []
+        }
+      } as any
+    };
+    const a = buildOracleArtifact(input);
+    const b = buildOracleArtifact(input);
+    expect(a.v56).toEqual(b.v56);
+    expect(a.v56?.caption.toLowerCase()).toContain('theoretical');
+    expect(JSON.stringify(a.v56)).not.toContain('private lineage');
   });
 });

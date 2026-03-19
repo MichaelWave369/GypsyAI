@@ -256,3 +256,10 @@ MIT (existing LICENSE preserved).
 - Added compact v56 sphere presentation card in Assistant UI with optional diagnostics trace details.
 - Kept v54/v55/v56 role distinction explicit: v54 operational runtime, v55 conceptual framing, v56 theoretical integration/presentation layer.
 - Sphere outputs remain explicitly modeled/theoretical and do not claim hardware measurement or physical confirmation.
+
+## TIEKAT Phase 20 (Sphere Artifact + Ritual Continuity Layer)
+- Oracle artifacts now support an additive compact `v56` summary block (awakening/shield/synchrony/overlap, glyph family, compact caption, confidence note) with normalization-safe defaults for legacy artifacts that have no v56 data.
+- Artifact build flow now includes v56 summaries only from already-derived awakened sphere state (no secondary hidden recomputation path).
+- Replay and ritual surfaces now show compact v56 continuity metadata when present, while keeping exports compact and local-only.
+- Constellation continuity now supports lightweight sphere-state awareness (`sphere_shift`) and a deterministic `buildSphereContinuitySummary(...)` helper for diagnostics-friendly continuity lines.
+- All phase additions remain additive, memory-gated, privacy-safe, and explicitly modeled/theoretical (no hardware/physical measurement claims, no raw private payload persistence).

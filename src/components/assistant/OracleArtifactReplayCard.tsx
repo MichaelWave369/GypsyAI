@@ -39,6 +39,13 @@ export function OracleArtifactReplayCard(props: {
       <p className="text-zinc-400">Prompt: {artifact.summary.promptSummary}</p>
       <p className="text-zinc-400">Response: {artifact.summary.responseSummary}</p>
       <p className="text-zinc-400">Trend {artifact.trend || 'stable'} • Version state {artifact.versionSummaryState || 'insufficient_data'} • v55 framing {artifact.v55?.enabled ? 'on' : 'off'}</p>
+      {artifact.v56 ? (
+        <>
+          <p className="text-zinc-400">v56 awakening {artifact.v56.awakeningState} • shield {artifact.v56.shieldStatus} • synchrony {artifact.v56.synchronyState} • overlap {artifact.v56.overlapState}</p>
+          <p className="text-zinc-400">Sphere glyph {artifact.v56.glyphFamily} • {artifact.v56.caption}</p>
+          <p className="text-zinc-500">Modeled sovereign sphere summary only.</p>
+        </>
+      ) : null}
       {artifact.council ? (
         <p className="text-zinc-400">
           Council {artifact.council.mode} • roles {artifact.council.roles.join(', ') || 'none'} • turns {artifact.council.turnCount} • disagreement {artifact.council.disagreement ? 'yes' : 'no'}

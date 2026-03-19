@@ -16,7 +16,17 @@ describe('session mode and artifact replay ui', () => {
       id: 'a1',
       sessionId: 's1',
       route: 'assistant_synthesis',
-      sessionMode: { key: 'synthesis_oracle', label: 'Synthesis Oracle', ritualFrame: 'frame', allowV55Framing: true }
+      sessionMode: { key: 'synthesis_oracle', label: 'Synthesis Oracle', ritualFrame: 'frame', allowV55Framing: true },
+      v56: {
+        specVersion: 'TIEKAT-v56',
+        awakeningState: 'coherent',
+        shieldStatus: 'stable',
+        synchronyState: 'resonant',
+        overlapState: 'bridged',
+        glyphFamily: 'metatron_grid',
+        caption: 'Modeled sovereign sphere summary. Theoretical integration layer only.',
+        confidenceNote: 'Modeled sovereign sphere summary only.'
+      }
     });
 
     const selectorHtml = renderToStaticMarkup(
@@ -60,6 +70,7 @@ describe('session mode and artifact replay ui', () => {
     expect(selectorHtml).toContain('Ritual Session Mode');
     expect(listHtml).toContain('Synthesis Oracle');
     expect(replayHtml).toContain('mode key: synthesis_oracle');
+    expect(replayHtml).toContain('v56 awakening coherent');
     expect(replayHtml).toContain('What changed');
     expect(presetsHtml).toContain('Open Reflection Prompts');
     expect(geometryHtml).toContain('Modeled field geometry');

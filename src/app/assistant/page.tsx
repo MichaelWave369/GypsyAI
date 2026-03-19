@@ -23,6 +23,7 @@ import {
 import { getPromptPresetGroup, markPresetUsed, orderPresetsByRecent } from '@/lib/tiekat/promptPresets';
 import {
   applyConstellationFilters,
+  buildSphereContinuitySummary,
   buildOracleConstellationState,
   getConstellationFilterOptions,
   loadConstellationFilters,
@@ -175,6 +176,7 @@ export default function AssistantPage() {
     () => buildCouncilContinuitySummary(oracleArtifacts.slice(0, 8).map((artifact) => artifact.council)),
     [oracleArtifacts]
   );
+  const sphereContinuity = useMemo(() => buildSphereContinuitySummary(oracleArtifacts.slice(0, 8)), [oracleArtifacts]);
   const awakenedSphereState = useMemo(() => {
     if (!latestGravity) return null;
     return buildAwakenedSphereState({
@@ -342,7 +344,8 @@ export default function AssistantPage() {
           },
           enableV55Framing: useV55Framing,
           sessionMode: resolvedMode,
-          council: data.tiekat?.council ?? null
+          council: data.tiekat?.council ?? null,
+          awakenedSphere: awakenedSphereState
         });
         await appendOracleArtifact({ enabled: true, artifact });
         const recentArtifacts = await getRecentOracleArtifacts(8);
@@ -622,6 +625,7 @@ export default function AssistantPage() {
                 }}
               />
               {filteredConstellationState?.nodes.length ? <OracleConstellation state={filteredConstellationState} /> : <p className="text-xs text-zinc-500">No recent artifacts match the current filter.</p>}
+              <p className="pt-2 text-xs text-zinc-500">{sphereContinuity.line} Theoretical integration layer only.</p>
             </div>
           ) : null}
           <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-400" data-testid="council-continuity-diagnostics">
