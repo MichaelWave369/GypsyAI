@@ -33,6 +33,14 @@ function inferMode(moduleCount: number): TiekatReflectionMode {
   return 'blended';
 }
 
+function hasStringAnchors(value: unknown): value is { anchors: string[] } {
+  return typeof value === 'object'
+    && value !== null
+    && 'anchors' in value
+    && Array.isArray((value as { anchors?: unknown }).anchors)
+    && (value as { anchors: unknown[] }).anchors.every((anchor) => typeof anchor === 'string');
+}
+
 export function buildTiekatContextEnvelope(args: BuildTiekatContextArgs): TiekatContextEnvelope {
   const moduleData = args.moduleData ?? {};
   const moduleContext: TiekatContextEnvelope['moduleContext'] = {
@@ -50,7 +58,7 @@ export function buildTiekatContextEnvelope(args: BuildTiekatContextArgs): Tiekat
 
   const memoryContext = args.consent.memoryEnabled ? selectRelevantMemory(args.memoryEntries ?? [], args.message) : [];
   const symbolicAnchors = [
-    ...(moduleContext.tarot && 'anchors' in moduleContext.tarot ? (moduleContext.tarot.anchors as string[]) : []),
+    ...(hasStringAnchors(moduleContext.tarot) ? moduleContext.tarot.anchors : []),
     ...memoryContext.flatMap((entry) => entry.anchors)
   ].slice(0, 12);
 
