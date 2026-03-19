@@ -2,6 +2,43 @@ export type TiekatModuleKey = 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 
 
 export type TiekatReflectionMode = 'single_module' | 'blended' | 'assistant_synthesis';
 
+export type TiekatGravityBootstrapStatus = 'disabled' | 'theoretical' | 'simulated';
+
+export interface TiekatGravityBootstrapConfig {
+  enabled: boolean;
+  status: TiekatGravityBootstrapStatus;
+  lambdaI: number;
+  baselineMatterDensity: number;
+  sourceMode: 'modeled_internal_signal';
+}
+
+export interface TiekatGravityBootstrapState {
+  informationIntegral: number;
+  anchorStrength: number;
+  moduleDiversity: number;
+  coherenceFactor: number;
+  memoryContinuity: number;
+  redactionPenalty: number;
+  contradictionPenalty: number;
+  markerBoost: number;
+}
+
+export interface TiekatGravityBootstrapResult {
+  status: TiekatGravityBootstrapStatus;
+  enabled: boolean;
+  lambdaI: number;
+  baselineMatterDensity: number;
+  informationIntegral: number;
+  deltaGPredicted: number;
+  deltaGBand: { min: number; max: number };
+  classicalLimitReached: boolean;
+  confidenceNote: string;
+  sourceMode: 'modeled_internal_signal';
+  contributingAnchors: string[];
+  contributingModules: TiekatModuleKey[];
+  modelVersion: 'gravity-bootstrap-v1';
+}
+
 export interface TiekatConsentState {
   allowAncestry: boolean;
   includeNames: boolean;
@@ -23,6 +60,12 @@ export interface TiekatMemoryEntry {
   anchors: string[];
   modules: TiekatModuleKey[];
   updatedAt: string;
+  gravitySummary?: {
+    deltaGPredicted: number;
+    informationIntegral: number;
+    contributingModules: TiekatModuleKey[];
+    status: TiekatGravityBootstrapStatus;
+  };
 }
 
 export interface TiekatContextEnvelope {
@@ -40,6 +83,11 @@ export interface TiekatReflectionPlan {
   contextSummary: string;
   verificationRules: string[];
   memoryKeysUsed: string[];
+  gravityBootstrap: {
+    enabled: boolean;
+    status: TiekatGravityBootstrapStatus;
+    sourceMode: 'modeled_internal_signal';
+  };
 }
 
 export interface TiekatVerificationResult {

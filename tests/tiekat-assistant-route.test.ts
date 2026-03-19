@@ -24,6 +24,9 @@ describe('assistant route with tiekat', () => {
     expect(data.intent).toBe('CHAT');
     expect(data.tiekat.route).toBe('assistant_synthesis');
     expect(data.tiekat.verification.passed).toBe(true);
+    expect(data.tiekat.gravityBootstrap.status).toBe('theoretical');
+    expect(data.tiekat.gravityBootstrap.sourceMode).toBe('modeled_internal_signal');
+    expect(data.tiekat.gravityBootstrap.confidenceNote).toContain('not a physical sensor measurement');
 
     vi.unstubAllEnvs();
   });

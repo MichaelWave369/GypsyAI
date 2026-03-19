@@ -7,7 +7,8 @@ describe('tiekat verification', () => {
     modulesToConsult: ['assistant', 'tarot'] as const,
     contextSummary: 'summary',
     verificationRules: [],
-    memoryKeysUsed: []
+    memoryKeysUsed: [],
+    gravityBootstrap: { enabled: true, status: 'theoretical' as const, sourceMode: 'modeled_internal_signal' as const }
   };
 
   it('passes coherent in-scope output', () => {

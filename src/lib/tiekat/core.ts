@@ -79,7 +79,12 @@ export function buildTiekatReflectionPlan(session: TiekatSessionState, envelope:
     modulesToConsult,
     contextSummary: `Intent: ${session.userIntent}. Anchors: ${envelope.symbolicAnchors.join(', ') || 'none'}. Redactions: ${envelope.redactionApplied.join(', ') || 'none'}.`,
     verificationRules,
-    memoryKeysUsed: envelope.memoryContext.map((entry) => entry.key)
+    memoryKeysUsed: envelope.memoryContext.map((entry) => entry.key),
+    gravityBootstrap: {
+      enabled: true,
+      status: 'theoretical',
+      sourceMode: 'modeled_internal_signal'
+    }
   };
 }
 

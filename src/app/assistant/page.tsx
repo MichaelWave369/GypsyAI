@@ -15,6 +15,7 @@ export default function AssistantPage() {
   const [sessions, setSessions] = useState<AssistantSession[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [tiekatRoute, setTiekatRoute] = useState<string>('');
+  const [gravityBadge, setGravityBadge] = useState<string>('');
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -91,8 +92,12 @@ export default function AssistantPage() {
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
       setTiekatRoute(data.tiekat?.route ?? '');
+      if (data.tiekat?.gravityBootstrap) {
+        const gb = data.tiekat.gravityBootstrap;
+        setGravityBadge(`Gravity Bootstrap: ${gb.status} • Δg ${gb.deltaGPredicted.toExponential(2)}`);
+      } else setGravityBadge('');
       if (s.useSessionsInAssistant && data.tiekat?.verification?.passed) {
-        const entry = createTiekatMemoryEntry(sessionId, data.content, input.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8), data.tiekat?.verification?.usedModules ?? ['assistant']);
+        const entry = createTiekatMemoryEntry(sessionId, data.content, input.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8), data.tiekat?.verification?.usedModules ?? ['assistant'], data.tiekat?.gravityBootstrap);
         const nextMemory = [entry, ...memoryEntries].slice(0, 50);
         setMemoryEntries(nextMemory);
         saveTiekatMemory(nextMemory, true);
@@ -149,6 +154,7 @@ export default function AssistantPage() {
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
       {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
+      {gravityBadge ? <p className="text-xs text-zinc-400">{gravityBadge} (modeled/theoretical)</p> : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">
           <div className="flex gap-2"><button className="rounded border border-zinc-700 px-2" onClick={summarize}>Summarize session</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('md')}>Export MD</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('json')}>Export JSON</button></div>

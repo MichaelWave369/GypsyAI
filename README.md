@@ -117,3 +117,10 @@ MIT (existing LICENSE preserved).
   - no replacement of module engines
   - no remote memory service
   - no non-deterministic hidden classifier layer
+
+## TIEKAT Phase 2 (Gravity Bootstrap Oracle Layer)
+- TIEKAT now computes a **Gravity Bootstrap** internal signal for Assistant flows as a deterministic modeled/theoretical layer.
+- This layer follows a conceptual modified-Poisson framing and computes a predicted `deltaGPredicted` from symbolic/context signals, but remains an internal model variable.
+- Important safety/provenance: this does **not** measure physical gravity, does not read hardware sensors, and must not be interpreted as a real-world gravity reading.
+- Inputs are drawn from existing TIEKAT state (anchors, module diversity, coherence, memory continuity, redaction/issue penalties) with transparent deterministic weights.
+- Outputs include explicit model labeling (`status`, `sourceMode`, `confidenceNote`) for traceability and future comparison with potential experimental validation work.

@@ -1,4 +1,4 @@
-import { TiekatMemoryEntry } from '@/lib/tiekat/schema';
+import { TiekatGravityBootstrapResult, TiekatMemoryEntry } from '@/lib/tiekat/schema';
 
 const TIEKAT_MEMORY_KEY = 'gypsy-ai-tiekat-memory';
 
@@ -20,13 +20,27 @@ export function saveTiekatMemory(entries: TiekatMemoryEntry[], enabled: boolean)
   window.localStorage.setItem(TIEKAT_MEMORY_KEY, JSON.stringify(entries.slice(0, 50)));
 }
 
-export function createTiekatMemoryEntry(sessionId: string, summary: string, anchors: string[], modules: TiekatMemoryEntry['modules']): TiekatMemoryEntry {
+export function createTiekatMemoryEntry(
+  sessionId: string,
+  summary: string,
+  anchors: string[],
+  modules: TiekatMemoryEntry['modules'],
+  gravity?: TiekatGravityBootstrapResult
+): TiekatMemoryEntry {
   return {
     key: `${sessionId}:${anchors.join('|').slice(0, 48)}`,
     summary: summary.slice(0, 220),
     anchors: anchors.slice(0, 12),
     modules,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    gravitySummary: gravity
+      ? {
+          deltaGPredicted: gravity.deltaGPredicted,
+          informationIntegral: gravity.informationIntegral,
+          contributingModules: gravity.contributingModules,
+          status: gravity.status
+        }
+      : undefined
   };
 }
 

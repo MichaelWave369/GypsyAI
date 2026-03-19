@@ -14,6 +14,7 @@ import { sanitizeUserInput } from '@/lib/security/promptShield';
 import { buildTiekatContextEnvelope, buildTiekatReflectionPlan, buildTiekatSessionState } from '@/lib/tiekat/core';
 import { TiekatConsentState } from '@/lib/tiekat/schema';
 import { verifyTiekatOutput } from '@/lib/tiekat/verification';
+import { computeGravityBootstrap } from '@/lib/tiekat/gravity';
 
 const consentSchema = z.object({
   allowAncestry: z.boolean().default(false),
@@ -41,7 +42,15 @@ const tiekatSchema = z
           summary: z.string(),
           anchors: z.array(z.string()),
           modules: z.array(z.enum(['assistant', 'tarot', 'astrology', 'genekeys', 'ancestry'])),
-          updatedAt: z.string()
+          updatedAt: z.string(),
+          gravitySummary: z
+            .object({
+              deltaGPredicted: z.number(),
+              informationIntegral: z.number(),
+              contributingModules: z.array(z.enum(['assistant', 'tarot', 'astrology', 'genekeys', 'ancestry'])),
+              status: z.enum(['disabled', 'theoretical', 'simulated'])
+            })
+            .optional()
         })
       )
       .optional()
@@ -85,6 +94,8 @@ export async function POST(req: NextRequest) {
 
   if (isTestMode() || demoMode) {
     const content = `Demo assistant (${intent}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`;
+    const verification = verifyTiekatOutput(content, tiekatPlan, consent);
+    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
     return NextResponse.json({
       content,
       intent,
@@ -92,7 +103,8 @@ export async function POST(req: NextRequest) {
       tiekat: {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
-        verification: verifyTiekatOutput(content, tiekatPlan, consent)
+        verification,
+        gravityBootstrap
       }
     });
   }
@@ -119,6 +131,8 @@ export async function POST(req: NextRequest) {
       return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
     }
     const content = await callModel({ provider, model, prompt: `Conversational mode. Be warm and practical.\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}`, temperature: 0.2 });
+    const verification = verifyTiekatOutput(content, tiekatPlan, consent);
+    const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
     return NextResponse.json({
       content,
       intent,
@@ -127,7 +141,8 @@ export async function POST(req: NextRequest) {
       tiekat: {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
-        verification: verifyTiekatOutput(content, tiekatPlan, consent)
+        verification,
+        gravityBootstrap
       }
     });
   }
@@ -154,6 +169,9 @@ export async function POST(req: NextRequest) {
     const issues = verifyReading(reading, packet);
     if (issues.length) reading = await callModel({ provider, model, prompt: buildRevisionPrompt(reading, packet, issues), temperature: 0.1 });
   }
+
+  const verification = verifyTiekatOutput(reading, tiekatPlan, consent);
+  const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification });
   return NextResponse.json({
     content: reading,
     intent,
@@ -162,7 +180,8 @@ export async function POST(req: NextRequest) {
     tiekat: {
       route: tiekatSession.routing.route,
       plan: tiekatPlan,
-      verification: verifyTiekatOutput(reading, tiekatPlan, consent)
+      verification,
+      gravityBootstrap
     }
   });
 }
