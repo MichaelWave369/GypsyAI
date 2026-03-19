@@ -285,3 +285,39 @@ MIT (existing LICENSE preserved).
 - Added ritual-style transition summary copy before apply and compact transition-complete acknowledgment after apply.
 - Added optional lightweight keyboard shortcuts for habitat management (`Alt+Shift+P`, `Alt+Shift+↑/↓`, `Alt+Shift+A`) with input/textarea safety guards.
 - Transition tooling remains local-only, configuration-only, privacy-safe, and modeled/theoretical (no transcript-aware logic, no telemetry, no scoring changes).
+
+## TIEKAT Phase 24 (Habitat Constellation Memories)
+- Added additive habitat usage memory metadata on profiles (`lastAppliedAt`, `applyCount`, `lastAppliedSessionMode`) with normalization-safe defaults for legacy rows.
+- Profile apply flow now records explicit local usage memory only when the user clicks apply (timestamp/count/mode), with no hidden tracking and no transcript/session payload capture.
+- Added compact deterministic habitat memory helpers (`buildHabitatProfileMemorySummary`, `buildHabitatConstellationSummary`, `formatHabitatUsageSummary`) for recent usage, most-used habitat, pinned-never-applied, stale habitats, and a compact continuity note.
+- Assistant habitat panel now shows lightweight memory cues (`last applied`, `used N times`, `never applied`) plus compact continuity lines to make habitats feel like living local context.
+- Added optional chip-detail expansion control so transition chips stay compact by default but can be expanded on demand.
+- Export/import remains additive and local-first; habitat memory stores only config usage metadata and preserves existing consent-safe/modeled-theoretical safety rails.
+
+## TIEKAT Phase 25 (Habitat Time Semantics + Continuity Polish)
+- Extracted compact deterministic habitat time helpers (`habitatTime.ts`) so relative-time labels are reusable/testable instead of page-inline logic.
+- Added consistent local labels for habitat recency (`just now`, `5m ago`, `2h ago`, `3d ago`, `never applied`) and a dedicated `formatHabitatLastAppliedLabel(...)` helper.
+- Added lightweight continuity-status classification/formatting (`never_applied`, `recently_active`, `frequently_used`, `stale`) for compact habitat memory polish.
+- Assistant habitat selector now renders a tiny usage-status badge alongside existing memory cues while remaining compact and additive.
+- Time/continuity semantics remain local-only metadata transforms with no transcript/private ancestry payload usage, no hidden tracking, and no oracle ontology changes.
+
+## TIEKAT Phase 26 (Habitat-to-Habitat Constellation)
+- Centralized habitat continuity thresholds/constants in `habitatConstants.ts` (stale window, frequent-use threshold, recent window size, max constellation nodes) for deterministic reuse.
+- Added compact local `habitatConstellation.ts` mapping helpers for deterministic nodes/edges/state/summary derived only from habitat profile usage metadata.
+- Constellation nodes reflect profile continuity context (apply count, recency bucket, intensity bucket, pinned marker, session/council mode metadata), while edges use recent transition metadata when available or deterministic recent-use fallback.
+- Assistant habitat UI now surfaces tiny constellation cues (dominant continuity headline, dominant pair/line, compact node list) without introducing a dashboard.
+- Constellation logic remains local-only/config-only with explicit-apply continuity input, no transcript/session-content analytics, and no changes to modeled/theoretical oracle semantics.
+
+## TIEKAT Phase 27 (Habitat Ritual Decks)
+- Added `habitatDeck.ts` to derive compact habitat ritual cards/decks from existing profile usage/config metadata only (no transcript/session content).
+- Added deterministic deck builders for pinned/recent/all/selected habitats and compact summaries (`summarizeHabitatDeck`).
+- Added local versioned export/import helpers for habitat deck JSON plus Markdown export, with validation and unsupported-version rejection.
+- Added lightweight habitat deck controls in habitat UI (build pinned/recent/all, export JSON/Markdown, import JSON) and compact deck preview lines.
+- Habitat deck cards include modeled/local-only footer copy and intentionally exclude private ancestry/session payloads and telemetry paths.
+
+## TIEKAT Phase 28 (Habitat Sphere Profiles)
+- Added deterministic `habitatSphere.ts` to derive compact modeled habitat sphere signatures from profile configuration/usage metadata only.
+- Sphere signatures include compact v56-style identity fields (`awakeningState`, `shieldStatus`, `synchronyState`, `glyphFamily`, caption/confidence note, spec version) with explicit theoretical wording.
+- Assistant habitat selector now shows a tiny “Modeled habitat sphere signature” cue (glyph + awakening/shield/synchrony + compact caption/confidence line).
+- Habitat ritual cards/decks now carry additive sphere-signature metadata and include sphere lines in markdown export while preserving existing local/config-only posture.
+- Sphere-profile logic remains local-only/config-derived, avoids transcript/private ancestry payloads, and makes no hardware/physical measurement claims.
