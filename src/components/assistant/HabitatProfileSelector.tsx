@@ -20,13 +20,30 @@ export function HabitatProfileSelector(props: {
   onTogglePin: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  onBuildPinnedDeck: () => void;
+  onBuildRecentDeck: () => void;
+  onBuildAllDeck: () => void;
+  onExportDeckJson: () => void;
+  onExportDeckMarkdown: () => void;
+  onImportDeck: (file?: File) => void;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
   transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
+  profileUsageSummary?: string;
+  profileLastAppliedLabel?: string;
+  usageBadge?: string;
+  constellationContinuityNote?: string | null;
+  constellationTransitionNote?: string | null;
+  constellationNodeLabels?: string[];
+  deckSummaryLine?: string | null;
+  deckPreviewLabels?: string[];
+  deckNote?: string;
+  deckError?: string;
   note?: string;
   error?: string;
 }) {
   const selected = props.profiles.find((profile) => profile.id === props.selectedId) || null;
+  const [expandedChipDetails, setExpandedChipDetails] = React.useState(false);
   return (
     <section className="space-y-2 rounded border border-zinc-700 p-2 text-xs text-zinc-300" data-testid="habitat-profile-selector">
       <p className="font-semibold">Sovereign Habitat Profile</p>
@@ -37,6 +54,14 @@ export function HabitatProfileSelector(props: {
           {props.profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.pinned ? '📌 ' : ''}{profile.name}</option>)}
         </select>
       </label>
+      {selected ? (
+        <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="habitat-memory-cues">
+          <p className="font-semibold text-zinc-300">Habitat memory</p>
+          {props.profileLastAppliedLabel ? <p>{props.profileLastAppliedLabel}</p> : <p>Never applied</p>}
+          {props.profileUsageSummary ? <p>{props.profileUsageSummary}</p> : null}
+          {props.usageBadge ? <p className="text-[10px] uppercase tracking-wide text-zinc-500">{props.usageBadge}</p> : null}
+        </div>
+      ) : null}
       <label className="block text-zinc-400">
         Name
         <input
@@ -69,6 +94,17 @@ export function HabitatProfileSelector(props: {
           <input type="file" accept="application/json" className="hidden" onChange={(e) => props.onImport(e.target.files?.[0])} />
         </label>
       </div>
+      <div className="flex flex-wrap gap-2">
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildPinnedDeck}>Pinned Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildRecentDeck}>Recent Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildAllDeck}>All Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onExportDeckJson}>Export Deck JSON</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onExportDeckMarkdown}>Export Deck Markdown</button>
+        <label className="cursor-pointer rounded border border-zinc-700 px-2 py-1">
+          Import Deck JSON
+          <input type="file" accept="application/json" className="hidden" onChange={(e) => props.onImportDeck(e.target.files?.[0])} />
+        </label>
+      </div>
       {props.diffPreview?.lines.length || props.diffPreview?.ancestryFallbackLine ? (
         <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="habitat-diff-preview">
           <p className="font-semibold">This profile will change:</p>
@@ -85,13 +121,27 @@ export function HabitatProfileSelector(props: {
           {props.transitionSummary.fallbackLine ? <p className="text-zinc-500">{props.transitionSummary.fallbackLine}</p> : null}
           {props.transitionChips?.length ? (
             <div className="flex flex-wrap gap-1 pt-1">
-              {props.transitionChips.slice(0, 5).map((chip) => (
+              {(expandedChipDetails ? props.transitionChips : props.transitionChips.slice(0, 5)).map((chip) => (
                 <span key={chip.key} className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]">{chip.label}</span>
               ))}
             </div>
           ) : null}
+          {props.transitionChips?.length ? (
+            <button className="mt-1 rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => setExpandedChipDetails((value) => !value)}>
+              {expandedChipDetails ? 'Compact chip view' : 'Expand chip details'}
+            </button>
+          ) : null}
         </div>
       ) : null}
+      {props.constellationContinuityNote ? <p className="text-zinc-500">{props.constellationContinuityNote}</p> : null}
+      {props.constellationTransitionNote ? <p className="text-zinc-500">{props.constellationTransitionNote}</p> : null}
+      {props.constellationNodeLabels?.length ? (
+        <p className="text-[10px] text-zinc-600">Constellation: {props.constellationNodeLabels.slice(0, 4).join(' • ')}</p>
+      ) : null}
+      {props.deckSummaryLine ? <p className="text-zinc-500">{props.deckSummaryLine}</p> : null}
+      {props.deckPreviewLabels?.length ? <p className="text-[10px] text-zinc-600">Deck cards: {props.deckPreviewLabels.slice(0, 4).join(' • ')}</p> : null}
+      {props.deckNote ? <p className="text-zinc-500">{props.deckNote}</p> : null}
+      {props.deckError ? <p className="text-xs text-rose-400">{props.deckError}</p> : null}
       {props.note ? <p className="text-zinc-500">{props.note}</p> : null}
       {props.error ? <p className="text-xs text-rose-400">{props.error}</p> : null}
       <p className="text-zinc-500">Shortcuts: Alt+Shift+P (pin), Alt+Shift+↑/↓ (reorder), Alt+Shift+A (apply).</p>
