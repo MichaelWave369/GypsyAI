@@ -2,18 +2,69 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { classifyIntent } from '@/lib/assistant/router';
-import { loadSettings } from '@/lib/local/settings';
+import { buildContextCapsule } from '@/lib/assistant/context';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
+import { loadAncestry } from '@/lib/ancestry/storage';
+import { loadSettings } from '@/lib/local/settings';
+import { appendGravityHistoryEntry, buildVersionComparisonSummary, getRecentGravityHistory, summarizeGravityTrend } from '@/lib/tiekat/gravityHistory';
+import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
+import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
+import { buildOraclePresentation, OracleVersionSummary, shouldShowOraclePresentation, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
+import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
+import { ModeledBadge } from '@/components/assistant/ModeledBadge';
+import { OracleCard } from '@/components/assistant/OracleCard';
+import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
+import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string; sources?: string[] }[]>([]);
   const [sessions, setSessions] = useState<AssistantSession[]>([]);
   const [activeId, setActiveId] = useState<string>('');
+  const [tiekatRoute, setTiekatRoute] = useState<string>('');
+  const [gravityBadge, setGravityBadge] = useState<string>('');
+  const [showGravityDiagnostics, setShowGravityDiagnostics] = useState(false);
+  const [enableV55Framing, setEnableV55Framing] = useState(false);
+  const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
+  const [gravityTrend, setGravityTrend] = useState<string>('stable');
+  const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
+  const [versionComparisonSummary, setVersionComparisonSummary] = useState<OracleVersionSummary | null>(null);
+  const [oraclePresentation, setOraclePresentation] = useState<TiekatOraclePresentation | null>(null);
+  const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => { loadAssistantSessions().then((s) => { setSessions(s); if (s[0]) { setActiveId(s[0].id); setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content }))); } }); }, []);
+  useEffect(() => {
+    loadAssistantSessions().then((s) => {
+      setSessions(s);
+      if (s[0]) {
+        setActiveId(s[0].id);
+        setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content })));
+      }
+    });
+    setMemoryEntries(loadTiekatMemory());
+    getRecentGravityHistory(5).then((history) => {
+      setRecentGravity(history);
+      setGravityTrend(summarizeGravityTrend(history).trend);
+      const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
+      setVersionComparisonSummary(summary);
+    });
+  }, []);
+
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
+
+  const sparklinePoints = useMemo(() => {
+    if (!recentGravity.length) return '';
+    const values = recentGravity.map((row) => row.deltaGPredicted);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return values
+      .map((value, i) => {
+        const x = (i / Math.max(values.length - 1, 1)) * 100;
+        const y = max === min ? 20 : 40 - ((value - min) / (max - min)) * 40;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }, [recentGravity]);
 
   const persist = async (nextMessages: { role: 'user' | 'assistant'; content: string; sources?: string[] }[]) => {
     const base = sessions.filter((s) => s.id !== activeId);
@@ -33,16 +84,89 @@ export default function AssistantPage() {
 
   const send = async () => {
     const s = loadSettings();
+    const ancestry = await loadAncestry();
+    const capsule = buildContextCapsule(ancestry);
     const next = [...messages, { role: 'user' as const, content: input }];
     setMessages(next);
     setInput('');
     controllerRef.current = new AbortController();
-    const res = await fetch('/api/assistant/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: input, demoMode: s.demoMode, strictReadingMode: s.strictReadingMode, autoSwitchReadingMode: s.autoSwitchReadingMode, provider: s.provider, model: s.model }), signal: controllerRef.current.signal });
+    const sessionId = activeId || crypto.randomUUID();
+
+    const res = await fetch('/api/assistant/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: input,
+        demoMode: s.demoMode,
+        strictReadingMode: s.strictReadingMode,
+        autoSwitchReadingMode: s.autoSwitchReadingMode,
+        provider: s.provider,
+        model: s.model,
+        tiekat: {
+          sessionId,
+          gravityDiagnostics: showGravityDiagnostics,
+          consent: {
+            allowAncestry: s.allowAncestryAi,
+            includeNames: s.includeNamesInAiContext,
+            hideLivingPersons: s.hideLivingPersons,
+            memoryEnabled: s.useSessionsInAssistant
+          },
+          moduleData: {
+            tarot: capsule.lastTarot,
+            genekeys: capsule.lastGeneKeys,
+            ancestry: capsule.ancestryPatterns
+          },
+          memoryEntries
+        }
+      }),
+      signal: controllerRef.current.signal
+    });
     const ct = res.headers.get('content-type') || '';
     if (ct.includes('application/json')) {
       const data = await res.json();
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
+      setTiekatRoute(data.tiekat?.route ?? '');
+      if (data.tiekat?.gravityBootstrap) {
+        const gb = data.tiekat.gravityBootstrap;
+        setGravityBadge(`Gravity Bootstrap: ${gb.status} (${gb.scoringVersion}) • Δg ${gb.deltaGPredicted.toExponential(2)}`);
+        setGravityDiagnostics(showGravityDiagnostics && gb.diagnostics ? JSON.stringify(gb.diagnostics, null, 2) : '');
+      } else {
+        setGravityBadge('');
+        setGravityDiagnostics('');
+      }
+      if (s.useSessionsInAssistant && data.tiekat?.verification?.passed) {
+        const entry = createTiekatMemoryEntry(sessionId, data.content, input.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8), data.tiekat?.verification?.usedModules ?? ['assistant'], data.tiekat?.gravityBootstrap);
+        const nextMemory = [entry, ...memoryEntries].slice(0, 50);
+        setMemoryEntries(nextMemory);
+        saveTiekatMemory(nextMemory, true);
+      } else if (!s.useSessionsInAssistant) {
+        saveTiekatMemory([], false);
+      }
+
+      if (s.useSessionsInAssistant && data.tiekat?.gravityBootstrap) {
+        await appendGravityHistoryEntry({
+          enabled: true,
+          sessionId,
+          route: data.tiekat?.route ?? 'assistant_synthesis',
+          mode: data.tiekat?.plan?.mode ?? 'assistant_synthesis',
+          gravity: data.tiekat.gravityBootstrap
+        });
+        const history = await getRecentGravityHistory(5);
+        setRecentGravity(history);
+        setGravityTrend(summarizeGravityTrend(history).trend);
+        const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
+        setVersionComparisonSummary(summary);
+        if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: summarizeGravityTrend(history).trend, versionSummary: summary, enableV55Framing }));
+        }
+      } else if (data.tiekat?.gravityBootstrap) {
+        const summary = versionComparisonSummary ?? buildVersionComparisonSummary([], TIEKAT_V54_SCORING_VERSION);
+        if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: gravityTrend as 'rising' | 'stable' | 'falling', versionSummary: summary, enableV55Framing }));
+        }
+      }
+
       await persist(withAssistant);
       return;
     }
@@ -92,6 +216,28 @@ export default function AssistantPage() {
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
+      {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
+      {gravityBadge ? <ModeledBadge text={gravityBadge} /> : null}
+      {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input type="checkbox" checked={enableV55Framing} onChange={(e) => setEnableV55Framing(e.target.checked)} />
+        Enable v55 master-action framing (conceptual)
+      </label>
+      {enableV55Framing ? <p className="text-xs text-zinc-400">{getTiekatV55Metadata().confidenceNote}</p> : null}
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input type="checkbox" checked={showGravityDiagnostics} onChange={(e) => setShowGravityDiagnostics(e.target.checked)} />
+        Show gravity diagnostics (debug)
+      </label>
+      {showGravityDiagnostics ? (
+        <DiagnosticsSection
+          gravityTrend={gravityTrend}
+          recentGravity={recentGravity}
+          sparklinePoints={sparklinePoints}
+          versionState={versionComparisonSummary}
+          scoringVersion={TIEKAT_V54_SCORING_VERSION}
+          gravityDiagnostics={gravityDiagnostics}
+        />
+      ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">
           <div className="flex gap-2"><button className="rounded border border-zinc-700 px-2" onClick={summarize}>Summarize session</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('md')}>Export MD</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('json')}>Export JSON</button></div>
