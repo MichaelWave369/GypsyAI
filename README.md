@@ -221,3 +221,10 @@ MIT (existing LICENSE preserved).
 - Added lightweight diagnostics filter controls (`ConstellationFilterChips`) with reset support.
 - Added local-only persistence for last-used constellation filters (no telemetry/sync).
 - Filtered constellation captions remain explicitly local/modelled/theoretical and include deterministic empty-state messaging when no nodes match.
+
+## TIEKAT Phase 15 (Ritual Export Deck Layer)
+- Added deterministic ritual export helpers (`ritualDeck.ts`) that derive compact ritual cards and decks from sanitized oracle artifacts only.
+- Ritual cards intentionally store summary-level metadata (headline, response summary, mode, gravity summary, v54/v55 framing hints, geometry glyph) and do not export full raw transcripts by default.
+- Added local-only export helpers for ritual card/deck JSON plus compact deck markdown summaries with explicit modeled/theoretical footer language.
+- Added lightweight Assistant ritual deck panel for creating a recent or selected deck and exporting deck/card artifacts.
+- This phase remains additive/local-first: no cloud sync/sharing, no new scoring math, and no hardware/physical measurement claims.

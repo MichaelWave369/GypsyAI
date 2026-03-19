@@ -31,6 +31,15 @@ import {
 } from '@/lib/tiekat/oracleConstellation';
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
+import {
+  buildRecentRitualDeck,
+  buildRitualDeck,
+  exportRitualCardJson,
+  exportRitualDeckJson,
+  exportRitualDeckMarkdown,
+  summarizeRitualDeck,
+  TiekatRitualDeck
+} from '@/lib/tiekat/ritualDeck';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ConstellationFilterChips } from '@/components/assistant/ConstellationFilterChips';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
@@ -39,6 +48,7 @@ import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactR
 import { OracleConstellation } from '@/components/assistant/OracleConstellation';
 import { OracleCard } from '@/components/assistant/OracleCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
+import { RitualDeckPanel } from '@/components/assistant/RitualDeckPanel';
 import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
@@ -68,6 +78,7 @@ export default function AssistantPage() {
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const [artifactImportError, setArtifactImportError] = useState<string>('');
   const [constellationFilters, setConstellationFilters] = useState<TiekatConstellationFilterState>({ mode: 'all', scoringVersion: 'all', shiftType: 'all' });
+  const [ritualDeck, setRitualDeck] = useState<TiekatRitualDeck | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -132,6 +143,7 @@ export default function AssistantPage() {
     if (!constellationState) return null;
     return getConstellationFilterOptions(constellationState);
   }, [constellationState]);
+  const ritualDeckSummary = useMemo(() => (ritualDeck ? summarizeRitualDeck(ritualDeck) : null), [ritualDeck]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -359,6 +371,44 @@ export default function AssistantPage() {
     }
   };
 
+  const downloadText = (filename: string, text: string, type = 'text/plain') => {
+    const blob = new Blob([text], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const buildRecentDeck = () => {
+    if (!oracleArtifacts.length) return;
+    setRitualDeck(buildRecentRitualDeck(oracleArtifacts, 5));
+  };
+
+  const buildSelectedDeck = () => {
+    if (!selectedArtifact) return;
+    setRitualDeck(buildRitualDeck({
+      title: `Selected Ritual Deck (${selectedArtifact.sessionMode.label})`,
+      source: 'selected',
+      artifacts: [selectedArtifact]
+    }));
+  };
+
+  const exportDeckJson = () => {
+    if (!ritualDeck) return;
+    downloadText(`ritual-deck-${ritualDeck.id.replace(/[:.]/g, '-')}.json`, exportRitualDeckJson(ritualDeck), 'application/json');
+  };
+
+  const exportDeckMarkdown = () => {
+    if (!ritualDeck) return;
+    downloadText(`ritual-deck-${ritualDeck.id.replace(/[:.]/g, '-')}.md`, exportRitualDeckMarkdown(ritualDeck), 'text/markdown');
+  };
+
+  const exportRitualCard = (indexCard: TiekatRitualDeck['cards'][number]) => {
+    downloadText(`ritual-card-${indexCard.artifactId.replace(/[:.]/g, '-')}.json`, exportRitualCardJson(indexCard), 'application/json');
+  };
+
   const importArtifact = async (file?: File) => {
     if (!file) return;
     try {
@@ -475,6 +525,16 @@ export default function AssistantPage() {
               onDelete={() => removeArtifact(selectedArtifact.id)}
             />
           ) : null}
+          <RitualDeckPanel
+            deck={ritualDeck}
+            summary={ritualDeckSummary}
+            onBuildRecentDeck={buildRecentDeck}
+            onBuildSelectedDeck={buildSelectedDeck}
+            onExportDeckJson={exportDeckJson}
+            onExportDeckMarkdown={exportDeckMarkdown}
+            onExportCard={exportRitualCard}
+            disabled={!oracleArtifacts.length}
+          />
           <div className="max-h-[500px] overflow-auto space-y-2">
             {messages.map((m, i) => <div key={i} className="rounded border border-zinc-700 p-2 text-sm"><b>{m.role}</b><pre className="whitespace-pre-wrap">{m.content}</pre>{m.sources?.length ? <p className="text-xs text-zinc-400">Sources: {m.sources.join(', ')}</p> : null}</div>)}
           </div>
