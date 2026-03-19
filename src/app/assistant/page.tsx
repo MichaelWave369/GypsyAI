@@ -38,7 +38,9 @@ import {
   applyHabitatProfile,
   buildHabitatProfileDiff,
   buildHabitatProfile,
+  buildHabitatProfileMemorySummary,
   formatHabitatProfileDiff,
+  formatHabitatUsageSummary,
   deleteHabitatProfile,
   exportHabitatProfileJson,
   getRecentHabitatProfiles,
@@ -52,6 +54,8 @@ import {
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
 import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
+import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
+import { buildHabitatConstellationState, buildHabitatConstellationSummary } from '@/lib/tiekat/habitatConstellation';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -130,6 +134,7 @@ export default function AssistantPage() {
   const [habitatDescriptionDraft, setHabitatDescriptionDraft] = useState('');
   const [habitatProfileNote, setHabitatProfileNote] = useState('');
   const [habitatProfileError, setHabitatProfileError] = useState('');
+  const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const habitatShortcutHandlersRef = useRef<{
     apply: () => void;
@@ -285,6 +290,30 @@ export default function AssistantPage() {
       allowAncestry: settings.allowAncestryAi
     });
   }, [selectedHabitatProfile, sessionMode, councilMode, preferProviderBackedCouncil, showGeometry, showGravityDiagnostics, enableV55Framing, constellationFilters, ritualDeckFilters]);
+  const selectedHabitatMemorySummary = useMemo(
+    () => (selectedHabitatProfile ? buildHabitatProfileMemorySummary(selectedHabitatProfile) : null),
+    [selectedHabitatProfile]
+  );
+  const habitatConstellationState = useMemo(
+    () => buildHabitatConstellationState({ profiles: habitatProfiles, recentTransition: recentHabitatTransition }),
+    [habitatProfiles, recentHabitatTransition]
+  );
+  const habitatConstellationSummary = useMemo(
+    () => buildHabitatConstellationSummary({ state: habitatConstellationState }),
+    [habitatConstellationState]
+  );
+
+  const habitatLastAppliedLabel = useMemo(() => {
+    if (!selectedHabitatMemorySummary) return 'Never applied';
+    return formatHabitatLastAppliedLabel({ lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt });
+  }, [selectedHabitatMemorySummary]);
+  const habitatUsageBadge = useMemo(() => {
+    if (!selectedHabitatMemorySummary) return 'Never Applied';
+    return formatHabitatUsageBadge(classifyHabitatUsage({
+      lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt,
+      applyCount: selectedHabitatMemorySummary.applyCount
+    }));
+  }, [selectedHabitatMemorySummary]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -645,9 +674,17 @@ export default function AssistantPage() {
     promptPresetMode: sessionMode
   });
 
-  const applySelectedHabitatProfile = () => {
+  const applySelectedHabitatProfile = async () => {
     if (!selectedHabitatProfile) return;
     const settings = loadSettings();
+    const previousApplied = [...habitatProfiles]
+      .sort((a, b) => {
+        const aMs = Number.isNaN(Date.parse(a.lastAppliedAt || '')) ? Number.NEGATIVE_INFINITY : Date.parse(a.lastAppliedAt || '');
+        const bMs = Number.isNaN(Date.parse(b.lastAppliedAt || '')) ? Number.NEGATIVE_INFINITY : Date.parse(b.lastAppliedAt || '');
+        return bMs - aMs;
+      })
+      .find((profile) => profile.lastAppliedAt);
+    const previousName = previousApplied?.name || 'Current Runtime';
     const applied = applyHabitatProfile({
       profile: selectedHabitatProfile,
       allowAncestry: settings.allowAncestryAi
@@ -663,8 +700,12 @@ export default function AssistantPage() {
     setConstellationFilters(applied.profile.preferences.constellationFilters);
     saveConstellationFilters(applied.profile.preferences.constellationFilters);
     setRitualDeckFilters(applied.profile.preferences.ritualDeckFilters);
+    const nextProfiles = habitatProfiles.map((profile) => (profile.id === applied.profile.id ? applied.profile : profile));
+    await saveHabitatProfiles(nextProfiles);
+    await refreshHabitatProfiles(applied.profile.id);
+    setRecentHabitatTransition({ from: previousName, to: applied.profile.name });
     const summaryLine = habitatTransitionPreview?.summary.line;
-    setHabitatProfileNote(`Transition complete: ${selectedHabitatProfile.name}. ${summaryLine || applied.note}`);
+    setHabitatProfileNote(`Transition complete: ${applied.profile.name}. ${summaryLine || applied.note}`);
     setHabitatProfileError('');
   };
 
@@ -748,7 +789,9 @@ export default function AssistantPage() {
 
   useEffect(() => {
     habitatShortcutHandlersRef.current = {
-      apply: applySelectedHabitatProfile,
+      apply: () => {
+        void applySelectedHabitatProfile();
+      },
       togglePin: () => togglePinSelectedHabitatProfile(),
       moveUp: () => reorderSelectedHabitatProfile('up'),
       moveDown: () => reorderSelectedHabitatProfile('down')
@@ -770,7 +813,7 @@ export default function AssistantPage() {
         void habitatShortcutHandlersRef.current?.togglePin();
       } else if (action === 'apply') {
         event.preventDefault();
-        habitatShortcutHandlersRef.current?.apply();
+        void habitatShortcutHandlersRef.current?.apply();
       } else if (action === 'move_up') {
         event.preventDefault();
         void habitatShortcutHandlersRef.current?.moveUp();
@@ -817,6 +860,12 @@ export default function AssistantPage() {
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}
+        profileUsageSummary={selectedHabitatMemorySummary ? formatHabitatUsageSummary(selectedHabitatMemorySummary) : ''}
+        profileLastAppliedLabel={habitatLastAppliedLabel}
+        usageBadge={habitatUsageBadge}
+        constellationContinuityNote={habitatConstellationSummary.headline}
+        constellationTransitionNote={habitatConstellationSummary.pairLine || habitatConstellationSummary.line}
+        constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
         note={habitatProfileNote}
         error={habitatProfileError}
       />
