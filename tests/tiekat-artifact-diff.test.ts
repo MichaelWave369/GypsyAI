@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildOracleArtifactDiffView, normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
+import { buildOracleArtifactDiffView, formatOracleArtifactDiffText, normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 
 describe('oracle artifact diff', () => {
   it('builds compact deterministic diff lines', () => {
@@ -27,5 +27,8 @@ describe('oracle artifact diff', () => {
     expect(diff.lines.join(' ')).toContain('Session mode');
     expect(diff.lines.join(' ')).toContain('ΔI');
     expect(diff.lines.join(' ').toLowerCase()).not.toContain('diagnostics');
+    const formatted = formatOracleArtifactDiffText(diff);
+    expect(formatted).toContain('What changed');
+    expect(formatted.split('\n').length).toBeGreaterThan(2);
   });
 });

@@ -190,3 +190,13 @@ MIT (existing LICENSE preserved).
 - Added compact artifact diff view helper (`buildOracleArtifactDiffView`) to summarize mode/route/module/version and gravity deltas in a scan-friendly “What changed” block.
 - Replay UI now renders structured diff lines (up to 8 concise items) instead of a single long comparison sentence.
 - All diff/preset behavior uses local metadata only and preserves modeled/theoretical framing (no hardware/physical claims).
+
+## TIEKAT Phase 11 (Sacred Geometry Diagnostic Layer)
+- Added a deterministic sacred-geometry mapper (`sacredGeometry.ts`) that derives compact glyph/layer/caption state from existing TIEKAT metadata only (gravity status/integral, trend, version state, session mode, modules, route/mode).
+- Added lightweight dependency-free SVG rendering (`SacredGeometryGlyph`) as a quiet modeled diagnostic companion in Assistant UI.
+- Geometry glyphs are rule-based (no randomness) and tied to metadata conditions such as drift detection, synthesis density, and single-module sparsity.
+- Geometry captions remain explicitly modeled/theoretical and avoid any sensor/measurement claims.
+- Included optional low-friction polishes:
+  - local-only recent preset ordering (`markPresetUsed`, `orderPresetsByRecent`)
+  - copy-to-clipboard action for artifact diff text in replay panel
+- Preserved privacy/consent boundaries: geometry and diff/copy use compact sanitized metadata only; no new persistence side-channel.

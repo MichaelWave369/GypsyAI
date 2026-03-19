@@ -14,6 +14,7 @@ export interface TiekatPromptPresetGroup {
 }
 
 export type TiekatSessionModePresetMap = Record<TiekatSessionModeKey, TiekatPromptPresetGroup>;
+const RECENT_PRESET_KEY = 'gypsy-ai-tiekat-recent-presets';
 
 const PRESET_MAP: TiekatSessionModePresetMap = {
   open_reflection: {
@@ -83,4 +84,28 @@ export function getPromptPresetGroup(mode: TiekatSessionModeKey, allowAncestry: 
 
 export function getPromptPresetMap(): TiekatSessionModePresetMap {
   return PRESET_MAP;
+}
+
+export function loadRecentPresetUsage(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(RECENT_PRESET_KEY) ?? '{}') as Record<string, number>;
+  } catch {
+    return {};
+  }
+}
+
+export function markPresetUsed(mode: TiekatSessionModeKey, presetId: string, enabled: boolean) {
+  if (!enabled || typeof window === 'undefined') return;
+  const usage = loadRecentPresetUsage();
+  usage[`${mode}:${presetId}`] = Date.now();
+  window.localStorage.setItem(RECENT_PRESET_KEY, JSON.stringify(usage));
+}
+
+export function orderPresetsByRecent(mode: TiekatSessionModeKey, group: TiekatPromptPresetGroup): TiekatPromptPresetGroup {
+  const usage = loadRecentPresetUsage();
+  return {
+    ...group,
+    presets: [...group.presets].sort((a, b) => (usage[`${mode}:${b.id}`] ?? 0) - (usage[`${mode}:${a.id}`] ?? 0))
+  };
 }

@@ -279,3 +279,7 @@ export function buildOracleArtifactDiffView(a: TiekatOracleArtifact, b: TiekatOr
     lines
   };
 }
+
+export function formatOracleArtifactDiffText(diffView: { title: string; lines: string[] }) {
+  return `${diffView.title}\n${diffView.lines.join('\n')}`;
+}

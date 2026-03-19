@@ -4,9 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
+import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 import { getPromptPresetGroup } from '@/lib/tiekat/promptPresets';
+import { buildSacredGeometryState } from '@/lib/tiekat/sacredGeometry';
 
 describe('session mode and artifact replay ui', () => {
   it('renders mode selector and artifact replay components', () => {
@@ -44,11 +46,22 @@ describe('session mode and artifact replay ui', () => {
         onChoose: vi.fn()
       })
     );
+    const geometry = buildSacredGeometryState({
+      gravity: { status: 'theoretical', informationIntegral: 0.5, deltaGPredicted: 1e-10 },
+      trend: 'stable',
+      versionSummary: { state: 'single_version' },
+      sessionMode: 'open_reflection',
+      activeModules: ['assistant'],
+      route: 'assistant_synthesis',
+      mode: 'assistant_synthesis'
+    } as any);
+    const geometryHtml = renderToStaticMarkup(React.createElement(SacredGeometryGlyph, { state: geometry }));
 
     expect(selectorHtml).toContain('Ritual Session Mode');
     expect(listHtml).toContain('Synthesis Oracle');
     expect(replayHtml).toContain('mode key: synthesis_oracle');
     expect(replayHtml).toContain('What changed');
     expect(presetsHtml).toContain('Open Reflection Prompts');
+    expect(geometryHtml).toContain('Modeled field geometry');
   });
 });

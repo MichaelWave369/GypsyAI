@@ -20,7 +20,8 @@ import {
   importOracleArtifactJson,
   TiekatOracleArtifact
 } from '@/lib/tiekat/oracleArtifact';
-import { getPromptPresetGroup } from '@/lib/tiekat/promptPresets';
+import { getPromptPresetGroup, markPresetUsed, orderPresetsByRecent } from '@/lib/tiekat/promptPresets';
+import { buildSacredGeometryState } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
@@ -28,6 +29,7 @@ import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
 import { OracleCard } from '@/components/assistant/OracleCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
+import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
@@ -47,6 +49,9 @@ export default function AssistantPage() {
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
   const [versionComparisonSummary, setVersionComparisonSummary] = useState<OracleVersionSummary | null>(null);
   const [oraclePresentation, setOraclePresentation] = useState<TiekatOraclePresentation | null>(null);
+  const [latestGravity, setLatestGravity] = useState<TiekatGravityBootstrapResult | null>(null);
+  const [latestModules, setLatestModules] = useState<Array<'assistant' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry'>>(['assistant']);
+  const [latestMode, setLatestMode] = useState<'single_module' | 'blended' | 'assistant_synthesis'>('assistant_synthesis');
   const [oracleArtifacts, setOracleArtifacts] = useState<TiekatOracleArtifact[]>([]);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string>('');
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
@@ -87,8 +92,20 @@ export default function AssistantPage() {
   }, [selectedArtifact, previousArtifact]);
   const presetGroup = useMemo(() => {
     const settings = loadSettings();
-    return getPromptPresetGroup(sessionMode, settings.allowAncestryAi);
+    return orderPresetsByRecent(sessionMode, getPromptPresetGroup(sessionMode, settings.allowAncestryAi));
   }, [sessionMode]);
+  const geometryState = useMemo(() => {
+    if (!latestGravity) return null;
+    return buildSacredGeometryState({
+      gravity: latestGravity,
+      trend: gravityTrend as 'rising' | 'stable' | 'falling',
+      versionSummary: versionComparisonSummary ?? { state: 'insufficient_data' },
+      sessionMode,
+      activeModules: latestModules,
+      route: tiekatRoute || 'assistant_synthesis',
+      mode: latestMode
+    });
+  }, [latestGravity, gravityTrend, versionComparisonSummary, sessionMode, latestModules, tiekatRoute, latestMode]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -170,8 +187,11 @@ export default function AssistantPage() {
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
       setTiekatRoute(data.tiekat?.route ?? modeConfig.defaultRouteBias);
+      setLatestModules(data.tiekat?.plan?.modulesToConsult ?? ['assistant']);
+      setLatestMode(data.tiekat?.plan?.mode ?? 'assistant_synthesis');
       if (data.tiekat?.gravityBootstrap) {
         const gb = data.tiekat.gravityBootstrap;
+        setLatestGravity(gb as TiekatGravityBootstrapResult);
         setGravityBadge(`Gravity Bootstrap: ${gb.status} (${gb.scoringVersion}) • Δg ${gb.deltaGPredicted.toExponential(2)}`);
         setGravityDiagnostics(showGravityDiagnostics && gb.diagnostics ? JSON.stringify(gb.diagnostics, null, 2) : '');
       } else {
@@ -342,8 +362,13 @@ export default function AssistantPage() {
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <PromptPresetChips
         group={presetGroup}
-        onChoose={(text) => setInput((prev) => (prev.trim().length ? `${prev}\n${text}` : text))}
+        onChoose={({ id, text }) => {
+          const settings = loadSettings();
+          markPresetUsed(sessionMode, id, settings.useSessionsInAssistant);
+          setInput((prev) => (prev.trim().length ? `${prev}\n${text}` : text));
+        }}
       />
+      {geometryState ? <SacredGeometryGlyph state={geometryState} /> : null}
       <label className="flex items-center gap-2 text-xs text-zinc-400">
         <input type="checkbox" checked={enableV55Framing} onChange={(e) => setEnableV55Framing(e.target.checked)} />
         Enable v55 master-action framing (conceptual)
