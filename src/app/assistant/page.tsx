@@ -2,17 +2,43 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { classifyIntent } from '@/lib/assistant/router';
-import { loadSettings } from '@/lib/local/settings';
+import { buildContextCapsule } from '@/lib/assistant/context';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
+import { loadAncestry } from '@/lib/ancestry/storage';
+import { loadSettings } from '@/lib/local/settings';
+import { appendGravityHistoryEntry, getRecentGravityHistory, summarizeGravityTrend } from '@/lib/tiekat/gravityHistory';
+import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
+import { TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string; sources?: string[] }[]>([]);
   const [sessions, setSessions] = useState<AssistantSession[]>([]);
   const [activeId, setActiveId] = useState<string>('');
+  const [tiekatRoute, setTiekatRoute] = useState<string>('');
+  const [gravityBadge, setGravityBadge] = useState<string>('');
+  const [showGravityDiagnostics, setShowGravityDiagnostics] = useState(false);
+  const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
+  const [gravityTrend, setGravityTrend] = useState<string>('stable');
+  const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
+  const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => { loadAssistantSessions().then((s) => { setSessions(s); if (s[0]) { setActiveId(s[0].id); setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content }))); } }); }, []);
+  useEffect(() => {
+    loadAssistantSessions().then((s) => {
+      setSessions(s);
+      if (s[0]) {
+        setActiveId(s[0].id);
+        setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content })));
+      }
+    });
+    setMemoryEntries(loadTiekatMemory());
+    getRecentGravityHistory(5).then((history) => {
+      setRecentGravity(history);
+      setGravityTrend(summarizeGravityTrend(history).trend);
+    });
+  }, []);
+
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
 
   const persist = async (nextMessages: { role: 'user' | 'assistant'; content: string; sources?: string[] }[]) => {
@@ -33,16 +59,79 @@ export default function AssistantPage() {
 
   const send = async () => {
     const s = loadSettings();
+    const ancestry = await loadAncestry();
+    const capsule = buildContextCapsule(ancestry);
     const next = [...messages, { role: 'user' as const, content: input }];
     setMessages(next);
     setInput('');
     controllerRef.current = new AbortController();
-    const res = await fetch('/api/assistant/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: input, demoMode: s.demoMode, strictReadingMode: s.strictReadingMode, autoSwitchReadingMode: s.autoSwitchReadingMode, provider: s.provider, model: s.model }), signal: controllerRef.current.signal });
+    const sessionId = activeId || crypto.randomUUID();
+
+    const res = await fetch('/api/assistant/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: input,
+        demoMode: s.demoMode,
+        strictReadingMode: s.strictReadingMode,
+        autoSwitchReadingMode: s.autoSwitchReadingMode,
+        provider: s.provider,
+        model: s.model,
+        tiekat: {
+          sessionId,
+          gravityDiagnostics: showGravityDiagnostics,
+          consent: {
+            allowAncestry: s.allowAncestryAi,
+            includeNames: s.includeNamesInAiContext,
+            hideLivingPersons: s.hideLivingPersons,
+            memoryEnabled: s.useSessionsInAssistant
+          },
+          moduleData: {
+            tarot: capsule.lastTarot,
+            genekeys: capsule.lastGeneKeys,
+            ancestry: capsule.ancestryPatterns
+          },
+          memoryEntries
+        }
+      }),
+      signal: controllerRef.current.signal
+    });
     const ct = res.headers.get('content-type') || '';
     if (ct.includes('application/json')) {
       const data = await res.json();
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
+      setTiekatRoute(data.tiekat?.route ?? '');
+      if (data.tiekat?.gravityBootstrap) {
+        const gb = data.tiekat.gravityBootstrap;
+        setGravityBadge(`Gravity Bootstrap: ${gb.status} (${gb.scoringVersion}) • Δg ${gb.deltaGPredicted.toExponential(2)}`);
+        setGravityDiagnostics(showGravityDiagnostics && gb.diagnostics ? JSON.stringify(gb.diagnostics, null, 2) : '');
+      } else {
+        setGravityBadge('');
+        setGravityDiagnostics('');
+      }
+      if (s.useSessionsInAssistant && data.tiekat?.verification?.passed) {
+        const entry = createTiekatMemoryEntry(sessionId, data.content, input.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8), data.tiekat?.verification?.usedModules ?? ['assistant'], data.tiekat?.gravityBootstrap);
+        const nextMemory = [entry, ...memoryEntries].slice(0, 50);
+        setMemoryEntries(nextMemory);
+        saveTiekatMemory(nextMemory, true);
+      } else if (!s.useSessionsInAssistant) {
+        saveTiekatMemory([], false);
+      }
+
+      if (s.useSessionsInAssistant && data.tiekat?.gravityBootstrap) {
+        await appendGravityHistoryEntry({
+          enabled: true,
+          sessionId,
+          route: data.tiekat?.route ?? 'assistant_synthesis',
+          mode: data.tiekat?.plan?.mode ?? 'assistant_synthesis',
+          gravity: data.tiekat.gravityBootstrap
+        });
+        const history = await getRecentGravityHistory(5);
+        setRecentGravity(history);
+        setGravityTrend(summarizeGravityTrend(history).trend);
+      }
+
       await persist(withAssistant);
       return;
     }
@@ -92,6 +181,19 @@ export default function AssistantPage() {
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
+      {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
+      {gravityBadge ? <p className="text-xs text-zinc-400">{gravityBadge} (modeled/theoretical)</p> : null}
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input type="checkbox" checked={showGravityDiagnostics} onChange={(e) => setShowGravityDiagnostics(e.target.checked)} />
+        Show gravity diagnostics (debug)
+      </label>
+      {showGravityDiagnostics ? (
+        <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-300">
+          <p>Recent modeled gravity trend: {gravityTrend}</p>
+          {recentGravity.length ? <p>Recent snapshots: {recentGravity.map((row) => `${row.deltaGPredicted.toExponential(2)}@${new Date(row.timestamp).toLocaleTimeString()}`).join(' | ')}</p> : <p>No local gravity history yet.</p>}
+          {gravityDiagnostics ? <pre className="whitespace-pre-wrap">{gravityDiagnostics}</pre> : <p>Diagnostics hidden in response until next request.</p>}
+        </div>
+      ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">
           <div className="flex gap-2"><button className="rounded border border-zinc-700 px-2" onClick={summarize}>Summarize session</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('md')}>Export MD</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('json')}>Export JSON</button></div>
