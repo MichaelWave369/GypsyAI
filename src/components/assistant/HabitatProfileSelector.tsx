@@ -28,6 +28,7 @@ export function HabitatProfileSelector(props: {
   usageBadge?: string;
   constellationContinuityNote?: string | null;
   constellationTransitionNote?: string | null;
+  constellationNodeLabels?: string[];
   note?: string;
   error?: string;
 }) {
@@ -113,6 +114,9 @@ export function HabitatProfileSelector(props: {
       ) : null}
       {props.constellationContinuityNote ? <p className="text-zinc-500">{props.constellationContinuityNote}</p> : null}
       {props.constellationTransitionNote ? <p className="text-zinc-500">{props.constellationTransitionNote}</p> : null}
+      {props.constellationNodeLabels?.length ? (
+        <p className="text-[10px] text-zinc-600">Constellation: {props.constellationNodeLabels.slice(0, 4).join(' • ')}</p>
+      ) : null}
       {props.note ? <p className="text-zinc-500">{props.note}</p> : null}
       {props.error ? <p className="text-xs text-rose-400">{props.error}</p> : null}
       <p className="text-zinc-500">Shortcuts: Alt+Shift+P (pin), Alt+Shift+↑/↓ (reorder), Alt+Shift+A (apply).</p>

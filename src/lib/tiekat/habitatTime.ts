@@ -1,4 +1,5 @@
 import { TiekatHabitatProfile } from '@/lib/tiekat/habitatProfile';
+import { HABITAT_FREQUENT_USE_THRESHOLD, HABITAT_STALE_MS } from '@/lib/tiekat/habitatConstants';
 
 export type TiekatHabitatRecency = 'never_applied' | 'just_now' | 'recent' | 'aging' | 'stale';
 export type TiekatHabitatUsageStatus = 'never_applied' | 'recently_active' | 'frequently_used' | 'stale';
@@ -30,7 +31,7 @@ export function classifyHabitatRecency(timestamp: string | null | undefined, now
   const deltaMs = Math.max(0, nowMs - timestampMs);
   if (deltaMs < 1000 * 60) return 'just_now';
   if (deltaMs < 1000 * 60 * 60 * 24) return 'recent';
-  if (deltaMs < 1000 * 60 * 60 * 24 * 14) return 'aging';
+  if (deltaMs < HABITAT_STALE_MS) return 'aging';
   return 'stale';
 }
 
@@ -43,7 +44,7 @@ export function classifyHabitatUsage(profile: Pick<TiekatHabitatProfile, 'lastAp
   if (!profile.lastAppliedAt || profile.applyCount <= 0) return 'never_applied';
   const recency = classifyHabitatRecency(profile.lastAppliedAt, now);
   if (recency === 'stale') return 'stale';
-  if (profile.applyCount >= 5) return 'frequently_used';
+  if (profile.applyCount >= HABITAT_FREQUENT_USE_THRESHOLD) return 'frequently_used';
   return 'recently_active';
 }
 

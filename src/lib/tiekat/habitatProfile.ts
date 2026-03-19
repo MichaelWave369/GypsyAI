@@ -1,4 +1,5 @@
 import { dbGet, dbSet } from '@/lib/local/db';
+import { HABITAT_STALE_MS } from '@/lib/tiekat/habitatConstants';
 import { TiekatConstellationFilterState } from '@/lib/tiekat/oracleConstellation';
 import { TiekatCouncilMode } from '@/lib/tiekat/oracleCouncil';
 import { TiekatRitualDeckFilterState } from '@/lib/tiekat/ritualDeck';
@@ -270,7 +271,6 @@ export function buildHabitatProfileMemorySummary(profile: TiekatHabitatProfile, 
   const normalized = normalizeHabitatProfile(profile);
   const nowMs = toMs(now);
   const lastAppliedMs = toMs(normalized.lastAppliedAt);
-  const staleThresholdMs = 1000 * 60 * 60 * 24 * 14;
   return {
     id: normalized.id,
     name: normalized.name,
@@ -278,7 +278,7 @@ export function buildHabitatProfileMemorySummary(profile: TiekatHabitatProfile, 
     lastAppliedAt: normalized.lastAppliedAt,
     lastAppliedSessionMode: normalized.lastAppliedSessionMode,
     neverApplied: normalized.applyCount <= 0 || !normalized.lastAppliedAt,
-    stale: normalized.applyCount > 0 && Number.isFinite(nowMs) && Number.isFinite(lastAppliedMs) && nowMs - lastAppliedMs > staleThresholdMs,
+    stale: normalized.applyCount > 0 && Number.isFinite(nowMs) && Number.isFinite(lastAppliedMs) && nowMs - lastAppliedMs > HABITAT_STALE_MS,
     pinnedNeverApplied: normalized.pinned && (normalized.applyCount <= 0 || !normalized.lastAppliedAt)
   };
 }

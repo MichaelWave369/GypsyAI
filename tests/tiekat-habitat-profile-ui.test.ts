@@ -36,6 +36,7 @@ describe('habitat profile ui', () => {
         usageBadge: 'Frequently Used',
         constellationContinuityNote: 'Recent continuity favors Synthesis Oracle.',
         constellationTransitionNote: 'Recent transition: Quiet Reflection → Synthesis Oracle.',
+        constellationNodeLabels: ['Synthesis Oracle', 'Council Deliberation'],
         note: 'Applied habitat profile Quiet Reflection.',
         error: ''
       })
@@ -53,6 +54,7 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Used 5 times');
     expect(html).toContain('Frequently Used');
     expect(html).toContain('Recent continuity favors Synthesis Oracle.');
+    expect(html).toContain('Constellation: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
     expect(html).toContain('Shortcuts: Alt+Shift+P');
     expect(html).toContain('preferences/configuration, no transcript');
@@ -82,10 +84,12 @@ describe('habitat profile ui', () => {
         transitionChips: [],
         profileUsageSummary: 'Never applied',
         profileLastAppliedLabel: 'Never applied',
-        usageBadge: 'Never Applied'
+        usageBadge: 'Never Applied',
+        constellationNodeLabels: ['Quiet Reflection']
       })
     );
     expect(html).toContain('Never applied');
     expect(html).toContain('Never Applied');
+    expect(html).toContain('Constellation: Quiet Reflection');
   });
 });

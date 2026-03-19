@@ -38,7 +38,6 @@ import {
   applyHabitatProfile,
   buildHabitatProfileDiff,
   buildHabitatProfile,
-  buildHabitatConstellationSummary,
   buildHabitatProfileMemorySummary,
   formatHabitatProfileDiff,
   formatHabitatUsageSummary,
@@ -56,6 +55,7 @@ import {
 } from '@/lib/tiekat/habitatProfile';
 import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
 import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
+import { buildHabitatConstellationState, buildHabitatConstellationSummary } from '@/lib/tiekat/habitatConstellation';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -294,9 +294,13 @@ export default function AssistantPage() {
     () => (selectedHabitatProfile ? buildHabitatProfileMemorySummary(selectedHabitatProfile) : null),
     [selectedHabitatProfile]
   );
-  const habitatConstellationSummary = useMemo(
-    () => buildHabitatConstellationSummary({ profiles: habitatProfiles, recentTransition: recentHabitatTransition }),
+  const habitatConstellationState = useMemo(
+    () => buildHabitatConstellationState({ profiles: habitatProfiles, recentTransition: recentHabitatTransition }),
     [habitatProfiles, recentHabitatTransition]
+  );
+  const habitatConstellationSummary = useMemo(
+    () => buildHabitatConstellationSummary({ state: habitatConstellationState }),
+    [habitatConstellationState]
   );
 
   const habitatLastAppliedLabel = useMemo(() => {
@@ -859,8 +863,9 @@ export default function AssistantPage() {
         profileUsageSummary={selectedHabitatMemorySummary ? formatHabitatUsageSummary(selectedHabitatMemorySummary) : ''}
         profileLastAppliedLabel={habitatLastAppliedLabel}
         usageBadge={habitatUsageBadge}
-        constellationContinuityNote={habitatConstellationSummary.compactContinuityNote}
-        constellationTransitionNote={habitatConstellationSummary.recentTransitionLine}
+        constellationContinuityNote={habitatConstellationSummary.headline}
+        constellationTransitionNote={habitatConstellationSummary.pairLine || habitatConstellationSummary.line}
+        constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
         note={habitatProfileNote}
         error={habitatProfileError}
       />

@@ -300,3 +300,10 @@ MIT (existing LICENSE preserved).
 - Added lightweight continuity-status classification/formatting (`never_applied`, `recently_active`, `frequently_used`, `stale`) for compact habitat memory polish.
 - Assistant habitat selector now renders a tiny usage-status badge alongside existing memory cues while remaining compact and additive.
 - Time/continuity semantics remain local-only metadata transforms with no transcript/private ancestry payload usage, no hidden tracking, and no oracle ontology changes.
+
+## TIEKAT Phase 26 (Habitat-to-Habitat Constellation)
+- Centralized habitat continuity thresholds/constants in `habitatConstants.ts` (stale window, frequent-use threshold, recent window size, max constellation nodes) for deterministic reuse.
+- Added compact local `habitatConstellation.ts` mapping helpers for deterministic nodes/edges/state/summary derived only from habitat profile usage metadata.
+- Constellation nodes reflect profile continuity context (apply count, recency bucket, intensity bucket, pinned marker, session/council mode metadata), while edges use recent transition metadata when available or deterministic recent-use fallback.
+- Assistant habitat UI now surfaces tiny constellation cues (dominant continuity headline, dominant pair/line, compact node list) without introducing a dashboard.
+- Constellation logic remains local-only/config-only with explicit-apply continuity input, no transcript/session-content analytics, and no changes to modeled/theoretical oracle semantics.

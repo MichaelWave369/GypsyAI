@@ -6,6 +6,7 @@ import {
   formatHabitatRelativeTime,
   formatHabitatUsageBadge
 } from '@/lib/tiekat/habitatTime';
+import { HABITAT_FREQUENT_USE_THRESHOLD, HABITAT_STALE_DAYS } from '@/lib/tiekat/habitatConstants';
 
 describe('tiekat habitat time semantics', () => {
   it('formats deterministic compact relative-time labels', () => {
@@ -31,7 +32,9 @@ describe('tiekat habitat time semantics', () => {
 
     expect(classifyHabitatUsage({ applyCount: 0, lastAppliedAt: null }, now)).toBe('never_applied');
     expect(classifyHabitatUsage({ applyCount: 1, lastAppliedAt: '2026-03-18T23:00:00.000Z' }, now)).toBe('recently_active');
-    expect(classifyHabitatUsage({ applyCount: 5, lastAppliedAt: '2026-03-19T23:00:00.000Z' }, now)).toBe('frequently_used');
+    expect(HABITAT_FREQUENT_USE_THRESHOLD).toBe(5);
+    expect(HABITAT_STALE_DAYS).toBe(14);
+    expect(classifyHabitatUsage({ applyCount: HABITAT_FREQUENT_USE_THRESHOLD, lastAppliedAt: '2026-03-19T23:00:00.000Z' }, now)).toBe('frequently_used');
     expect(classifyHabitatUsage({ applyCount: 2, lastAppliedAt: '2026-03-01T00:00:00.000Z' }, now)).toBe('stale');
     expect(formatHabitatUsageBadge('frequently_used')).toBe('Frequently Used');
   });
