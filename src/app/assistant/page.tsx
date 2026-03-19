@@ -10,6 +10,15 @@ import { appendGravityHistoryEntry, buildVersionComparisonSummary, getRecentGrav
 import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
 import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
 import { buildOraclePresentation, OracleVersionSummary, shouldShowOraclePresentation, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
+import {
+  appendOracleArtifact,
+  buildOracleArtifact,
+  compareOracleArtifacts,
+  deleteOracleArtifact,
+  exportOracleArtifactJson,
+  getRecentOracleArtifacts,
+  TiekatOracleArtifact
+} from '@/lib/tiekat/oracleArtifact';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
 import { OracleCard } from '@/components/assistant/OracleCard';
@@ -30,6 +39,8 @@ export default function AssistantPage() {
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
   const [versionComparisonSummary, setVersionComparisonSummary] = useState<OracleVersionSummary | null>(null);
   const [oraclePresentation, setOraclePresentation] = useState<TiekatOraclePresentation | null>(null);
+  const [oracleArtifacts, setOracleArtifacts] = useState<TiekatOracleArtifact[]>([]);
+  const [selectedArtifactId, setSelectedArtifactId] = useState<string>('');
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -48,9 +59,37 @@ export default function AssistantPage() {
       const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
       setVersionComparisonSummary(summary);
     });
+    getRecentOracleArtifacts(8).then((rows) => {
+      setOracleArtifacts(rows);
+      if (rows[0]) setSelectedArtifactId(rows[0].id);
+    });
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
+  const selectedArtifact = useMemo(() => oracleArtifacts.find((row) => row.id === selectedArtifactId) ?? null, [oracleArtifacts, selectedArtifactId]);
+  const previousArtifact = useMemo(() => {
+    if (!selectedArtifact) return null;
+    const selectedIndex = oracleArtifacts.findIndex((row) => row.id === selectedArtifact.id);
+    return selectedIndex >= 0 ? oracleArtifacts[selectedIndex + 1] ?? null : null;
+  }, [oracleArtifacts, selectedArtifact]);
+  const artifactComparison = useMemo(() => {
+    if (!selectedArtifact || !previousArtifact) return null;
+    return compareOracleArtifacts(previousArtifact, selectedArtifact);
+  }, [selectedArtifact, previousArtifact]);
+
+  const sparklinePoints = useMemo(() => {
+    if (!recentGravity.length) return '';
+    const values = recentGravity.map((row) => row.deltaGPredicted);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return values
+      .map((value, i) => {
+        const x = (i / Math.max(values.length - 1, 1)) * 100;
+        const y = max === min ? 20 : 40 - ((value - min) / (max - min)) * 40;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }, [recentGravity]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -166,6 +205,41 @@ export default function AssistantPage() {
           setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: gravityTrend as 'rising' | 'stable' | 'falling', versionSummary: summary, enableV55Framing }));
         }
       }
+      if (s.useSessionsInAssistant && data.tiekat?.verification?.passed && data.tiekat?.gravityBootstrap) {
+        const artifactOracle = buildOraclePresentation({
+          gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult,
+          trend: (gravityTrend as 'rising' | 'stable' | 'falling'),
+          versionSummary: versionComparisonSummary ?? buildVersionComparisonSummary(recentGravity, TIEKAT_V54_SCORING_VERSION),
+          enableV55Framing
+        });
+        const artifact = buildOracleArtifact({
+          sessionId,
+          route: data.tiekat?.route ?? 'assistant_synthesis',
+          mode: data.tiekat?.plan?.mode ?? 'assistant_synthesis',
+          activeModules: data.tiekat?.plan?.modulesToConsult ?? ['assistant'],
+          prompt: input,
+          response: data.content,
+          gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult,
+          oracle: artifactOracle,
+          trend: gravityTrend as 'rising' | 'stable' | 'falling',
+          versionSummary: versionComparisonSummary,
+          consent: {
+            memoryEnabled: s.useSessionsInAssistant,
+            includeNames: s.includeNamesInAiContext,
+            allowAncestry: s.allowAncestryAi,
+            hideLivingPersons: s.hideLivingPersons
+          },
+          enableV55Framing
+        });
+        await appendOracleArtifact({ enabled: true, artifact });
+        const recentArtifacts = await getRecentOracleArtifacts(8);
+        setOracleArtifacts(recentArtifacts);
+        setSelectedArtifactId(recentArtifacts[0]?.id ?? '');
+      }
+      if (!s.useSessionsInAssistant) {
+        setOracleArtifacts([]);
+        setSelectedArtifactId('');
+      }
 
       await persist(withAssistant);
       return;
@@ -213,6 +287,26 @@ export default function AssistantPage() {
     await saveAssistantSessions(next);
   };
 
+  const exportArtifact = (artifact: TiekatOracleArtifact) => {
+    const text = exportOracleArtifactJson(artifact);
+    const blob = new Blob([text], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `oracle-artifact-${artifact.id.replace(/[:.]/g, '-')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const removeArtifact = async (id: string) => {
+    await deleteOracleArtifact(id);
+    const rows = await getRecentOracleArtifacts(8);
+    setOracleArtifacts(rows);
+    if (!rows.some((row) => row.id === selectedArtifactId)) {
+      setSelectedArtifactId(rows[0]?.id ?? '');
+    }
+  };
+
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
@@ -243,8 +337,38 @@ export default function AssistantPage() {
           <div className="flex gap-2"><button className="rounded border border-zinc-700 px-2" onClick={summarize}>Summarize session</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('md')}>Export MD</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('json')}>Export JSON</button></div>
           <input type="file" accept="application/json" onChange={(e) => importSession(e.target.files?.[0])} />
           {sessions.map((s) => <button key={s.id} className="block w-full rounded border border-zinc-700 p-2 text-left" onClick={() => { setActiveId(s.id); setMessages(s.messages.map((m) => ({ role: m.role, content: m.content }))); }}>{s.title}<div className="text-xs text-zinc-400">{new Date(s.updatedAt).toLocaleString()}</div></button>)}
+          <div className="space-y-2 rounded border border-zinc-700 p-2" data-testid="oracle-artifact-panel">
+            <p className="text-xs uppercase tracking-wide text-zinc-400">Recent Oracle Sessions</p>
+            {!oracleArtifacts.length ? <p className="text-xs text-zinc-500">No local oracle artifacts yet.</p> : null}
+            {oracleArtifacts.map((artifact) => (
+              <button
+                key={artifact.id}
+                className={`block w-full rounded border p-2 text-left ${artifact.id === selectedArtifactId ? 'border-gold text-gold' : 'border-zinc-700'}`}
+                onClick={() => setSelectedArtifactId(artifact.id)}
+              >
+                <p className="text-xs">{new Date(artifact.timestamp).toLocaleString()}</p>
+                <p className="text-xs text-zinc-400">{artifact.route} • {artifact.activeModules.join(', ')}</p>
+                <p className="text-xs text-zinc-400">I={artifact.gravity.informationIntegral.toFixed(3)}, Δg={artifact.gravity.deltaGPredicted.toExponential(2)}</p>
+              </button>
+            ))}
+          </div>
         </aside>
         <section className="panel space-y-2">
+          {selectedArtifact ? (
+            <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-300" data-testid="oracle-artifact-replay">
+              <p className="font-semibold">Artifact Replay</p>
+              <p>{selectedArtifact.summary.oracleHeadline || 'Oracle summary artifact'}</p>
+              <p className="text-zinc-400">Prompt: {selectedArtifact.summary.promptSummary}</p>
+              <p className="text-zinc-400">Response: {selectedArtifact.summary.responseSummary}</p>
+              <p className="text-zinc-400">Trend {selectedArtifact.trend || 'stable'} • Version state {selectedArtifact.versionSummaryState || 'insufficient_data'} • v55 framing {selectedArtifact.v55?.enabled ? 'on' : 'off'}</p>
+              {artifactComparison ? <p className="text-zinc-400">Compared to previous: ΔI {artifactComparison.informationIntegralDelta.toFixed(6)}, ΔΔg {artifactComparison.deltaGPredictedDelta.toExponential(2)}, route changed {artifactComparison.routeChanged ? 'yes' : 'no'}, scoring version changed {artifactComparison.scoringVersionChanged ? 'yes' : 'no'}</p> : null}
+              <div className="flex gap-2 pt-1">
+                <button className="rounded border border-zinc-700 px-2 py-1" onClick={() => exportArtifact(selectedArtifact)}>Export Artifact JSON</button>
+                <button className="rounded border border-zinc-700 px-2 py-1" onClick={() => removeArtifact(selectedArtifact.id)}>Delete Artifact</button>
+              </div>
+              <p className="text-zinc-500">Modeled/theoretical artifact only — local storage, no cloud sync.</p>
+            </div>
+          ) : null}
           <div className="max-h-[500px] overflow-auto space-y-2">
             {messages.map((m, i) => <div key={i} className="rounded border border-zinc-700 p-2 text-sm"><b>{m.role}</b><pre className="whitespace-pre-wrap">{m.content}</pre>{m.sources?.length ? <p className="text-xs text-zinc-400">Sources: {m.sources.join(', ')}</p> : null}</div>)}
           </div>

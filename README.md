@@ -162,3 +162,13 @@ MIT (existing LICENSE preserved).
 - Introduced lightweight shared Assistant presentation components (`OracleCard`, `ModeledBadge`, `DiagnosticsSection`, `SectionLabel`) for visual consistency.
 - Added low-friction UI visibility tests for oracle/disclaimer/framing and diagnostics placeholder behavior.
 - All framing remains modeled/theoretical and does not imply hardware measurement or physical confirmation.
+
+## TIEKAT Phase 8 (Oracle Session Artifact Layer)
+- Added a compact local-first **oracle artifact** schema for replayable TIEKAT session snapshots (`TIEKAT-oracle-artifact-v1`).
+- Artifacts intentionally store summaries and modeled metadata only: route/mode/modules, prompt/response summaries, gravity snapshot, v54 metadata, optional v55 framing presence, trend/version state, and consent flags.
+- Artifacts intentionally do **not** store full transcripts, raw ancestry payloads, or deep private source objects.
+- Persistence is additive and local-only via IndexedDB (`oracleArtifacts` store) with normalization-safe defaults, recent listing, deletion, and compact export JSON helper support.
+- Artifact persistence is gated by existing session-memory consent (when memory is disabled, artifact persistence does not run).
+- Added lightweight Assistant replay UI: recent oracle artifacts list, compact replay panel, optional export/delete actions, and tiny comparison readout against the previous artifact.
+- Added deterministic helper coverage for artifact build/summary/normalization, privacy-safe redaction behavior, persistence/load/recent/delete flow, export shape, and artifact comparison deltas.
+- As with prior phases, oracle/gravity data remains explicitly modeled/theoretical and not a physical sensor measurement.
