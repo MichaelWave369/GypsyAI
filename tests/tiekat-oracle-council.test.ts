@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildOracleArtifact, normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 import {
+  buildCouncilContinuitySummary,
   buildCouncilInputEnvelope,
   buildCouncilPlan,
   getCouncilRoster,
@@ -32,7 +33,7 @@ describe('oracle council layer', () => {
     expect(envelope.ancestrySummary).toBeUndefined();
   });
 
-  it('returns null for disabled council mode and deterministic result otherwise', () => {
+  it('returns null for disabled council mode and deterministic result otherwise', async () => {
     const envelope = buildCouncilInputEnvelope({
       message: 'General prompt',
       sessionMode: 'open_reflection',
@@ -42,16 +43,17 @@ describe('oracle council layer', () => {
       artifactContinuitySummary: 'continuity',
       consent: { allowAncestry: false, includeNames: false }
     });
-    expect(runOracleCouncil({ mode: 'disabled', consent: { allowAncestry: false }, envelope })).toBeNull();
+    expect(await runOracleCouncil({ mode: 'disabled', consent: { allowAncestry: false }, envelope })).toBeNull();
 
-    const result = runOracleCouncil({ mode: 'oracle_council', consent: { allowAncestry: false }, envelope });
+    const result = await runOracleCouncil({ mode: 'oracle_council', consent: { allowAncestry: false }, envelope });
     expect(result?.summary.mode).toBe('oracle_council');
     expect(result?.summary.turnCount).toBeGreaterThan(0);
+    expect(result?.summary.executionSource).toBe('deterministic_stub');
     expect(result?.summary.footer.toLowerCase()).toContain('theoretical');
   });
 
-  it('stores compact council metadata in artifacts and normalizes older artifacts', () => {
-    const council = runOracleCouncil({
+  it('stores compact council metadata in artifacts and normalizes older artifacts', async () => {
+    const council = await runOracleCouncil({
       mode: 'deliberation_oracle',
       consent: { allowAncestry: true },
       envelope: buildCouncilInputEnvelope({
@@ -84,13 +86,45 @@ describe('oracle council layer', () => {
       council: council?.summary ?? null
     });
     expect(artifact.council?.roles.length).toBeGreaterThan(0);
+    expect(artifact.council?.executionSource).toBe('deterministic_stub');
     const normalized = normalizeOracleArtifact({ id: 'legacy' });
     expect(normalized.council).toBeUndefined();
   });
 
-  it('buildCouncilPlan returns empty roles for disabled mode', () => {
+  it('buildCouncilPlan and continuity summary work for compact diagnostics', () => {
     const disabled = buildCouncilPlan('disabled', { allowAncestry: true });
     expect(disabled.roles.length).toBe(0);
     expect(summarizePromptForCouncil('A B C Name')).toContain('[name]');
+
+    const continuity = buildCouncilContinuitySummary([
+      {
+        mode: 'oracle_council',
+        roles: ['oracle_reader', 'pattern_weaver', 'skeptic_grounder', 'final_integrator'],
+        turnCount: 4,
+        roleSummaries: [],
+        disagreement: false,
+        synthesisNote: 'a',
+        selectedModules: ['assistant'],
+        warnings: [],
+        executionSource: 'deterministic_stub',
+        adapterAvailable: false,
+        footer: 'f'
+      },
+      {
+        mode: 'oracle_council',
+        roles: ['oracle_reader', 'pattern_weaver', 'skeptic_grounder', 'final_integrator'],
+        turnCount: 4,
+        roleSummaries: [],
+        disagreement: true,
+        synthesisNote: 'b',
+        selectedModules: ['assistant'],
+        warnings: [],
+        executionSource: 'provider_backed',
+        adapterAvailable: true,
+        footer: 'f'
+      }
+    ]);
+    expect(continuity.state).toBe('council_continuity');
+    expect(continuity.executionSources).toContain('provider_backed');
   });
 });

@@ -31,7 +31,14 @@ import {
 } from '@/lib/tiekat/oracleConstellation';
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
-import { getCouncilModes, TiekatCouncilMode, TiekatCouncilSummary } from '@/lib/tiekat/oracleCouncil';
+import {
+  buildCouncilContinuitySummary,
+  getCouncilModes,
+  loadCouncilModePreference,
+  saveCouncilModePreference,
+  TiekatCouncilMode,
+  TiekatCouncilSummary
+} from '@/lib/tiekat/oracleCouncil';
 import {
   appendRitualDeck,
   buildFilteredRitualDeck,
@@ -92,6 +99,7 @@ export default function AssistantPage() {
   const [ritualDeckFilters, setRitualDeckFilters] = useState<TiekatRitualDeckFilterState>(normalizeRitualDeckFilterState());
   const [ritualDeckImportError, setRitualDeckImportError] = useState('');
   const [councilMode, setCouncilMode] = useState<TiekatCouncilMode>('disabled');
+  const [preferProviderBackedCouncil, setPreferProviderBackedCouncil] = useState(false);
   const [councilSummary, setCouncilSummary] = useState<TiekatCouncilSummary | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -117,6 +125,7 @@ export default function AssistantPage() {
     getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows));
     setShowGeometry(loadGeometryVisibilityPreference(false));
     setConstellationFilters(loadConstellationFilters());
+    setCouncilMode(loadCouncilModePreference('disabled'));
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
@@ -160,6 +169,10 @@ export default function AssistantPage() {
   }, [constellationState]);
   const ritualDeckSummary = useMemo(() => (ritualDeck ? summarizeRitualDeck(ritualDeck) : null), [ritualDeck]);
   const ritualDeckFilterOptions = useMemo(() => getRitualDeckFilterOptions(oracleArtifacts), [oracleArtifacts]);
+  const councilContinuity = useMemo(
+    () => buildCouncilContinuitySummary(oracleArtifacts.slice(0, 8).map((artifact) => artifact.council)),
+    [oracleArtifacts]
+  );
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -231,7 +244,8 @@ export default function AssistantPage() {
             ancestry: capsule.ancestryPatterns
           },
           memoryEntries,
-          councilMode
+          councilMode,
+          councilAdapterMode: preferProviderBackedCouncil ? 'provider_preferred' : 'deterministic_only'
         }
       }),
       signal: controllerRef.current.signal
@@ -503,15 +517,24 @@ export default function AssistantPage() {
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <label className="text-xs text-zinc-400">
         Oracle council mode
-        <select className="ml-2 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5" value={councilMode} onChange={(e) => setCouncilMode(e.target.value as TiekatCouncilMode)}>
+        <select className="ml-2 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5" value={councilMode} onChange={(e) => {
+          const mode = e.target.value as TiekatCouncilMode;
+          setCouncilMode(mode);
+          saveCouncilModePreference(mode);
+        }}>
           {getCouncilModes().map((mode) => <option key={mode} value={mode}>{mode}</option>)}
         </select>
+      </label>
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input type="checkbox" checked={preferProviderBackedCouncil} onChange={(e) => setPreferProviderBackedCouncil(e.target.checked)} />
+        Prefer provider-backed council adapter (fallbacks to deterministic)
       </label>
       {councilSummary ? (
         <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-400" data-testid="council-summary">
           <p className="font-semibold">Council: {councilSummary.mode}</p>
           <p>Roles: {councilSummary.roles.join(', ') || 'none'} • Turns: {councilSummary.turnCount}</p>
           <p>Debate: {councilSummary.disagreement ? 'disagreement detected' : 'aligned synthesis'}</p>
+          <p>Execution: {councilSummary.executionSource}{councilSummary.adapterName ? ` (${councilSummary.adapterName})` : ''}</p>
           <p>{councilSummary.synthesisNote}</p>
         </div>
       ) : null}
@@ -584,6 +607,14 @@ export default function AssistantPage() {
               {filteredConstellationState?.nodes.length ? <OracleConstellation state={filteredConstellationState} /> : <p className="text-xs text-zinc-500">No recent artifacts match the current filter.</p>}
             </div>
           ) : null}
+          <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-400" data-testid="council-continuity-diagnostics">
+            <p className="font-semibold">Council Continuity (diagnostics)</p>
+            <p>State: {councilContinuity.state}</p>
+            <p>Role stability: {councilContinuity.roleStability}</p>
+            <p>Disagreement rate: {councilContinuity.disagreementRate.toFixed(3)}</p>
+            <p>Execution sources: {councilContinuity.executionSources.join(', ') || 'none'}</p>
+            <p>{councilContinuity.note}</p>
+          </div>
         </>
       ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">

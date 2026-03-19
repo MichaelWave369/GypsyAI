@@ -59,6 +59,9 @@ export interface TiekatOracleArtifact {
     disagreement: boolean;
     synthesisNote: string;
     roleSummaries: Array<{ role: TiekatCouncilRole; summary: string }>;
+    executionSource: TiekatCouncilSummary['executionSource'];
+    adapterName?: string;
+    adapterAvailable: boolean;
     footer: string;
   };
   consent: {
@@ -160,6 +163,9 @@ export function buildOracleArtifact(args: {
       disagreement: args.council.disagreement,
       synthesisNote: args.council.synthesisNote.slice(0, 200),
       roleSummaries: args.council.roleSummaries.map((row) => ({ role: row.role, summary: row.summary.slice(0, 200) })).slice(0, 6),
+      executionSource: args.council.executionSource,
+      adapterName: args.council.adapterName?.slice(0, 80),
+      adapterAvailable: args.council.adapterAvailable,
       footer: args.council.footer
     } : undefined,
     consent: {
@@ -220,6 +226,9 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
         role: row.role,
         summary: row.summary?.slice(0, 200) || ''
       })).slice(0, 8) : [],
+      executionSource: value.council.executionSource || 'deterministic_stub',
+      adapterName: value.council.adapterName?.slice(0, 80),
+      adapterAvailable: value.council.adapterAvailable ?? false,
       footer: value.council.footer?.slice(0, 180) || 'Modeled council deliberation only.'
     } : undefined,
     consent: {

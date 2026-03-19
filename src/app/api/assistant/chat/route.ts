@@ -31,6 +31,7 @@ const tiekatSchema = z
     sessionId: z.string().optional(),
     sessionMode: z.enum(['open_reflection', 'tarot_inquiry', 'astrology_reflection', 'genekeys_contemplation', 'ancestral_listening', 'synthesis_oracle']).optional(),
     councilMode: z.enum(['disabled', 'oracle_council', 'deliberation_oracle', 'swarm_synthesis']).optional(),
+    councilAdapterMode: z.enum(['deterministic_only', 'provider_preferred']).optional(),
     consent: consentSchema.optional(),
     moduleData: z
       .object({
@@ -114,10 +115,12 @@ export async function POST(req: NextRequest) {
     ancestrySummary: typeof tiekat?.moduleData?.ancestry === 'string' ? tiekat.moduleData.ancestry : 'ancestry summary not expanded',
     consent
   });
-  const councilResult = runOracleCouncil({
+  const councilResult = await runOracleCouncil({
     mode: councilMode,
     consent,
-    envelope: councilEnvelope
+    envelope: councilEnvelope,
+    adapterMode: tiekat?.councilAdapterMode ?? 'deterministic_only',
+    provider: providerInput
   });
 
   if (isTestMode() || demoMode) {

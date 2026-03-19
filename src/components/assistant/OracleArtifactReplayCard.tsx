@@ -44,6 +44,7 @@ export function OracleArtifactReplayCard(props: {
           Council {artifact.council.mode} • roles {artifact.council.roles.join(', ') || 'none'} • turns {artifact.council.turnCount} • disagreement {artifact.council.disagreement ? 'yes' : 'no'}
         </p>
       ) : null}
+      {artifact.council ? <p className="text-zinc-500">Council source: {artifact.council.executionSource}{artifact.council.adapterName ? ` (${artifact.council.adapterName})` : ''}</p> : null}
       {props.diffView ? (
         <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="artifact-diff-view">
           <p className="font-semibold">{props.diffView.title}</p>

@@ -1,7 +1,9 @@
 import { TiekatConsentState, TiekatModuleKey } from '@/lib/tiekat/schema';
 import { TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
+import { resolveCouncilAdapter, TiekatCouncilAdapterMode } from '@/lib/tiekat/oracleCouncilAdapter';
 
 export type TiekatCouncilMode = 'disabled' | 'oracle_council' | 'deliberation_oracle' | 'swarm_synthesis';
+export type TiekatCouncilExecutionSource = 'deterministic_stub' | 'provider_backed';
 
 export type TiekatCouncilRole = 'oracle_reader' | 'pattern_weaver' | 'skeptic_grounder' | 'lineage_keeper' | 'final_integrator';
 
@@ -42,6 +44,9 @@ export interface TiekatCouncilSummary {
   synthesisNote: string;
   selectedModules: TiekatModuleKey[];
   warnings: string[];
+  executionSource: TiekatCouncilExecutionSource;
+  adapterName?: string;
+  adapterAvailable: boolean;
   footer: string;
 }
 
@@ -51,6 +56,16 @@ export interface TiekatCouncilResult {
   summary: TiekatCouncilSummary;
 }
 
+export interface TiekatCouncilContinuitySummary {
+  state: 'insufficient_data' | 'council_continuity' | 'council_shift';
+  recentModes: TiekatCouncilMode[];
+  disagreementRate: number;
+  executionSources: TiekatCouncilExecutionSource[];
+  roleStability: 'stable' | 'shifted';
+  note: string;
+}
+
+const COUNCIL_MODE_KEY = 'gypsy-ai-tiekat-council-mode';
 export const COUNCIL_FOOTER = 'Modeled council deliberation only. Theoretical planning aid — not physical confirmation.';
 
 const ROLE_PURPOSES: Record<TiekatCouncilRole, string> = {
@@ -63,6 +78,17 @@ const ROLE_PURPOSES: Record<TiekatCouncilRole, string> = {
 
 export function getCouncilModes(): TiekatCouncilMode[] {
   return ['disabled', 'oracle_council', 'deliberation_oracle', 'swarm_synthesis'];
+}
+
+export function loadCouncilModePreference(defaultMode: TiekatCouncilMode = 'disabled'): TiekatCouncilMode {
+  if (typeof window === 'undefined') return defaultMode;
+  const raw = window.localStorage.getItem(COUNCIL_MODE_KEY);
+  return getCouncilModes().includes(raw as TiekatCouncilMode) ? raw as TiekatCouncilMode : defaultMode;
+}
+
+export function saveCouncilModePreference(mode: TiekatCouncilMode) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(COUNCIL_MODE_KEY, mode);
 }
 
 export function getCouncilRoster(consent: Pick<TiekatConsentState, 'allowAncestry'>): TiekatCouncilRole[] {
@@ -110,12 +136,11 @@ export function buildCouncilInputEnvelope(args: {
   };
 }
 
-export function runOracleCouncil(args: {
+function buildDeterministicCouncil(args: {
   mode: TiekatCouncilMode;
   consent: Pick<TiekatConsentState, 'allowAncestry'>;
   envelope: TiekatCouncilInputEnvelope;
-}): TiekatCouncilResult | null {
-  if (args.mode === 'disabled') return null;
+}) {
   const plan = buildCouncilPlan(args.mode, args.consent);
   const turns: TiekatCouncilTurn[] = plan.roles.map((entry, i) => {
     const base = `${entry.role}: ${entry.purpose}`;
@@ -132,17 +157,106 @@ export function runOracleCouncil(args: {
 
   const disagreement = turns.some((turn) => !turn.agreesWithPrior);
   const warnings = turns.map((turn) => turn.warning).filter(Boolean) as string[];
-  const summary: TiekatCouncilSummary = {
-    mode: args.mode,
-    roles: plan.roles.map((entry) => entry.role),
-    turnCount: turns.length,
-    roleSummaries: turns.map((turn) => ({ role: turn.role, summary: turn.summary })),
-    disagreement,
-    synthesisNote: `Council synthesized ${turns.length} compact role perspectives under TIEKAT governance.`,
-    selectedModules: args.envelope.modules,
-    warnings,
-    footer: COUNCIL_FOOTER
+  return {
+    plan,
+    turns,
+    summary: {
+      mode: args.mode,
+      roles: plan.roles.map((entry) => entry.role),
+      turnCount: turns.length,
+      roleSummaries: turns.map((turn) => ({ role: turn.role, summary: turn.summary })),
+      disagreement,
+      synthesisNote: `Council synthesized ${turns.length} compact role perspectives under TIEKAT governance.`,
+      selectedModules: args.envelope.modules,
+      warnings,
+      executionSource: 'deterministic_stub' as const,
+      adapterName: undefined,
+      adapterAvailable: false,
+      footer: COUNCIL_FOOTER
+    }
   };
+}
 
-  return { plan, turns, summary };
+export async function runOracleCouncilWithAdapter(args: {
+  mode: TiekatCouncilMode;
+  consent: Pick<TiekatConsentState, 'allowAncestry'>;
+  envelope: TiekatCouncilInputEnvelope;
+  adapterMode?: TiekatCouncilAdapterMode;
+  provider?: string;
+}): Promise<TiekatCouncilResult | null> {
+  if (args.mode === 'disabled') return null;
+
+  const base = buildDeterministicCouncil(args);
+  const adapter = resolveCouncilAdapter(args.adapterMode ?? 'deterministic_only', args.provider);
+  if (!adapter.available) {
+    return {
+      ...base,
+      summary: {
+        ...base.summary,
+        adapterAvailable: false
+      }
+    };
+  }
+
+  const adapterResult = await adapter.run({
+    mode: args.mode,
+    roles: base.plan.roles.map((row) => row.role),
+    envelope: args.envelope
+  });
+  return {
+    plan: base.plan,
+    turns: adapterResult.turns,
+    summary: {
+      mode: args.mode,
+      roles: base.plan.roles.map((entry) => entry.role),
+      turnCount: adapterResult.turns.length,
+      roleSummaries: adapterResult.turns.map((turn) => ({ role: turn.role, summary: turn.summary })),
+      disagreement: adapterResult.disagreement,
+      synthesisNote: adapterResult.synthesisNote,
+      selectedModules: args.envelope.modules,
+      warnings: adapterResult.warnings,
+      executionSource: 'provider_backed',
+      adapterName: adapter.name,
+      adapterAvailable: true,
+      footer: COUNCIL_FOOTER
+    }
+  };
+}
+
+export async function runOracleCouncil(args: {
+  mode: TiekatCouncilMode;
+  consent: Pick<TiekatConsentState, 'allowAncestry'>;
+  envelope: TiekatCouncilInputEnvelope;
+  adapterMode?: TiekatCouncilAdapterMode;
+  provider?: string;
+}): Promise<TiekatCouncilResult | null> {
+  return runOracleCouncilWithAdapter(args);
+}
+
+export function buildCouncilContinuitySummary(summaries: Array<TiekatCouncilSummary | undefined | null>): TiekatCouncilContinuitySummary {
+  const rows = summaries.filter(Boolean) as TiekatCouncilSummary[];
+  if (rows.length < 2) {
+    return {
+      state: 'insufficient_data',
+      recentModes: rows.map((row) => row.mode),
+      disagreementRate: rows.length ? Number((rows.filter((row) => row.disagreement).length / rows.length).toFixed(3)) : 0,
+      executionSources: rows.map((row) => row.executionSource),
+      roleStability: 'stable',
+      note: 'Insufficient council artifacts for continuity signal.'
+    };
+  }
+  const recentModes = rows.map((row) => row.mode);
+  const uniqueModes = new Set(recentModes);
+  const roleSignature = rows.map((row) => row.roles.join('|'));
+  const roleStability = new Set(roleSignature).size > 1 ? 'shifted' : 'stable';
+  const disagreementRate = Number((rows.filter((row) => row.disagreement).length / rows.length).toFixed(3));
+  const state = uniqueModes.size > 1 || roleStability === 'shifted' ? 'council_shift' : 'council_continuity';
+  return {
+    state,
+    recentModes,
+    disagreementRate,
+    executionSources: rows.map((row) => row.executionSource),
+    roleStability,
+    note: state === 'council_continuity' ? 'Recent council artifacts show stable role/mode continuity.' : 'Recent council artifacts indicate mode/roster shift.'
+  };
 }

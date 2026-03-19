@@ -242,3 +242,10 @@ MIT (existing LICENSE preserved).
 - Added sanitized council input-envelope and deterministic deliberation summaries (agreement/disagreement, warnings, synthesis note) with modeled/theoretical footer language.
 - Assistant API now returns compact council summaries when enabled, while the default single-oracle path remains unchanged when council mode is disabled.
 - Oracle artifacts now support additive compact council metadata for replay/export compatibility without storing full council transcripts.
+
+## TIEKAT Phase 18 (Provider-Backed Council Adapter + Continuity)
+- Added a governed council adapter seam (`oracleCouncilAdapter.ts`) supporting optional provider-preferred execution while preserving deterministic fallback by default.
+- Council summaries now include compact execution metadata (`executionSource`, `adapterName`, `adapterAvailable`) for replay/diagnostics continuity.
+- Added local-only council mode preference helpers (`loadCouncilModePreference`, `saveCouncilModePreference`) and wired them into Assistant council controls.
+- Added diagnostics-only council continuity summaries from recent artifact council metadata (continuity/shift state, role stability, disagreement rate, execution-source mix).
+- Adapter input remains sanitized and summary-only; no raw council/provider transcript persistence paths were introduced.
