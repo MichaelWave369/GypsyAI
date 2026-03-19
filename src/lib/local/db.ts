@@ -3,10 +3,11 @@ import { AssistantSession } from '@/lib/assistant/storage';
 import { TiekatGravityHistoryEntry } from '@/lib/tiekat/schema';
 import type { TiekatOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 import type { TiekatRitualDeckStoreEntry } from '@/lib/tiekat/ritualDeck';
+import type { TiekatHabitatProfile } from '@/lib/tiekat/habitatProfile';
 import { BirthProfile, GeneKeysSession, TarotSession } from '@/lib/local/storage';
 
 export const DB_NAME = 'gypsy-ai-local';
-export const DB_VERSION = 5;
+export const DB_VERSION = 6;
 
 type StoreMap = {
   profiles: BirthProfile[];
@@ -18,6 +19,7 @@ type StoreMap = {
   gravityHistory: TiekatGravityHistoryEntry[];
   oracleArtifacts: TiekatOracleArtifact[];
   ritualDecks: TiekatRitualDeckStoreEntry[];
+  habitatProfiles: TiekatHabitatProfile[];
   meta: { schemaVersion: number; appVersion: string; updatedAt: string };
 };
 
@@ -31,6 +33,7 @@ const stores: Array<keyof StoreMap> = [
   'gravityHistory',
   'oracleArtifacts',
   'ritualDecks',
+  'habitatProfiles',
   'meta'
 ];
 

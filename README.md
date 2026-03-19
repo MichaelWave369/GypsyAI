@@ -263,3 +263,11 @@ MIT (existing LICENSE preserved).
 - Replay and ritual surfaces now show compact v56 continuity metadata when present, while keeping exports compact and local-only.
 - Constellation continuity now supports lightweight sphere-state awareness (`sphere_shift`) and a deterministic `buildSphereContinuitySummary(...)` helper for diagnostics-friendly continuity lines.
 - All phase additions remain additive, memory-gated, privacy-safe, and explicitly modeled/theoretical (no hardware/physical measurement claims, no raw private payload persistence).
+
+## TIEKAT Phase 21 (Sovereign Habitat Profiles)
+- Added local-first habitat profiles as compact preference/config presets (session mode, council mode, adapter preference, geometry/diagnostics/v55 toggles, constellation/ritual filters, prompt-preset mode).
+- Habitat profiles intentionally store **no transcript/session content** and no raw private ancestry payloads; they are configuration-only artifacts.
+- Added deterministic profile defaults (`Quiet Reflection`, `Tarot Chamber`, `Synthesis Oracle`, `Council Deliberation`, `Sphere Diagnostics`) plus normalization-safe persistence/import/export helpers.
+- Assistant UI now includes a compact habitat panel for apply/save/update/delete/export/import profile flows.
+- Profile application is explicit and consent-safe: ancestry-forward requests resolve through existing session-mode governance when ancestry consent is disabled.
+- Profiles remain local-only and preserve modeled/theoretical runtime posture (no hardware/physical measurement claims and no ontology changes to v54/v55/v56 roles).

@@ -34,6 +34,17 @@ import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibility
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { buildAwakenedSphereState } from '@/lib/tiekat/awakenedSphere';
 import {
+  appendHabitatProfile,
+  applyHabitatProfile,
+  buildHabitatProfile,
+  deleteHabitatProfile,
+  exportHabitatProfileJson,
+  getRecentHabitatProfiles,
+  importHabitatProfileJson,
+  TiekatHabitatProfile,
+  updateHabitatProfile
+} from '@/lib/tiekat/habitatProfile';
+import {
   buildCouncilContinuitySummary,
   getCouncilModes,
   loadCouncilModePreference,
@@ -68,6 +79,7 @@ import { OracleCard } from '@/components/assistant/OracleCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
 import { RitualDeckPanel } from '@/components/assistant/RitualDeckPanel';
 import { AwakenedSphereCard } from '@/components/assistant/AwakenedSphereCard';
+import { HabitatProfileSelector } from '@/components/assistant/HabitatProfileSelector';
 import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
@@ -104,6 +116,12 @@ export default function AssistantPage() {
   const [councilMode, setCouncilMode] = useState<TiekatCouncilMode>('disabled');
   const [preferProviderBackedCouncil, setPreferProviderBackedCouncil] = useState(false);
   const [councilSummary, setCouncilSummary] = useState<TiekatCouncilSummary | null>(null);
+  const [habitatProfiles, setHabitatProfiles] = useState<TiekatHabitatProfile[]>([]);
+  const [selectedHabitatProfileId, setSelectedHabitatProfileId] = useState('');
+  const [habitatNameDraft, setHabitatNameDraft] = useState('');
+  const [habitatDescriptionDraft, setHabitatDescriptionDraft] = useState('');
+  const [habitatProfileNote, setHabitatProfileNote] = useState('');
+  const [habitatProfileError, setHabitatProfileError] = useState('');
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -126,6 +144,14 @@ export default function AssistantPage() {
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
     getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows));
+    getRecentHabitatProfiles(12).then((rows) => {
+      setHabitatProfiles(rows);
+      if (rows[0]) {
+        setSelectedHabitatProfileId(rows[0].id);
+        setHabitatNameDraft(rows[0].name);
+        setHabitatDescriptionDraft(rows[0].description);
+      }
+    });
     setShowGeometry(loadGeometryVisibilityPreference(false));
     setConstellationFilters(loadConstellationFilters());
     setCouncilMode(loadCouncilModePreference('disabled'));
@@ -191,6 +217,10 @@ export default function AssistantPage() {
       trend: gravityTrend as 'rising' | 'stable' | 'falling'
     });
   }, [latestGravity, councilSummary, councilContinuity, geometryState, filteredConstellationState, constellationState, sessionMode, latestModules, versionComparisonSummary, gravityTrend]);
+  const selectedHabitatProfile = useMemo(
+    () => habitatProfiles.find((profile) => profile.id === selectedHabitatProfileId) ?? null,
+    [habitatProfiles, selectedHabitatProfileId]
+  );
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -526,6 +556,114 @@ export default function AssistantPage() {
     }
   };
 
+  const refreshHabitatProfiles = async (nextSelectedId?: string) => {
+    const rows = await getRecentHabitatProfiles(12);
+    setHabitatProfiles(rows);
+    const fallback = rows[0]?.id || '';
+    const selected = nextSelectedId && rows.some((profile) => profile.id === nextSelectedId) ? nextSelectedId : fallback;
+    setSelectedHabitatProfileId(selected);
+    const selectedProfile = rows.find((profile) => profile.id === selected);
+    if (selectedProfile) {
+      setHabitatNameDraft(selectedProfile.name);
+      setHabitatDescriptionDraft(selectedProfile.description);
+    }
+  };
+
+  const captureCurrentHabitatPreferences = () => ({
+    sessionMode,
+    councilMode,
+    preferProviderBackedCouncil,
+    showGeometry,
+    showDiagnostics: showGravityDiagnostics,
+    enableV55Framing,
+    constellationFilters,
+    ritualDeckFilters,
+    promptPresetMode: sessionMode
+  });
+
+  const applySelectedHabitatProfile = () => {
+    if (!selectedHabitatProfile) return;
+    const settings = loadSettings();
+    const applied = applyHabitatProfile({
+      profile: selectedHabitatProfile,
+      allowAncestry: settings.allowAncestryAi
+    });
+    setSessionMode(applied.appliedSessionMode);
+    setCouncilMode(applied.profile.preferences.councilMode);
+    saveCouncilModePreference(applied.profile.preferences.councilMode);
+    setPreferProviderBackedCouncil(applied.profile.preferences.preferProviderBackedCouncil);
+    setShowGeometry(applied.profile.preferences.showGeometry);
+    saveGeometryVisibilityPreference(applied.profile.preferences.showGeometry);
+    setShowGravityDiagnostics(applied.profile.preferences.showDiagnostics);
+    setEnableV55Framing(applied.profile.preferences.enableV55Framing);
+    setConstellationFilters(applied.profile.preferences.constellationFilters);
+    saveConstellationFilters(applied.profile.preferences.constellationFilters);
+    setRitualDeckFilters(applied.profile.preferences.ritualDeckFilters);
+    setHabitatProfileNote(applied.note);
+    setHabitatProfileError('');
+  };
+
+  const saveCurrentAsHabitatProfile = async () => {
+    const now = new Date().toISOString();
+    const profile = buildHabitatProfile({
+      name: habitatNameDraft.trim() || 'Sovereign Habitat',
+      description: habitatDescriptionDraft.trim() || 'Compact local oracle habitat profile.',
+      now,
+      preferences: captureCurrentHabitatPreferences()
+    });
+    await appendHabitatProfile(profile);
+    await refreshHabitatProfiles(profile.id);
+    setHabitatProfileNote(`Saved habitat profile ${profile.name}.`);
+    setHabitatProfileError('');
+  };
+
+  const updateCurrentHabitatProfile = async () => {
+    if (!selectedHabitatProfile) return;
+    const updated: TiekatHabitatProfile = {
+      ...selectedHabitatProfile,
+      name: habitatNameDraft.trim() || selectedHabitatProfile.name,
+      description: habitatDescriptionDraft.trim() || selectedHabitatProfile.description,
+      updatedAt: new Date().toISOString(),
+      preferences: captureCurrentHabitatPreferences()
+    };
+    await updateHabitatProfile(updated);
+    await refreshHabitatProfiles(updated.id);
+    setHabitatProfileNote(`Updated habitat profile ${updated.name}.`);
+    setHabitatProfileError('');
+  };
+
+  const deleteCurrentHabitatProfile = async () => {
+    if (!selectedHabitatProfile) return;
+    await deleteHabitatProfile(selectedHabitatProfile.id);
+    await refreshHabitatProfiles();
+    setHabitatProfileNote('Deleted habitat profile.');
+    setHabitatProfileError('');
+  };
+
+  const exportCurrentHabitatProfile = () => {
+    if (!selectedHabitatProfile) return;
+    const blob = new Blob([exportHabitatProfileJson(selectedHabitatProfile)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedHabitatProfile.name.replace(/\s+/g, '-').toLowerCase()}-habitat-profile.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importHabitatProfile = async (file?: File) => {
+    if (!file) return;
+    try {
+      const parsed = importHabitatProfileJson(await file.text());
+      await appendHabitatProfile(parsed);
+      await refreshHabitatProfiles(parsed.id);
+      setHabitatProfileNote(`Imported habitat profile ${parsed.name}.`);
+      setHabitatProfileError('');
+    } catch (error) {
+      setHabitatProfileError(error instanceof Error ? error.message : 'Failed to import habitat profile');
+    }
+  };
+
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
@@ -533,6 +671,30 @@ export default function AssistantPage() {
       {gravityBadge ? <ModeledBadge text={gravityBadge} /> : null}
       {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
       {awakenedSphereState ? <AwakenedSphereCard state={awakenedSphereState} showDiagnostics={showGravityDiagnostics} /> : null}
+      <HabitatProfileSelector
+        profiles={habitatProfiles}
+        selectedId={selectedHabitatProfileId}
+        profileNameDraft={habitatNameDraft}
+        profileDescriptionDraft={habitatDescriptionDraft}
+        onSelect={(id) => {
+          setSelectedHabitatProfileId(id);
+          const found = habitatProfiles.find((profile) => profile.id === id);
+          if (found) {
+            setHabitatNameDraft(found.name);
+            setHabitatDescriptionDraft(found.description);
+          }
+        }}
+        onProfileNameDraftChange={setHabitatNameDraft}
+        onProfileDescriptionDraftChange={setHabitatDescriptionDraft}
+        onApply={applySelectedHabitatProfile}
+        onSave={saveCurrentAsHabitatProfile}
+        onUpdate={updateCurrentHabitatProfile}
+        onDelete={deleteCurrentHabitatProfile}
+        onExport={exportCurrentHabitatProfile}
+        onImport={importHabitatProfile}
+        note={habitatProfileNote}
+        error={habitatProfileError}
+      />
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <label className="text-xs text-zinc-400">
