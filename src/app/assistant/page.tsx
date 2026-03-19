@@ -57,6 +57,16 @@ import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/hab
 import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
 import { buildHabitatConstellationState, buildHabitatConstellationSummary } from '@/lib/tiekat/habitatConstellation';
 import {
+  buildHabitatDeck,
+  buildPinnedHabitatDeck,
+  buildRecentHabitatDeck,
+  exportHabitatDeckJson,
+  exportHabitatDeckMarkdown,
+  importHabitatDeckJson,
+  summarizeHabitatDeck,
+  TiekatHabitatDeck
+} from '@/lib/tiekat/habitatDeck';
+import {
   buildCouncilContinuitySummary,
   getCouncilModes,
   loadCouncilModePreference,
@@ -134,6 +144,9 @@ export default function AssistantPage() {
   const [habitatDescriptionDraft, setHabitatDescriptionDraft] = useState('');
   const [habitatProfileNote, setHabitatProfileNote] = useState('');
   const [habitatProfileError, setHabitatProfileError] = useState('');
+  const [habitatDeck, setHabitatDeck] = useState<TiekatHabitatDeck | null>(null);
+  const [habitatDeckNote, setHabitatDeckNote] = useState('');
+  const [habitatDeckError, setHabitatDeckError] = useState('');
   const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const habitatShortcutHandlersRef = useRef<{
@@ -314,6 +327,7 @@ export default function AssistantPage() {
       applyCount: selectedHabitatMemorySummary.applyCount
     }));
   }, [selectedHabitatMemorySummary]);
+  const habitatDeckSummary = useMemo(() => (habitatDeck ? summarizeHabitatDeck(habitatDeck) : null), [habitatDeck]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -787,6 +801,59 @@ export default function AssistantPage() {
     await refreshHabitatProfiles(selectedHabitatProfile.id);
   };
 
+  const buildPinnedDeck = () => {
+    const next = buildPinnedHabitatDeck(habitatProfiles);
+    setHabitatDeck(next);
+    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckError('');
+  };
+
+  const buildRecentDeck = () => {
+    const next = buildRecentHabitatDeck(habitatProfiles);
+    setHabitatDeck(next);
+    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckError('');
+  };
+
+  const buildAllDeck = () => {
+    const next = buildHabitatDeck({ profiles: habitatProfiles, kind: 'all', name: 'All habitat ritual deck' });
+    setHabitatDeck(next);
+    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckError('');
+  };
+
+  const download = (content: string, name: string, type: string) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportDeckJson = () => {
+    if (!habitatDeck) return;
+    download(exportHabitatDeckJson(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.json`, 'application/json');
+  };
+
+  const exportDeckMarkdown = () => {
+    if (!habitatDeck) return;
+    download(exportHabitatDeckMarkdown(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.md`, 'text/markdown');
+  };
+
+  const importHabitatDeck = async (file?: File) => {
+    if (!file) return;
+    try {
+      const parsed = importHabitatDeckJson(await file.text());
+      setHabitatDeck(parsed);
+      setHabitatDeckNote(`Imported deck ${parsed.name}.`);
+      setHabitatDeckError('');
+    } catch (error) {
+      setHabitatDeckError(error instanceof Error ? error.message : 'Failed to import habitat deck');
+    }
+  };
+
   useEffect(() => {
     habitatShortcutHandlersRef.current = {
       apply: () => {
@@ -857,6 +924,12 @@ export default function AssistantPage() {
         onTogglePin={togglePinSelectedHabitatProfile}
         onMoveUp={() => reorderSelectedHabitatProfile('up')}
         onMoveDown={() => reorderSelectedHabitatProfile('down')}
+        onBuildPinnedDeck={buildPinnedDeck}
+        onBuildRecentDeck={buildRecentDeck}
+        onBuildAllDeck={buildAllDeck}
+        onExportDeckJson={exportDeckJson}
+        onExportDeckMarkdown={exportDeckMarkdown}
+        onImportDeck={importHabitatDeck}
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}
@@ -866,6 +939,10 @@ export default function AssistantPage() {
         constellationContinuityNote={habitatConstellationSummary.headline}
         constellationTransitionNote={habitatConstellationSummary.pairLine || habitatConstellationSummary.line}
         constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
+        deckSummaryLine={habitatDeckSummary?.line ?? null}
+        deckPreviewLabels={habitatDeck?.cards.map((card) => card.profileName) ?? []}
+        deckNote={habitatDeckNote}
+        deckError={habitatDeckError}
         note={habitatProfileNote}
         error={habitatProfileError}
       />

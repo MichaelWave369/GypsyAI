@@ -307,3 +307,10 @@ MIT (existing LICENSE preserved).
 - Constellation nodes reflect profile continuity context (apply count, recency bucket, intensity bucket, pinned marker, session/council mode metadata), while edges use recent transition metadata when available or deterministic recent-use fallback.
 - Assistant habitat UI now surfaces tiny constellation cues (dominant continuity headline, dominant pair/line, compact node list) without introducing a dashboard.
 - Constellation logic remains local-only/config-only with explicit-apply continuity input, no transcript/session-content analytics, and no changes to modeled/theoretical oracle semantics.
+
+## TIEKAT Phase 27 (Habitat Ritual Decks)
+- Added `habitatDeck.ts` to derive compact habitat ritual cards/decks from existing profile usage/config metadata only (no transcript/session content).
+- Added deterministic deck builders for pinned/recent/all/selected habitats and compact summaries (`summarizeHabitatDeck`).
+- Added local versioned export/import helpers for habitat deck JSON plus Markdown export, with validation and unsupported-version rejection.
+- Added lightweight habitat deck controls in habitat UI (build pinned/recent/all, export JSON/Markdown, import JSON) and compact deck preview lines.
+- Habitat deck cards include modeled/local-only footer copy and intentionally exclude private ancestry/session payloads and telemetry paths.

@@ -20,6 +20,12 @@ export function HabitatProfileSelector(props: {
   onTogglePin: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  onBuildPinnedDeck: () => void;
+  onBuildRecentDeck: () => void;
+  onBuildAllDeck: () => void;
+  onExportDeckJson: () => void;
+  onExportDeckMarkdown: () => void;
+  onImportDeck: (file?: File) => void;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
   transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
@@ -29,6 +35,10 @@ export function HabitatProfileSelector(props: {
   constellationContinuityNote?: string | null;
   constellationTransitionNote?: string | null;
   constellationNodeLabels?: string[];
+  deckSummaryLine?: string | null;
+  deckPreviewLabels?: string[];
+  deckNote?: string;
+  deckError?: string;
   note?: string;
   error?: string;
 }) {
@@ -84,6 +94,17 @@ export function HabitatProfileSelector(props: {
           <input type="file" accept="application/json" className="hidden" onChange={(e) => props.onImport(e.target.files?.[0])} />
         </label>
       </div>
+      <div className="flex flex-wrap gap-2">
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildPinnedDeck}>Pinned Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildRecentDeck}>Recent Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildAllDeck}>All Deck</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onExportDeckJson}>Export Deck JSON</button>
+        <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onExportDeckMarkdown}>Export Deck Markdown</button>
+        <label className="cursor-pointer rounded border border-zinc-700 px-2 py-1">
+          Import Deck JSON
+          <input type="file" accept="application/json" className="hidden" onChange={(e) => props.onImportDeck(e.target.files?.[0])} />
+        </label>
+      </div>
       {props.diffPreview?.lines.length || props.diffPreview?.ancestryFallbackLine ? (
         <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="habitat-diff-preview">
           <p className="font-semibold">This profile will change:</p>
@@ -117,6 +138,10 @@ export function HabitatProfileSelector(props: {
       {props.constellationNodeLabels?.length ? (
         <p className="text-[10px] text-zinc-600">Constellation: {props.constellationNodeLabels.slice(0, 4).join(' • ')}</p>
       ) : null}
+      {props.deckSummaryLine ? <p className="text-zinc-500">{props.deckSummaryLine}</p> : null}
+      {props.deckPreviewLabels?.length ? <p className="text-[10px] text-zinc-600">Deck cards: {props.deckPreviewLabels.slice(0, 4).join(' • ')}</p> : null}
+      {props.deckNote ? <p className="text-zinc-500">{props.deckNote}</p> : null}
+      {props.deckError ? <p className="text-xs text-rose-400">{props.deckError}</p> : null}
       {props.note ? <p className="text-zinc-500">{props.note}</p> : null}
       {props.error ? <p className="text-xs text-rose-400">{props.error}</p> : null}
       <p className="text-zinc-500">Shortcuts: Alt+Shift+P (pin), Alt+Shift+↑/↓ (reorder), Alt+Shift+A (apply).</p>

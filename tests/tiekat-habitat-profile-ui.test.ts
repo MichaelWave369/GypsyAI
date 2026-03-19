@@ -25,6 +25,12 @@ describe('habitat profile ui', () => {
         onTogglePin: vi.fn(),
         onMoveUp: vi.fn(),
         onMoveDown: vi.fn(),
+        onBuildPinnedDeck: vi.fn(),
+        onBuildRecentDeck: vi.fn(),
+        onBuildAllDeck: vi.fn(),
+        onExportDeckJson: vi.fn(),
+        onExportDeckMarkdown: vi.fn(),
+        onImportDeck: vi.fn(),
         diffPreview: { lines: ['Session mode: open_reflection → synthesis_oracle'], ancestryFallbackLine: 'Consent-safe fallback on apply: ancestral_listening → open_reflection.' },
         transitionSummary: {
           headline: 'Transitioning from Quiet Reflection to Synthesis Oracle.',
@@ -37,6 +43,9 @@ describe('habitat profile ui', () => {
         constellationContinuityNote: 'Recent continuity favors Synthesis Oracle.',
         constellationTransitionNote: 'Recent transition: Quiet Reflection → Synthesis Oracle.',
         constellationNodeLabels: ['Synthesis Oracle', 'Council Deliberation'],
+        deckSummaryLine: '2 habitat card(s). Lead: Synthesis Oracle.',
+        deckPreviewLabels: ['Synthesis Oracle', 'Council Deliberation'],
+        deckNote: 'Built pinned habitat ritual deck.',
         note: 'Applied habitat profile Quiet Reflection.',
         error: ''
       })
@@ -55,6 +64,11 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Frequently Used');
     expect(html).toContain('Recent continuity favors Synthesis Oracle.');
     expect(html).toContain('Constellation: Synthesis Oracle • Council Deliberation');
+    expect(html).toContain('Export Deck JSON');
+    expect(html).toContain('Export Deck Markdown');
+    expect(html).toContain('Import Deck JSON');
+    expect(html).toContain('2 habitat card(s). Lead: Synthesis Oracle.');
+    expect(html).toContain('Deck cards: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
     expect(html).toContain('Shortcuts: Alt+Shift+P');
     expect(html).toContain('preferences/configuration, no transcript');
@@ -81,15 +95,23 @@ describe('habitat profile ui', () => {
         onTogglePin: vi.fn(),
         onMoveUp: vi.fn(),
         onMoveDown: vi.fn(),
+        onBuildPinnedDeck: vi.fn(),
+        onBuildRecentDeck: vi.fn(),
+        onBuildAllDeck: vi.fn(),
+        onExportDeckJson: vi.fn(),
+        onExportDeckMarkdown: vi.fn(),
+        onImportDeck: vi.fn(),
         transitionChips: [],
         profileUsageSummary: 'Never applied',
         profileLastAppliedLabel: 'Never applied',
         usageBadge: 'Never Applied',
-        constellationNodeLabels: ['Quiet Reflection']
+        constellationNodeLabels: ['Quiet Reflection'],
+        deckPreviewLabels: ['Quiet Reflection']
       })
     );
     expect(html).toContain('Never applied');
     expect(html).toContain('Never Applied');
     expect(html).toContain('Constellation: Quiet Reflection');
+    expect(html).toContain('Deck cards: Quiet Reflection');
   });
 });
