@@ -91,6 +91,20 @@ export default function AssistantPage() {
       .join(' ');
   }, [recentGravity]);
 
+  const sparklinePoints = useMemo(() => {
+    if (!recentGravity.length) return '';
+    const values = recentGravity.map((row) => row.deltaGPredicted);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return values
+      .map((value, i) => {
+        const x = (i / Math.max(values.length - 1, 1)) * 100;
+        const y = max === min ? 20 : 40 - ((value - min) / (max - min)) * 40;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }, [recentGravity]);
+
   const persist = async (nextMessages: { role: 'user' | 'assistant'; content: string; sources?: string[] }[]) => {
     const base = sessions.filter((s) => s.id !== activeId);
     const id = activeId || crypto.randomUUID();
