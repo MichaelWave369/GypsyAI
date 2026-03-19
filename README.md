@@ -147,3 +147,10 @@ MIT (existing LICENSE preserved).
 - When drift is detected across versions, diagnostics can show a short text summary of average `informationIntegral` and `deltaGPredicted` drift.
 - Added deterministic mixed-version backup fixture tests to validate normalization defaults for missing legacy fields (`scoringVersion`, `rowVersion`, `canonicalSpecVersion`).
 - Comparison UI remains diagnostics-only and gravity interpretation remains explicitly modeled/theoretical.
+
+## TIEKAT Phase 6 (Oracle Presentation Layer)
+- Added a deterministic oracle presentation formatter that translates existing modeled gravity metadata into concise human-facing language.
+- Oracle presentation is separate from diagnostics: it offers a compact interpreted summary while diagnostics remains an optional debug surface.
+- Added shared tiny drift-number formatting for consistent rendering of near-zero and small values.
+- Oracle text is generated from existing local/sanitized metadata only and always preserves modeled/theoretical anti-overclaim wording.
+- No new scoring path or external data source is introduced in this phase.

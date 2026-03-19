@@ -8,7 +8,8 @@ import { loadAncestry } from '@/lib/ancestry/storage';
 import { loadSettings } from '@/lib/local/settings';
 import { appendGravityHistoryEntry, buildVersionComparisonSummary, getRecentGravityHistory, summarizeGravityTrend } from '@/lib/tiekat/gravityHistory';
 import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
-import { TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
+import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
+import { buildOraclePresentation, OracleVersionSummary, shouldShowOraclePresentation, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 
 export default function AssistantPage() {
@@ -22,7 +23,8 @@ export default function AssistantPage() {
   const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
   const [gravityTrend, setGravityTrend] = useState<string>('stable');
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
-  const [versionComparisonSummary, setVersionComparisonSummary] = useState<{ state: string; versionCount: number; drift: unknown } | null>(null);
+  const [versionComparisonSummary, setVersionComparisonSummary] = useState<OracleVersionSummary | null>(null);
+  const [oraclePresentation, setOraclePresentation] = useState<TiekatOraclePresentation | null>(null);
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -39,7 +41,7 @@ export default function AssistantPage() {
       setRecentGravity(history);
       setGravityTrend(summarizeGravityTrend(history).trend);
       const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
-      setVersionComparisonSummary({ state: summary.state, versionCount: summary.versionCount, drift: summary.drift });
+      setVersionComparisonSummary(summary);
     });
   }, []);
 
@@ -149,7 +151,15 @@ export default function AssistantPage() {
         setRecentGravity(history);
         setGravityTrend(summarizeGravityTrend(history).trend);
         const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
-        setVersionComparisonSummary({ state: summary.state, versionCount: summary.versionCount, drift: summary.drift });
+        setVersionComparisonSummary(summary);
+        if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: summarizeGravityTrend(history).trend, versionSummary: summary }));
+        }
+      } else if (data.tiekat?.gravityBootstrap) {
+        const summary = versionComparisonSummary ?? buildVersionComparisonSummary([], TIEKAT_V54_SCORING_VERSION);
+        if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: gravityTrend as 'rising' | 'stable' | 'falling', versionSummary: summary }));
+        }
       }
 
       await persist(withAssistant);
@@ -203,6 +213,7 @@ export default function AssistantPage() {
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
       {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
       {gravityBadge ? <p className="text-xs text-zinc-400">{gravityBadge} (modeled/theoretical)</p> : null}
+      {oraclePresentation ? <section className="rounded border border-zinc-700 p-2 text-sm"><p className="font-semibold">{oraclePresentation.headline}</p><p>{oraclePresentation.narrative}</p><p className="text-xs text-zinc-400">{oraclePresentation.trend}</p>{oraclePresentation.drift ? <p className="text-xs text-zinc-400">{oraclePresentation.drift}</p> : null}<p className="text-xs text-zinc-500">{oraclePresentation.footer}</p></section> : null}
       <label className="flex items-center gap-2 text-xs text-zinc-400">
         <input type="checkbox" checked={showGravityDiagnostics} onChange={(e) => setShowGravityDiagnostics(e.target.checked)} />
         Show gravity diagnostics (debug)
@@ -219,7 +230,7 @@ export default function AssistantPage() {
             </>
           ) : <p>No local gravity history yet.</p>}
           {versionComparisonSummary ? <p className="rounded border border-zinc-600 px-2 py-1">Version Comparison • current {TIEKAT_V54_SCORING_VERSION} • versions {versionComparisonSummary.versionCount} • state {versionComparisonSummary.state} (modeled/theoretical)</p> : null}
-          {versionComparisonSummary?.state === 'drift_detected' && versionComparisonSummary.drift && typeof versionComparisonSummary.drift === 'object' ? <p>Drift: {(versionComparisonSummary.drift as { from: string; to: string; informationIntegralDrift: number; deltaGDrift: number }).from} → {(versionComparisonSummary.drift as { from: string; to: string; informationIntegralDrift: number; deltaGDrift: number }).to}, ΔI {(versionComparisonSummary.drift as { informationIntegralDrift: number }).informationIntegralDrift.toFixed(4)}, ΔΔg {(versionComparisonSummary.drift as { deltaGDrift: number }).deltaGDrift.toExponential(2)}</p> : null}
+          {versionComparisonSummary?.state === 'drift_detected' && versionComparisonSummary.drift ? <p>Drift: {versionComparisonSummary.drift.from} → {versionComparisonSummary.drift.to}, ΔI {versionComparisonSummary.drift.informationIntegralDrift.toFixed(4)}, ΔΔg {versionComparisonSummary.drift.deltaGDrift.toExponential(2)}</p> : null}
           {gravityDiagnostics ? <pre className="whitespace-pre-wrap">{gravityDiagnostics}</pre> : <p>Diagnostics hidden in response until next request.</p>}
         </div>
       ) : null}
