@@ -154,3 +154,11 @@ MIT (existing LICENSE preserved).
 - Added shared tiny drift-number formatting for consistent rendering of near-zero and small values.
 - Oracle text is generated from existing local/sanitized metadata only and always preserves modeled/theoretical anti-overclaim wording.
 - No new scoring path or external data source is introduced in this phase.
+
+## TIEKAT Phase 7 (Master Action Framing Layer)
+- Added canonical **v55** metadata/spec helpers for a conceptual master-action framing layer (`TIEKAT-v55`).
+- Kept the runtime distinction explicit: v54 remains the operational modeled gravity layer, while v55 is presentation-only theoretical framing.
+- Oracle presentation can now optionally include a compact v55 framing sentence without changing underlying scoring.
+- Introduced lightweight shared Assistant presentation components (`OracleCard`, `ModeledBadge`, `DiagnosticsSection`, `SectionLabel`) for visual consistency.
+- Added low-friction UI visibility tests for oracle/disclaimer/framing and diagnostics placeholder behavior.
+- All framing remains modeled/theoretical and does not imply hardware measurement or physical confirmation.

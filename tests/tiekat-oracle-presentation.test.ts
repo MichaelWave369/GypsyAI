@@ -4,7 +4,8 @@ import {
   formatDriftNumber,
   formatGravityStateLabel,
   formatModeledConfidenceText,
-  shouldShowOraclePresentation
+  shouldShowOraclePresentation,
+  formatMasterActionFraming
 } from '@/lib/tiekat/oraclePresentation';
 
 describe('tiekat oracle presentation', () => {
@@ -30,13 +31,15 @@ describe('tiekat oracle presentation', () => {
     const presentation = buildOraclePresentation({
       gravity: gravity as any,
       trend: 'rising',
-      versionSummary: { state: 'drift_detected', versionCount: 2, drift: { from: 'v54-gb-v1', to: 'v55-gb-v1', informationIntegralDrift: 0.01, deltaGDrift: 1e-11 } }
+      versionSummary: { state: 'drift_detected', versionCount: 2, drift: { from: 'v54-gb-v1', to: 'v55-gb-v1', informationIntegralDrift: 0.01, deltaGDrift: 1e-11 } },
+      enableV55Framing: true
     });
 
     expect(presentation.headline).toContain('Modeled Field');
     expect(presentation.narrative).toContain('Symbolic gravity bootstrap result');
     expect(presentation.footer).toContain('Modeled/theoretical');
     expect(presentation.drift).toContain('Version drift');
+    expect(presentation.masterActionFraming).toContain('theoretical master-action framing lens');
   });
 
   it('formats near-zero drift values clearly', () => {
@@ -71,5 +74,11 @@ describe('tiekat oracle presentation', () => {
     const text = `${presentation.headline} ${presentation.narrative} ${presentation.footer}`.toLowerCase();
     expect(text).not.toContain('ancestor name');
     expect(text).not.toContain('family tree record');
+  });
+
+
+  it('renders master-action framing only when enabled', () => {
+    expect(formatMasterActionFraming(true)).toContain('TIEKAT-v55');
+    expect(formatMasterActionFraming(false)).toBeUndefined();
   });
 });

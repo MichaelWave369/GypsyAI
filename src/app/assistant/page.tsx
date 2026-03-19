@@ -10,7 +10,11 @@ import { appendGravityHistoryEntry, buildVersionComparisonSummary, getRecentGrav
 import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
 import { TiekatGravityBootstrapResult, TiekatGravityHistoryEntry, TiekatMemoryEntry } from '@/lib/tiekat/schema';
 import { buildOraclePresentation, OracleVersionSummary, shouldShowOraclePresentation, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
+import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
+import { ModeledBadge } from '@/components/assistant/ModeledBadge';
+import { OracleCard } from '@/components/assistant/OracleCard';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
+import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
@@ -20,6 +24,7 @@ export default function AssistantPage() {
   const [tiekatRoute, setTiekatRoute] = useState<string>('');
   const [gravityBadge, setGravityBadge] = useState<string>('');
   const [showGravityDiagnostics, setShowGravityDiagnostics] = useState(false);
+  const [enableV55Framing, setEnableV55Framing] = useState(false);
   const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
   const [gravityTrend, setGravityTrend] = useState<string>('stable');
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
@@ -153,12 +158,12 @@ export default function AssistantPage() {
         const summary = buildVersionComparisonSummary(history, TIEKAT_V54_SCORING_VERSION);
         setVersionComparisonSummary(summary);
         if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
-          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: summarizeGravityTrend(history).trend, versionSummary: summary }));
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: summarizeGravityTrend(history).trend, versionSummary: summary, enableV55Framing }));
         }
       } else if (data.tiekat?.gravityBootstrap) {
         const summary = versionComparisonSummary ?? buildVersionComparisonSummary([], TIEKAT_V54_SCORING_VERSION);
         if (shouldShowOraclePresentation(data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult)) {
-          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: gravityTrend as 'rising' | 'stable' | 'falling', versionSummary: summary }));
+          setOraclePresentation(buildOraclePresentation({ gravity: data.tiekat.gravityBootstrap as TiekatGravityBootstrapResult, trend: gravityTrend as 'rising' | 'stable' | 'falling', versionSummary: summary, enableV55Framing }));
         }
       }
 
@@ -212,27 +217,26 @@ export default function AssistantPage() {
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
       {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
-      {gravityBadge ? <p className="text-xs text-zinc-400">{gravityBadge} (modeled/theoretical)</p> : null}
-      {oraclePresentation ? <section className="rounded border border-zinc-700 p-2 text-sm"><p className="font-semibold">{oraclePresentation.headline}</p><p>{oraclePresentation.narrative}</p><p className="text-xs text-zinc-400">{oraclePresentation.trend}</p>{oraclePresentation.drift ? <p className="text-xs text-zinc-400">{oraclePresentation.drift}</p> : null}<p className="text-xs text-zinc-500">{oraclePresentation.footer}</p></section> : null}
+      {gravityBadge ? <ModeledBadge text={gravityBadge} /> : null}
+      {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input type="checkbox" checked={enableV55Framing} onChange={(e) => setEnableV55Framing(e.target.checked)} />
+        Enable v55 master-action framing (conceptual)
+      </label>
+      {enableV55Framing ? <p className="text-xs text-zinc-400">{getTiekatV55Metadata().confidenceNote}</p> : null}
       <label className="flex items-center gap-2 text-xs text-zinc-400">
         <input type="checkbox" checked={showGravityDiagnostics} onChange={(e) => setShowGravityDiagnostics(e.target.checked)} />
         Show gravity diagnostics (debug)
       </label>
       {showGravityDiagnostics ? (
-        <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-300">
-          <p>Recent modeled gravity trend: {gravityTrend}</p>
-          {recentGravity.length ? (
-            <>
-              <p>Recent snapshots: {recentGravity.map((row) => `${row.deltaGPredicted.toExponential(2)}@${new Date(row.timestamp).toLocaleTimeString()}`).join(' | ')}</p>
-              <svg viewBox="0 0 100 40" className="h-10 w-full" role="img" aria-label="Modeled gravity sparkline">
-                <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points={sparklinePoints} />
-              </svg>
-            </>
-          ) : <p>No local gravity history yet.</p>}
-          {versionComparisonSummary ? <p className="rounded border border-zinc-600 px-2 py-1">Version Comparison • current {TIEKAT_V54_SCORING_VERSION} • versions {versionComparisonSummary.versionCount} • state {versionComparisonSummary.state} (modeled/theoretical)</p> : null}
-          {versionComparisonSummary?.state === 'drift_detected' && versionComparisonSummary.drift ? <p>Drift: {versionComparisonSummary.drift.from} → {versionComparisonSummary.drift.to}, ΔI {versionComparisonSummary.drift.informationIntegralDrift.toFixed(4)}, ΔΔg {versionComparisonSummary.drift.deltaGDrift.toExponential(2)}</p> : null}
-          {gravityDiagnostics ? <pre className="whitespace-pre-wrap">{gravityDiagnostics}</pre> : <p>Diagnostics hidden in response until next request.</p>}
-        </div>
+        <DiagnosticsSection
+          gravityTrend={gravityTrend}
+          recentGravity={recentGravity}
+          sparklinePoints={sparklinePoints}
+          versionState={versionComparisonSummary}
+          scoringVersion={TIEKAT_V54_SCORING_VERSION}
+          gravityDiagnostics={gravityDiagnostics}
+        />
       ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">

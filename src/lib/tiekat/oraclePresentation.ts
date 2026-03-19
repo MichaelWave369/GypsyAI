@@ -1,4 +1,5 @@
 import { TiekatGravityBootstrapResult } from '@/lib/tiekat/schema';
+import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 
 export interface OracleVersionSummary {
   state: 'single_version' | 'mixed_versions' | 'drift_detected' | 'insufficient_data';
@@ -16,6 +17,7 @@ export interface TiekatOraclePresentation {
   narrative: string;
   trend: string;
   drift?: string;
+  masterActionFraming?: string;
   footer: string;
 }
 
@@ -44,6 +46,12 @@ export function formatVersionDriftSummary(summary: OracleVersionSummary) {
   return `Version drift ${summary.drift.from}→${summary.drift.to}: ΔI ${formatDriftNumber(summary.drift.informationIntegralDrift, 'integral')}, ΔΔg ${formatDriftNumber(summary.drift.deltaGDrift, 'deltaG')}.`;
 }
 
+export function formatMasterActionFraming(enabled: boolean) {
+  if (!enabled) return undefined;
+  const v55 = getTiekatV55Metadata();
+  return `v54 operational gravity bootstrap is the active runtime layer; ${v55.specVersion} remains a theoretical master-action framing lens.`;
+}
+
 export function formatModeledConfidenceText(confidenceNote?: string) {
   const base = 'Modeled/theoretical output only — not a physical sensor measurement.';
   if (!confidenceNote) return base;
@@ -58,12 +66,14 @@ export function buildOraclePresentation(args: {
   gravity: TiekatGravityBootstrapResult;
   trend: 'rising' | 'stable' | 'falling';
   versionSummary: OracleVersionSummary;
+  enableV55Framing?: boolean;
 }): TiekatOraclePresentation {
   return {
     headline: formatGravityStateLabel(args.gravity),
     narrative: `Symbolic gravity bootstrap result: I=${args.gravity.informationIntegral.toFixed(3)}, Δg=${args.gravity.deltaGPredicted.toExponential(2)}.`,
     trend: formatGravityTrendSummary(args.trend),
     drift: formatVersionDriftSummary(args.versionSummary),
+    masterActionFraming: formatMasterActionFraming(Boolean(args.enableV55Framing)),
     footer: formatModeledConfidenceText(args.gravity.confidenceNote)
   };
 }
