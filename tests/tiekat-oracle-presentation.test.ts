@@ -32,7 +32,8 @@ describe('tiekat oracle presentation', () => {
       gravity: gravity as any,
       trend: 'rising',
       versionSummary: { state: 'drift_detected', versionCount: 2, drift: { from: 'v54-gb-v1', to: 'v55-gb-v1', informationIntegralDrift: 0.01, deltaGDrift: 1e-11 } },
-      enableV55Framing: true
+      enableV55Framing: true,
+      sessionMode: 'synthesis_oracle'
     });
 
     expect(presentation.headline).toContain('Modeled Field');
@@ -40,6 +41,8 @@ describe('tiekat oracle presentation', () => {
     expect(presentation.footer).toContain('Modeled/theoretical');
     expect(presentation.drift).toContain('Version drift');
     expect(presentation.masterActionFraming).toContain('theoretical master-action framing lens');
+    expect(presentation.modeLabel).toBe('Synthesis Oracle');
+    expect(presentation.ritualFrame).toContain('modeled/theoretical');
   });
 
   it('formats near-zero drift values clearly', () => {

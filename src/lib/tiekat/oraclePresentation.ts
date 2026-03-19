@@ -1,4 +1,5 @@
 import { TiekatGravityBootstrapResult } from '@/lib/tiekat/schema';
+import { getSessionModeConfig, getDefaultSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 
 export interface OracleVersionSummary {
@@ -15,6 +16,8 @@ export interface OracleVersionSummary {
 export interface TiekatOraclePresentation {
   headline: string;
   narrative: string;
+  modeLabel?: string;
+  ritualFrame?: string;
   trend: string;
   drift?: string;
   masterActionFraming?: string;
@@ -67,10 +70,14 @@ export function buildOraclePresentation(args: {
   trend: 'rising' | 'stable' | 'falling';
   versionSummary: OracleVersionSummary;
   enableV55Framing?: boolean;
+  sessionMode?: TiekatSessionModeKey;
 }): TiekatOraclePresentation {
+  const mode = getSessionModeConfig(args.sessionMode ?? getDefaultSessionMode());
   return {
-    headline: formatGravityStateLabel(args.gravity),
+    headline: `${formatGravityStateLabel(args.gravity)}${args.sessionMode ? ` · ${mode.presentation.label}` : ''}`,
     narrative: `Symbolic gravity bootstrap result: I=${args.gravity.informationIntegral.toFixed(3)}, Δg=${args.gravity.deltaGPredicted.toExponential(2)}.`,
+    modeLabel: mode.presentation.label,
+    ritualFrame: mode.presentation.ritualFrame,
     trend: formatGravityTrendSummary(args.trend),
     drift: formatVersionDriftSummary(args.versionSummary),
     masterActionFraming: formatMasterActionFraming(Boolean(args.enableV55Framing)),

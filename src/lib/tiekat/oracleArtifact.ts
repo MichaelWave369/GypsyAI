@@ -1,6 +1,7 @@
 import { dbGet, dbSet } from '@/lib/local/db';
 import { TiekatGravityBootstrapResult, TiekatModuleKey, TiekatReflectionMode } from '@/lib/tiekat/schema';
 import { OracleVersionSummary, TiekatOraclePresentation } from '@/lib/tiekat/oraclePresentation';
+import { getDefaultSessionMode, getSessionModeConfig, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
 
@@ -9,7 +10,7 @@ const MAX_ORACLE_ARTIFACTS = 150;
 
 export interface TiekatOracleArtifactVersion {
   rowVersion: typeof TIEKAT_ORACLE_ARTIFACT_ROW_VERSION;
-  artifactSpecVersion: 'TIEKAT-oracle-artifact-v1';
+  artifactSpecVersion: 'TIEKAT-oracle-artifact-v2';
 }
 
 export interface TiekatOracleArtifactSummary {
@@ -24,6 +25,12 @@ export interface TiekatOracleArtifact {
   timestamp: string;
   route: string;
   mode: TiekatReflectionMode;
+  sessionMode: {
+    key: TiekatSessionModeKey;
+    label: string;
+    ritualFrame: string;
+    allowV55Framing: boolean;
+  };
   activeModules: TiekatModuleKey[];
   summary: TiekatOracleArtifactSummary;
   gravity: {
@@ -94,16 +101,25 @@ export function buildOracleArtifact(args: {
     hideLivingPersons: boolean;
   };
   enableV55Framing: boolean;
+  sessionMode?: TiekatSessionModeKey;
 }): TiekatOracleArtifact {
   const now = new Date().toISOString();
   const v54 = getTiekatV54Metadata();
   const v55 = getTiekatV55Metadata();
+  const sessionModeKey = args.sessionMode ?? getDefaultSessionMode();
+  const sessionModeConfig = getSessionModeConfig(sessionModeKey);
   return {
     id: `${args.sessionId}:${now}`,
     sessionId: args.sessionId,
     timestamp: now,
     route: args.route,
     mode: args.mode,
+    sessionMode: {
+      key: sessionModeKey,
+      label: sessionModeConfig.presentation.label,
+      ritualFrame: sessionModeConfig.presentation.ritualFrame,
+      allowV55Framing: sessionModeConfig.allowV55Framing
+    },
     activeModules: args.activeModules.slice(0, 6),
     summary: buildOracleArtifactSummary({
       prompt: args.prompt,
@@ -134,7 +150,7 @@ export function buildOracleArtifact(args: {
     },
     version: {
       rowVersion: TIEKAT_ORACLE_ARTIFACT_ROW_VERSION,
-      artifactSpecVersion: 'TIEKAT-oracle-artifact-v1'
+      artifactSpecVersion: 'TIEKAT-oracle-artifact-v2'
     }
   };
 }
@@ -147,6 +163,12 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
     timestamp: value.timestamp || now,
     route: value.route || 'assistant_synthesis',
     mode: value.mode || 'assistant_synthesis',
+    sessionMode: {
+      key: value.sessionMode?.key || getDefaultSessionMode(),
+      label: value.sessionMode?.label || getSessionModeConfig(getDefaultSessionMode()).presentation.label,
+      ritualFrame: value.sessionMode?.ritualFrame || getSessionModeConfig(getDefaultSessionMode()).presentation.ritualFrame,
+      allowV55Framing: value.sessionMode?.allowV55Framing ?? true
+    },
     activeModules: Array.isArray(value.activeModules) && value.activeModules.length ? value.activeModules : ['assistant'],
     summary: {
       promptSummary: value.summary?.promptSummary?.slice(0, 180) || '',
@@ -176,7 +198,7 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
     },
     version: {
       rowVersion: TIEKAT_ORACLE_ARTIFACT_ROW_VERSION,
-      artifactSpecVersion: 'TIEKAT-oracle-artifact-v1'
+      artifactSpecVersion: 'TIEKAT-oracle-artifact-v2'
     }
   };
 }
@@ -216,6 +238,14 @@ export function exportOracleArtifactJson(artifact: TiekatOracleArtifact) {
   return JSON.stringify(normalizeOracleArtifact(artifact), null, 2);
 }
 
+export function importOracleArtifactJson(text: string) {
+  const parsed = JSON.parse(text) as Partial<TiekatOracleArtifact>;
+  if (typeof parsed !== 'object' || parsed === null) throw new Error('Invalid artifact payload');
+  if (parsed.summary && typeof parsed.summary !== 'object') throw new Error('Invalid artifact summary');
+  if (parsed.gravity && typeof parsed.gravity !== 'object') throw new Error('Invalid artifact gravity');
+  return normalizeOracleArtifact(parsed);
+}
+
 export function compareOracleArtifacts(a: TiekatOracleArtifact, b: TiekatOracleArtifact) {
   return {
     routeChanged: a.route !== b.route,
@@ -226,6 +256,7 @@ export function compareOracleArtifacts(a: TiekatOracleArtifact, b: TiekatOracleA
     informationIntegralDelta: Number((b.gravity.informationIntegral - a.gravity.informationIntegral).toFixed(6)),
     deltaGPredictedDelta: Number((b.gravity.deltaGPredicted - a.gravity.deltaGPredicted).toExponential(6)),
     scoringVersionChanged: a.gravity.scoringVersion !== b.gravity.scoringVersion,
+    sessionModeChanged: a.sessionMode.key !== b.sessionMode.key,
     trendChanged: (a.trend || 'stable') !== (b.trend || 'stable'),
     v55FramingChanged: Boolean(a.v55?.enabled) !== Boolean(b.v55?.enabled)
   };

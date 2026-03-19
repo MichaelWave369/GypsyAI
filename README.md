@@ -172,3 +172,13 @@ MIT (existing LICENSE preserved).
 - Added lightweight Assistant replay UI: recent oracle artifacts list, compact replay panel, optional export/delete actions, and tiny comparison readout against the previous artifact.
 - Added deterministic helper coverage for artifact build/summary/normalization, privacy-safe redaction behavior, persistence/load/recent/delete flow, export shape, and artifact comparison deltas.
 - As with prior phases, oracle/gravity data remains explicitly modeled/theoretical and not a physical sensor measurement.
+
+## TIEKAT Phase 9 (Ritual / Session Mode)
+- Added typed ritual session modes (`open_reflection`, `tarot_inquiry`, `astrology_reflection`, `genekeys_contemplation`, `ancestral_listening`, `synthesis_oracle`) with deterministic routing/presentation preferences.
+- Session modes are resolved safely with consent: ancestry-forward mode automatically falls back when ancestry consent is disabled.
+- Assistant UI now includes a compact session mode selector and mode ritual framing line; mode does not require diagnostics to function.
+- Oracle presentation now carries mode-aware label/ritual framing while preserving modeled/theoretical disclaimers and no diagnostics leakage by default.
+- Oracle artifacts now persist session mode identity/labels/ritual framing metadata for coherent replay, while keeping compact/sanitized local-only payloads.
+- Artifact replay/list UI was extracted into reusable components (`OracleArtifactList`, `OracleArtifactReplayCard`, `SessionModeBadge`) for cleaner Assistant composition.
+- Added optional local artifact import path (single JSON file), with deterministic validation/normalization and memory-enabled gating.
+- Maintained local-first behavior, additive API metadata, and explicit v54 operational + v55 conceptual distinction.

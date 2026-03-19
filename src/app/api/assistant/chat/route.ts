@@ -16,6 +16,7 @@ import { TiekatConsentState } from '@/lib/tiekat/schema';
 import { verifyTiekatOutput } from '@/lib/tiekat/verification';
 import { computeGravityBootstrap } from '@/lib/tiekat/gravity';
 import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
+import { buildSessionModePromptFrame, getDefaultSessionMode, resolveSessionMode } from '@/lib/tiekat/sessionMode';
 
 const consentSchema = z.object({
   allowAncestry: z.boolean().default(false),
@@ -27,6 +28,7 @@ const consentSchema = z.object({
 const tiekatSchema = z
   .object({
     sessionId: z.string().optional(),
+    sessionMode: z.enum(['open_reflection', 'tarot_inquiry', 'astrology_reflection', 'genekeys_contemplation', 'ancestral_listening', 'synthesis_oracle']).optional(),
     consent: consentSchema.optional(),
     moduleData: z
       .object({
@@ -86,10 +88,13 @@ export async function POST(req: NextRequest) {
   const { message, demoMode, strictReadingMode = true, provider: providerInput, model, tiekat } = schema.parse(await req.json());
   const cleanMessage = sanitizeUserInput(message);
   const consent = tiekat?.consent ?? defaultConsent;
-  const intent = classifyIntent(cleanMessage, consent);
-  const tiekatSession = buildTiekatSessionState(tiekat?.sessionId ?? crypto.randomUUID(), cleanMessage, consent);
+  const sessionMode = resolveSessionMode(tiekat?.sessionMode ?? getDefaultSessionMode(), { allowAncestry: consent.allowAncestry });
+  const modeFrame = buildSessionModePromptFrame(sessionMode, { allowAncestry: consent.allowAncestry });
+  const modeAdjustedMessage = `${modeFrame}\nUser message: ${cleanMessage}`;
+  const intent = classifyIntent(modeAdjustedMessage, consent);
+  const tiekatSession = buildTiekatSessionState(tiekat?.sessionId ?? crypto.randomUUID(), modeAdjustedMessage, consent);
   const tiekatEnvelope = buildTiekatContextEnvelope({
-    message: cleanMessage,
+    message: modeAdjustedMessage,
     consent,
     moduleData: tiekat?.moduleData,
     memoryEntries: tiekat?.memoryEntries
@@ -98,7 +103,7 @@ export async function POST(req: NextRequest) {
   const tiekatPlan = buildTiekatReflectionPlan(tiekatSession.state, tiekatEnvelope);
 
   if (isTestMode() || demoMode) {
-    const content = `Demo assistant (${intent}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`;
+    const content = `Demo assistant (${intent}, mode=${sessionMode}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`;
     const verification = verifyTiekatOutput(content, tiekatPlan, consent);
     const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification, includeDiagnostics: Boolean(tiekat?.gravityDiagnostics) });
     return NextResponse.json({
@@ -110,7 +115,8 @@ export async function POST(req: NextRequest) {
         plan: tiekatPlan,
         verification,
         gravityBootstrap,
-        v54: v54Metadata
+        v54: v54Metadata,
+        sessionMode
       }
     });
   }
@@ -132,11 +138,11 @@ export async function POST(req: NextRequest) {
   const readingIntent = intent !== 'CHAT' && intent !== 'STUDY_LOOKUP';
   if (!readingIntent) {
     if (provider === 'ollama') {
-      const body = await streamOllama({ model, prompt: `Conversational mode. Be warm and practical.\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}` });
+      const body = await streamOllama({ model, prompt: `Conversational mode. Be warm and practical.\n${modeFrame}\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}` });
       if (!body) return NextResponse.json({ content: 'No stream body', intent, sources: [] });
       return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
     }
-    const content = await callModel({ provider, model, prompt: `Conversational mode. Be warm and practical.\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}`, temperature: 0.2 });
+    const content = await callModel({ provider, model, prompt: `Conversational mode. Be warm and practical.\n${modeFrame}\nContext: ${tiekatPlan.contextSummary}\nUser: ${cleanMessage}`, temperature: 0.2 });
     const verification = verifyTiekatOutput(content, tiekatPlan, consent);
     const gravityBootstrap = computeGravityBootstrap({ session: tiekatSession.state, envelope: tiekatEnvelope, verification, includeDiagnostics: Boolean(tiekat?.gravityDiagnostics) });
     return NextResponse.json({
@@ -149,7 +155,8 @@ export async function POST(req: NextRequest) {
         plan: tiekatPlan,
         verification,
         gravityBootstrap,
-        v54: v54Metadata
+        v54: v54Metadata,
+        sessionMode
       }
     });
   }
@@ -189,7 +196,8 @@ export async function POST(req: NextRequest) {
       plan: tiekatPlan,
       verification,
       gravityBootstrap,
-      v54: v54Metadata
+      v54: v54Metadata,
+      sessionMode
     }
   });
 }

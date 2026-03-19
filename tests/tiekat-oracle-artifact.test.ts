@@ -18,6 +18,7 @@ import {
   compareOracleArtifacts,
   deleteOracleArtifact,
   exportOracleArtifactJson,
+  importOracleArtifactJson,
   getRecentOracleArtifacts,
   loadOracleArtifacts,
   normalizeOracleArtifact
@@ -59,12 +60,14 @@ describe('tiekat oracle artifact', () => {
       trend: 'stable',
       versionSummary: { state: 'single_version', versionCount: 1, drift: null },
       consent: { memoryEnabled: true, includeNames: false, allowAncestry: false, hideLivingPersons: true },
-      enableV55Framing: true
+      enableV55Framing: true,
+      sessionMode: 'synthesis_oracle'
     });
 
     expect(artifact.summary.promptSummary).not.toContain('Michael');
     expect(artifact.v55?.enabled).toBe(true);
-    expect(artifact.version.artifactSpecVersion).toBe('TIEKAT-oracle-artifact-v1');
+    expect(artifact.sessionMode.key).toBe('synthesis_oracle');
+    expect(artifact.version.artifactSpecVersion).toBe('TIEKAT-oracle-artifact-v2');
   });
 
   it('builds compact summary fields and keeps payload privacy-safe', () => {
@@ -91,6 +94,12 @@ describe('tiekat oracle artifact', () => {
 
     await deleteOracleArtifact('a2');
     expect((await loadOracleArtifacts()).map((row) => row.id)).toEqual(['a1']);
+  });
+
+  it('normalizes legacy artifacts that do not include session mode fields', () => {
+    const normalized = normalizeOracleArtifact({ id: 'legacy-1', sessionId: 's1' } as any);
+    expect(normalized.sessionMode.key).toBe('open_reflection');
+    expect(normalized.sessionMode.label).toBeTruthy();
   });
 
   it('does not persist artifacts when memory is disabled', async () => {
@@ -125,6 +134,10 @@ describe('tiekat oracle artifact', () => {
     expect(comparison.v55FramingChanged).toBe(true);
 
     const json = exportOracleArtifactJson(b);
-    expect(json).toContain('"artifactSpecVersion": "TIEKAT-oracle-artifact-v1"');
+    expect(json).toContain('"artifactSpecVersion": "TIEKAT-oracle-artifact-v2"');
+    const imported = importOracleArtifactJson(json);
+    expect(imported.id).toBe('b');
+    expect(imported.sessionMode.key).toBe('open_reflection');
+    expect(() => importOracleArtifactJson('{"summary":"bad"}')).toThrowError();
   });
 });

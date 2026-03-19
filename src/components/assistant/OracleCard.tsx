@@ -8,6 +8,8 @@ export function OracleCard({ oracle }: { oracle: TiekatOraclePresentation }) {
       <SectionLabel>Oracle</SectionLabel>
       <p className="font-semibold">{oracle.headline}</p>
       <p>{oracle.narrative}</p>
+      {oracle.modeLabel ? <p className="text-xs text-zinc-400">Mode: {oracle.modeLabel}</p> : null}
+      {oracle.ritualFrame ? <p className="text-xs text-zinc-400">{oracle.ritualFrame}</p> : null}
       <p className="text-xs text-zinc-400">{oracle.trend}</p>
       {oracle.drift ? <p className="text-xs text-zinc-400">{oracle.drift}</p> : null}
       {oracle.masterActionFraming ? <p className="text-xs text-zinc-400">{oracle.masterActionFraming}</p> : null}

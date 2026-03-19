@@ -11,6 +11,8 @@ describe('oracle/diagnostics UI visibility', () => {
         oracle: {
           headline: 'Modeled Field: Transitional',
           narrative: 'Symbolic gravity bootstrap result.',
+          modeLabel: 'Synthesis Oracle',
+          ritualFrame: 'Blend modules into concise synthesis.',
           trend: 'Local modeled trend is stable.',
           masterActionFraming: 'v54 operational gravity bootstrap is the active runtime layer; TIEKAT-v55 remains a theoretical master-action framing lens.',
           footer: 'Modeled/theoretical output only — not a physical sensor measurement.'
@@ -22,6 +24,7 @@ describe('oracle/diagnostics UI visibility', () => {
         oracle: {
           headline: 'Modeled Field: Transitional',
           narrative: 'Symbolic gravity bootstrap result.',
+          modeLabel: 'Open Reflection',
           trend: 'Local modeled trend is stable.',
           footer: 'Modeled/theoretical output only — not a physical sensor measurement.'
         }
@@ -30,6 +33,7 @@ describe('oracle/diagnostics UI visibility', () => {
 
     expect(withFraming).toContain('Modeled/theoretical output only');
     expect(withFraming).toContain('TIEKAT-v55');
+    expect(withFraming).toContain('Mode: Synthesis Oracle');
     expect(withoutFraming).not.toContain('TIEKAT-v55');
   });
 
