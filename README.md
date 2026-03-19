@@ -200,3 +200,10 @@ MIT (existing LICENSE preserved).
   - local-only recent preset ordering (`markPresetUsed`, `orderPresetsByRecent`)
   - copy-to-clipboard action for artifact diff text in replay panel
 - Preserved privacy/consent boundaries: geometry and diff/copy use compact sanitized metadata only; no new persistence side-channel.
+
+## TIEKAT Phase 12 (Geometry Explainability + View Control)
+- Sacred geometry state now includes a compact deterministic rule trace (`selectionRule`, `selectionReason`, `layerReason`) explaining glyph/layer selection.
+- Geometry trace is diagnostics-only and hidden from normal oracle view by default.
+- Added explicit user control for sacred geometry visibility in oracle view (`Show sacred geometry in oracle view`).
+- Geometry visibility preference is persisted locally (localStorage) with safe defaults and no telemetry/sync.
+- Core glyph mapping remains metadata-driven, deterministic, and explicitly modeled/theoretical.

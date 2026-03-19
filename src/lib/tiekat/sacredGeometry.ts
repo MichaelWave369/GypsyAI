@@ -25,7 +25,14 @@ export interface TiekatGeometryState {
   density: number;
   layers: TiekatGeometryLayer[];
   caption: string;
+  trace: {
+    selectionRule: string;
+    selectionReason: string;
+    layerReason: string;
+  };
 }
+
+const GEOMETRY_VISIBILITY_KEY = 'gypsy-ai-tiekat-geometry-visible';
 
 export function selectGeometryGlyph(input: TiekatGeometryInput): TiekatGeometryGlyph {
   if (input.versionSummary.state === 'drift_detected') return 'ring_orbit';
@@ -34,6 +41,25 @@ export function selectGeometryGlyph(input: TiekatGeometryInput): TiekatGeometryG
   if (input.trend === 'rising') return 'hex_field';
   if (input.trend === 'falling') return 'spiral';
   return 'metatron_grid';
+}
+
+export function getGeometrySelectionTrace(input: TiekatGeometryInput) {
+  if (input.versionSummary.state === 'drift_detected') {
+    return { selectionRule: 'drift_detected', selectionReason: 'drift_detected -> ring_orbit' };
+  }
+  if (input.sessionMode === 'synthesis_oracle' || input.activeModules.length >= 3) {
+    return { selectionRule: 'multi_module_synthesis', selectionReason: 'multi_module_synthesis -> lattice_bloom' };
+  }
+  if (input.mode === 'single_module' || input.activeModules.length <= 1) {
+    return { selectionRule: 'single_module_sparse_state', selectionReason: 'single_module_sparse_state -> triad' };
+  }
+  if (input.trend === 'rising') {
+    return { selectionRule: 'rising_trend', selectionReason: 'rising_trend -> hex_field' };
+  }
+  if (input.trend === 'falling') {
+    return { selectionRule: 'falling_trend', selectionReason: 'falling_trend -> spiral' };
+  }
+  return { selectionRule: 'stable_default', selectionReason: 'stable_default -> metatron_grid' };
 }
 
 export function buildGeometryLayers(input: TiekatGeometryInput): TiekatGeometryLayer[] {
@@ -51,11 +77,30 @@ export function formatGeometryCaption(input: TiekatGeometryInput, glyph: TiekatG
 
 export function buildSacredGeometryState(input: TiekatGeometryInput): TiekatGeometryState {
   const glyph = selectGeometryGlyph(input);
+  const trace = getGeometrySelectionTrace(input);
   const layers = buildGeometryLayers(input);
+  const layerReason = `informationIntegral ${input.gravity.informationIntegral.toFixed(2)} -> ${layers.length} layers`;
   return {
     glyph,
     density: layers.length,
     layers,
-    caption: formatGeometryCaption(input, glyph)
+    caption: formatGeometryCaption(input, glyph),
+    trace: {
+      selectionRule: trace.selectionRule,
+      selectionReason: trace.selectionReason,
+      layerReason
+    }
   };
+}
+
+export function loadGeometryVisibilityPreference(defaultVisible = false) {
+  if (typeof window === 'undefined') return defaultVisible;
+  const raw = window.localStorage.getItem(GEOMETRY_VISIBILITY_KEY);
+  if (raw === null) return defaultVisible;
+  return raw === '1';
+}
+
+export function saveGeometryVisibilityPreference(visible: boolean) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(GEOMETRY_VISIBILITY_KEY, visible ? '1' : '0');
 }

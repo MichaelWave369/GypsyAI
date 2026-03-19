@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildSacredGeometryState, formatGeometryCaption, selectGeometryGlyph } from '@/lib/tiekat/sacredGeometry';
+import {
+  buildSacredGeometryState,
+  formatGeometryCaption,
+  loadGeometryVisibilityPreference,
+  saveGeometryVisibilityPreference,
+  selectGeometryGlyph
+} from '@/lib/tiekat/sacredGeometry';
 
 const baseInput = {
   gravity: { status: 'theoretical' as const, informationIntegral: 0.5, deltaGPredicted: 1.1e-10 },
@@ -17,6 +23,8 @@ describe('tiekat sacred geometry', () => {
     const b = buildSacredGeometryState(baseInput as any);
     expect(a).toEqual(b);
     expect(a.layers.length).toBeGreaterThan(0);
+    expect(a.trace.selectionRule).toBeTruthy();
+    expect(a.trace.selectionReason).toContain('->');
   });
 
   it('maps representative metadata states to glyph rules', () => {
@@ -31,5 +39,20 @@ describe('tiekat sacred geometry', () => {
     expect(caption.toLowerCase()).toContain('theoretical');
     expect(caption.toLowerCase()).not.toContain('diagnostics');
     expect(caption.toLowerCase()).not.toContain('ancestor name');
+  });
+
+  it('persists and reloads local geometry visibility preference', () => {
+    const store: Record<string, string> = {};
+    (globalThis as any).window = {
+      localStorage: {
+        getItem: (k: string) => store[k] ?? null,
+        setItem: (k: string, v: string) => {
+          store[k] = v;
+        }
+      }
+    };
+    expect(loadGeometryVisibilityPreference(false)).toBe(false);
+    saveGeometryVisibilityPreference(true);
+    expect(loadGeometryVisibilityPreference(false)).toBe(true);
   });
 });

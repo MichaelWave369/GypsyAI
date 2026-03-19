@@ -21,7 +21,7 @@ import {
   TiekatOracleArtifact
 } from '@/lib/tiekat/oracleArtifact';
 import { getPromptPresetGroup, markPresetUsed, orderPresetsByRecent } from '@/lib/tiekat/promptPresets';
-import { buildSacredGeometryState } from '@/lib/tiekat/sacredGeometry';
+import { buildSacredGeometryState, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
@@ -44,6 +44,7 @@ export default function AssistantPage() {
   const [showGravityDiagnostics, setShowGravityDiagnostics] = useState(false);
   const [enableV55Framing, setEnableV55Framing] = useState(false);
   const [sessionMode, setSessionMode] = useState<TiekatSessionModeKey>(getDefaultSessionMode());
+  const [showGeometry, setShowGeometry] = useState(false);
   const [gravityDiagnostics, setGravityDiagnostics] = useState<string>('');
   const [gravityTrend, setGravityTrend] = useState<string>('stable');
   const [recentGravity, setRecentGravity] = useState<TiekatGravityHistoryEntry[]>([]);
@@ -77,6 +78,7 @@ export default function AssistantPage() {
       setOracleArtifacts(rows);
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
+    setShowGeometry(loadGeometryVisibilityPreference(false));
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
@@ -368,7 +370,18 @@ export default function AssistantPage() {
           setInput((prev) => (prev.trim().length ? `${prev}\n${text}` : text));
         }}
       />
-      {geometryState ? <SacredGeometryGlyph state={geometryState} /> : null}
+      <label className="flex items-center gap-2 text-xs text-zinc-400">
+        <input
+          type="checkbox"
+          checked={showGeometry}
+          onChange={(e) => {
+            setShowGeometry(e.target.checked);
+            saveGeometryVisibilityPreference(e.target.checked);
+          }}
+        />
+        Show sacred geometry in oracle view
+      </label>
+      {showGeometry && geometryState ? <SacredGeometryGlyph state={geometryState} /> : null}
       <label className="flex items-center gap-2 text-xs text-zinc-400">
         <input type="checkbox" checked={enableV55Framing} onChange={(e) => setEnableV55Framing(e.target.checked)} />
         Enable v55 master-action framing (conceptual)
@@ -379,14 +392,23 @@ export default function AssistantPage() {
         Show gravity diagnostics (debug)
       </label>
       {showGravityDiagnostics ? (
-        <DiagnosticsSection
-          gravityTrend={gravityTrend}
-          recentGravity={recentGravity}
-          sparklinePoints={sparklinePoints}
-          versionState={versionComparisonSummary}
-          scoringVersion={TIEKAT_V54_SCORING_VERSION}
-          gravityDiagnostics={gravityDiagnostics}
-        />
+        <>
+          <DiagnosticsSection
+            gravityTrend={gravityTrend}
+            recentGravity={recentGravity}
+            sparklinePoints={sparklinePoints}
+            versionState={versionComparisonSummary}
+            scoringVersion={TIEKAT_V54_SCORING_VERSION}
+            gravityDiagnostics={gravityDiagnostics}
+          />
+          {geometryState ? (
+            <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-400" data-testid="geometry-trace">
+              <p className="font-semibold">Geometry Trace (diagnostics)</p>
+              <p>Rule: {geometryState.trace.selectionReason}</p>
+              <p>Layers: {geometryState.trace.layerReason}</p>
+            </div>
+          ) : null}
+        </>
       ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">
