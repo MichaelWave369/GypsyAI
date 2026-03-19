@@ -35,6 +35,9 @@ export function HabitatProfileSelector(props: {
   constellationContinuityNote?: string | null;
   constellationTransitionNote?: string | null;
   constellationNodeLabels?: string[];
+  sphereLabel?: string | null;
+  sphereCaption?: string | null;
+  sphereConfidenceNote?: string | null;
   deckSummaryLine?: string | null;
   deckPreviewLabels?: string[];
   deckNote?: string;
@@ -138,6 +141,9 @@ export function HabitatProfileSelector(props: {
       {props.constellationNodeLabels?.length ? (
         <p className="text-[10px] text-zinc-600">Constellation: {props.constellationNodeLabels.slice(0, 4).join(' • ')}</p>
       ) : null}
+      {props.sphereLabel ? <p className="text-[10px] text-zinc-500">Modeled habitat sphere signature: {props.sphereLabel}</p> : null}
+      {props.sphereCaption ? <p className="text-zinc-500">{props.sphereCaption}</p> : null}
+      {props.sphereConfidenceNote ? <p className="text-[10px] text-zinc-600">{props.sphereConfidenceNote}</p> : null}
       {props.deckSummaryLine ? <p className="text-zinc-500">{props.deckSummaryLine}</p> : null}
       {props.deckPreviewLabels?.length ? <p className="text-[10px] text-zinc-600">Deck cards: {props.deckPreviewLabels.slice(0, 4).join(' • ')}</p> : null}
       {props.deckNote ? <p className="text-zinc-500">{props.deckNote}</p> : null}

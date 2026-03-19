@@ -22,6 +22,8 @@ describe('tiekat habitat deck', () => {
     const card = buildHabitatCardFromProfile(profile, '2026-03-20T00:10:00.000Z');
     expect(card.profileName).toBe('Synthesis Oracle');
     expect(card.usageBadge).toBe('Frequently Used');
+    expect(card.sphereSignature.specVersion).toBe('TIEKAT-habitat-sphere-v1');
+    expect(card.sphereSignature.caption).toContain('Configuration-derived sphere profile');
     expect(card.version).toBe(TIEKAT_HABITAT_DECK_EXPORT_VERSION);
     expect(card.footer).toContain('configuration only');
     expect(JSON.stringify(card).toLowerCase()).not.toContain('message');
@@ -57,7 +59,9 @@ describe('tiekat habitat deck', () => {
     const imported = importHabitatDeckJson(json);
     expect(imported.cards.length).toBe(deck.cards.length);
     expect(imported.version).toBe(TIEKAT_HABITAT_DECK_EXPORT_VERSION);
-    expect(exportHabitatDeckMarkdown(imported)).toContain('Local habitat ritual object');
+    const markdown = exportHabitatDeckMarkdown(imported);
+    expect(markdown).toContain('Local habitat ritual object');
+    expect(markdown).toContain('Sphere:');
     expect(() => importHabitatDeckJson(JSON.stringify({ version: 'bad', cards: [] }))).toThrow('Unsupported habitat deck export version');
   });
 });

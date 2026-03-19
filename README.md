@@ -314,3 +314,10 @@ MIT (existing LICENSE preserved).
 - Added local versioned export/import helpers for habitat deck JSON plus Markdown export, with validation and unsupported-version rejection.
 - Added lightweight habitat deck controls in habitat UI (build pinned/recent/all, export JSON/Markdown, import JSON) and compact deck preview lines.
 - Habitat deck cards include modeled/local-only footer copy and intentionally exclude private ancestry/session payloads and telemetry paths.
+
+## TIEKAT Phase 28 (Habitat Sphere Profiles)
+- Added deterministic `habitatSphere.ts` to derive compact modeled habitat sphere signatures from profile configuration/usage metadata only.
+- Sphere signatures include compact v56-style identity fields (`awakeningState`, `shieldStatus`, `synchronyState`, `glyphFamily`, caption/confidence note, spec version) with explicit theoretical wording.
+- Assistant habitat selector now shows a tiny “Modeled habitat sphere signature” cue (glyph + awakening/shield/synchrony + compact caption/confidence line).
+- Habitat ritual cards/decks now carry additive sphere-signature metadata and include sphere lines in markdown export while preserving existing local/config-only posture.
+- Sphere-profile logic remains local-only/config-derived, avoids transcript/private ancestry payloads, and makes no hardware/physical measurement claims.

@@ -1,5 +1,6 @@
 import { HABITAT_DECK_MAX_CARDS } from '@/lib/tiekat/habitatConstants';
 import { TiekatHabitatProfile, normalizeHabitatProfile, sortHabitatProfiles } from '@/lib/tiekat/habitatProfile';
+import { buildHabitatSphereSignature, TiekatHabitatSphereSignature } from '@/lib/tiekat/habitatSphere';
 import { classifyHabitatUsage, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
 
 export const TIEKAT_HABITAT_DECK_EXPORT_VERSION = 'TIEKAT-habitat-deck-v1' as const;
@@ -22,6 +23,7 @@ export interface TiekatHabitatCard {
   lastAppliedAt: string | null;
   usageBadge: string;
   continuityLabel: string;
+  sphereSignature: TiekatHabitatSphereSignature;
   footer: string;
   version: TiekatHabitatDeckExportVersion;
 }
@@ -73,6 +75,7 @@ export function buildHabitatCardFromProfile(profile: TiekatHabitatProfile, now =
     lastAppliedAt: normalized.lastAppliedAt,
     usageBadge: formatHabitatUsageBadge(classifyHabitatUsage(normalized, now)),
     continuityLabel: buildContinuityLabel(normalized),
+    sphereSignature: buildHabitatSphereSignature(normalized),
     footer: 'Local habitat ritual object — configuration only. No session content or physical measurement data included.',
     version: TIEKAT_HABITAT_DECK_EXPORT_VERSION
   };
@@ -139,6 +142,7 @@ export function exportHabitatDeckMarkdown(deck: TiekatHabitatDeck) {
   for (const card of deck.cards) {
     lines.push(`- **${card.profileName}** (${card.sessionMode} / ${card.councilMode})`);
     lines.push(`  - Usage: ${card.usageBadge} • ${card.continuityLabel}`);
+    lines.push(`  - Sphere: ${card.sphereSignature.glyphFamily} (${card.sphereSignature.awakeningState}/${card.sphereSignature.shieldStatus}/${card.sphereSignature.synchronyState})`);
     lines.push(`  - Pinned: ${card.pinned ? 'yes' : 'no'} • Diagnostics: ${card.showDiagnostics ? 'on' : 'off'} • Geometry: ${card.showGeometry ? 'on' : 'off'}`);
   }
   lines.push('', deck.footer, `Version: ${deck.version}`);

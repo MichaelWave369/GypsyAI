@@ -43,6 +43,9 @@ describe('habitat profile ui', () => {
         constellationContinuityNote: 'Recent continuity favors Synthesis Oracle.',
         constellationTransitionNote: 'Recent transition: Quiet Reflection → Synthesis Oracle.',
         constellationNodeLabels: ['Synthesis Oracle', 'Council Deliberation'],
+        sphereLabel: 'council_star • awakened/fortified/council_aligned',
+        sphereCaption: 'Configuration-derived sphere profile: awakened • fortified • council_aligned.',
+        sphereConfidenceNote: 'Modeled habitat sphere signature (theoretical, local configuration identity only).',
         deckSummaryLine: '2 habitat card(s). Lead: Synthesis Oracle.',
         deckPreviewLabels: ['Synthesis Oracle', 'Council Deliberation'],
         deckNote: 'Built pinned habitat ritual deck.',
@@ -64,6 +67,9 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Frequently Used');
     expect(html).toContain('Recent continuity favors Synthesis Oracle.');
     expect(html).toContain('Constellation: Synthesis Oracle • Council Deliberation');
+    expect(html).toContain('Modeled habitat sphere signature: council_star • awakened/fortified/council_aligned');
+    expect(html).toContain('Configuration-derived sphere profile: awakened • fortified • council_aligned.');
+    expect(html).toContain('theoretical, local configuration identity only');
     expect(html).toContain('Export Deck JSON');
     expect(html).toContain('Export Deck Markdown');
     expect(html).toContain('Import Deck JSON');
@@ -106,12 +112,14 @@ describe('habitat profile ui', () => {
         profileLastAppliedLabel: 'Never applied',
         usageBadge: 'Never Applied',
         constellationNodeLabels: ['Quiet Reflection'],
+        sphereLabel: 'quiet_lotus • quiet/open/solo',
         deckPreviewLabels: ['Quiet Reflection']
       })
     );
     expect(html).toContain('Never applied');
     expect(html).toContain('Never Applied');
     expect(html).toContain('Constellation: Quiet Reflection');
+    expect(html).toContain('Modeled habitat sphere signature: quiet_lotus • quiet/open/solo');
     expect(html).toContain('Deck cards: Quiet Reflection');
   });
 });

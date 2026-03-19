@@ -56,6 +56,7 @@ import {
 import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
 import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
 import { buildHabitatConstellationState, buildHabitatConstellationSummary } from '@/lib/tiekat/habitatConstellation';
+import { buildHabitatSphereSignature } from '@/lib/tiekat/habitatSphere';
 import {
   buildHabitatDeck,
   buildPinnedHabitatDeck,
@@ -327,6 +328,10 @@ export default function AssistantPage() {
       applyCount: selectedHabitatMemorySummary.applyCount
     }));
   }, [selectedHabitatMemorySummary]);
+  const habitatSphereSignature = useMemo(
+    () => (selectedHabitatProfile ? buildHabitatSphereSignature(selectedHabitatProfile) : null),
+    [selectedHabitatProfile]
+  );
   const habitatDeckSummary = useMemo(() => (habitatDeck ? summarizeHabitatDeck(habitatDeck) : null), [habitatDeck]);
 
   const sparklinePoints = useMemo(() => {
@@ -941,6 +946,9 @@ export default function AssistantPage() {
         constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
         deckSummaryLine={habitatDeckSummary?.line ?? null}
         deckPreviewLabels={habitatDeck?.cards.map((card) => card.profileName) ?? []}
+        sphereLabel={habitatSphereSignature ? `${habitatSphereSignature.glyphFamily} • ${habitatSphereSignature.awakeningState}/${habitatSphereSignature.shieldStatus}/${habitatSphereSignature.synchronyState}` : null}
+        sphereCaption={habitatSphereSignature?.caption ?? null}
+        sphereConfidenceNote={habitatSphereSignature?.confidenceNote ?? null}
         deckNote={habitatDeckNote}
         deckError={habitatDeckError}
         note={habitatProfileNote}
