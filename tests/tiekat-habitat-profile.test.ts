@@ -16,8 +16,11 @@ import {
   compareHabitatProfiles,
   buildDefaultHabitatProfiles,
   buildHabitatProfile,
+  buildHabitatConstellationSummary,
+  buildHabitatProfileMemorySummary,
   deleteHabitatProfile,
   exportHabitatProfileJson,
+  formatHabitatUsageSummary,
   formatHabitatProfileDiff,
   getRecentHabitatProfiles,
   importHabitatProfileJson,
@@ -64,6 +67,9 @@ describe('tiekat habitat profiles', () => {
     expect(normalized.preferences.constellationFilters.shiftType).toBe('all');
     expect(normalized.pinned).toBe(false);
     expect(normalized.sortOrder).toBe(0);
+    expect(normalized.lastAppliedAt).toBeNull();
+    expect(normalized.applyCount).toBe(0);
+    expect(normalized.lastAppliedSessionMode).toBeNull();
 
     const defaults = buildDefaultHabitatProfiles();
     expect(defaults.map((profile) => profile.name)).toEqual([
@@ -131,13 +137,55 @@ describe('tiekat habitat profiles', () => {
         promptPresetMode: 'ancestral_listening'
       }
     });
-    const denied = applyHabitatProfile({ profile, allowAncestry: false });
+    const denied = applyHabitatProfile({ profile, allowAncestry: false, now: '2026-03-19T01:00:00.000Z' });
     expect(denied.ancestryFallbackApplied).toBe(true);
     expect(denied.appliedSessionMode).not.toBe('ancestral_listening');
     expect(denied.note.toLowerCase()).toContain('ancestry consent is disabled');
+    expect(denied.profile.applyCount).toBe(1);
+    expect(denied.profile.lastAppliedAt).toBe('2026-03-19T01:00:00.000Z');
+    expect(denied.profile.lastAppliedSessionMode).toBe(denied.appliedSessionMode);
 
     const allowed = applyHabitatProfile({ profile, allowAncestry: true });
     expect(allowed.appliedSessionMode).toBe('ancestral_listening');
+  });
+
+  it('builds deterministic habitat usage summaries with no private/raw data leakage', () => {
+    const base = buildDefaultHabitatProfiles();
+    const appliedSynthesis = normalizeHabitatProfile({
+      ...base[2],
+      applyCount: 5,
+      lastAppliedAt: '2026-03-19T05:00:00.000Z',
+      lastAppliedSessionMode: 'synthesis_oracle'
+    });
+    const staleTarot = normalizeHabitatProfile({
+      ...base[1],
+      applyCount: 1,
+      lastAppliedAt: '2026-02-01T00:00:00.000Z',
+      lastAppliedSessionMode: 'tarot_inquiry'
+    });
+    const pinnedNeverApplied = normalizeHabitatProfile({
+      ...base[0],
+      pinned: true,
+      applyCount: 0,
+      lastAppliedAt: null,
+      lastAppliedSessionMode: null
+    });
+    const summary = buildHabitatProfileMemorySummary(appliedSynthesis, '2026-03-19T06:00:00.000Z');
+    expect(summary.neverApplied).toBe(false);
+    expect(formatHabitatUsageSummary(summary)).toContain('Used 5 times');
+
+    const constellation = buildHabitatConstellationSummary({
+      profiles: [appliedSynthesis, staleTarot, pinnedNeverApplied],
+      now: '2026-03-19T06:00:00.000Z',
+      recentTransition: { from: 'Tarot Chamber', to: 'Synthesis Oracle' }
+    });
+    expect(constellation.recentlyUsed[0]).toBe('Synthesis Oracle');
+    expect(constellation.mostUsed).toBe('Synthesis Oracle');
+    expect(constellation.pinnedNeverApplied).toContain('Quiet Reflection');
+    expect(constellation.staleHabitats).toContain('Tarot Chamber');
+    expect(constellation.recentTransitionLine).toContain('Tarot Chamber → Synthesis Oracle');
+    expect(constellation.compactContinuityNote).not.toContain('message');
+    expect(constellation.compactContinuityNote).not.toContain('ancestor name');
   });
 
   it('builds compact profile diff preview and avoids private/raw leakage', () => {
