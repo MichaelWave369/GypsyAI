@@ -21,12 +21,14 @@ import {
   TiekatOracleArtifact
 } from '@/lib/tiekat/oracleArtifact';
 import { getPromptPresetGroup, markPresetUsed, orderPresetsByRecent } from '@/lib/tiekat/promptPresets';
-import { buildSacredGeometryState, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
+import { buildOracleConstellationState } from '@/lib/tiekat/oracleConstellation';
+import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
 import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
+import { OracleConstellation } from '@/components/assistant/OracleConstellation';
 import { OracleCard } from '@/components/assistant/OracleCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
 import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
@@ -108,6 +110,10 @@ export default function AssistantPage() {
       mode: latestMode
     });
   }, [latestGravity, gravityTrend, versionComparisonSummary, sessionMode, latestModules, tiekatRoute, latestMode]);
+  const constellationState = useMemo(() => {
+    if (oracleArtifacts.length < 2) return null;
+    return buildOracleConstellationState({ artifacts: oracleArtifacts, limit: 6 });
+  }, [oracleArtifacts]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -406,8 +412,14 @@ export default function AssistantPage() {
               <p className="font-semibold">Geometry Trace (diagnostics)</p>
               <p>Rule: {geometryState.trace.selectionReason}</p>
               <p>Layers: {geometryState.trace.layerReason}</p>
+              <div className="flex flex-wrap gap-1 pt-1" data-testid="geometry-rule-legend">
+                {getGeometryRuleLegend().map((rule) => (
+                  <span key={rule} className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]">{rule}</span>
+                ))}
+              </div>
             </div>
           ) : null}
+          {constellationState ? <OracleConstellation state={constellationState} /> : null}
         </>
       ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">

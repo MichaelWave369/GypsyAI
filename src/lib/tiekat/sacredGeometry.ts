@@ -33,6 +33,14 @@ export interface TiekatGeometryState {
 }
 
 const GEOMETRY_VISIBILITY_KEY = 'gypsy-ai-tiekat-geometry-visible';
+const GEOMETRY_RULES = [
+  'drift_detected',
+  'multi_module_synthesis',
+  'single_module_sparse_state',
+  'rising_trend',
+  'falling_trend',
+  'stable_default'
+] as const;
 
 export function selectGeometryGlyph(input: TiekatGeometryInput): TiekatGeometryGlyph {
   if (input.versionSummary.state === 'drift_detected') return 'ring_orbit';
@@ -103,4 +111,8 @@ export function loadGeometryVisibilityPreference(defaultVisible = false) {
 export function saveGeometryVisibilityPreference(visible: boolean) {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(GEOMETRY_VISIBILITY_KEY, visible ? '1' : '0');
+}
+
+export function getGeometryRuleLegend() {
+  return [...GEOMETRY_RULES];
 }

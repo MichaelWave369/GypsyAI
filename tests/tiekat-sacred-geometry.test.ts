@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildSacredGeometryState,
   formatGeometryCaption,
+  getGeometryRuleLegend,
   loadGeometryVisibilityPreference,
   saveGeometryVisibilityPreference,
   selectGeometryGlyph
@@ -54,5 +55,11 @@ describe('tiekat sacred geometry', () => {
     expect(loadGeometryVisibilityPreference(false)).toBe(false);
     saveGeometryVisibilityPreference(true);
     expect(loadGeometryVisibilityPreference(false)).toBe(true);
+  });
+
+  it('exposes deterministic rule legend values', () => {
+    const legend = getGeometryRuleLegend();
+    expect(legend).toContain('drift_detected');
+    expect(legend).toContain('stable_default');
   });
 });

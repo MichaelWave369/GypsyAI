@@ -207,3 +207,10 @@ MIT (existing LICENSE preserved).
 - Added explicit user control for sacred geometry visibility in oracle view (`Show sacred geometry in oracle view`).
 - Geometry visibility preference is persisted locally (localStorage) with safe defaults and no telemetry/sync.
 - Core glyph mapping remains metadata-driven, deterministic, and explicitly modeled/theoretical.
+
+## TIEKAT Phase 13 (Oracle Memory Constellation Layer)
+- Added deterministic oracle constellation mapping from recent local artifacts only (`oracleConstellation.ts`) with compact nodes/edges/caption state.
+- Added lightweight SVG constellation renderer (`OracleConstellation`) for quiet continuity visualization.
+- Constellation is diagnostics-oriented and appears only when recent local artifacts exist.
+- Added diagnostics-only sacred-geometry rule legend chips using the current rule vocabulary.
+- Constellation captions remain modeled/theoretical and explicitly local-memory based.
