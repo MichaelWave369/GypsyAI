@@ -2,17 +2,33 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { classifyIntent } from '@/lib/assistant/router';
-import { loadSettings } from '@/lib/local/settings';
+import { buildContextCapsule } from '@/lib/assistant/context';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
+import { loadAncestry } from '@/lib/ancestry/storage';
+import { loadSettings } from '@/lib/local/settings';
+import { createTiekatMemoryEntry, loadTiekatMemory, saveTiekatMemory } from '@/lib/tiekat/memory';
+import { TiekatMemoryEntry } from '@/lib/tiekat/schema';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string; sources?: string[] }[]>([]);
   const [sessions, setSessions] = useState<AssistantSession[]>([]);
   const [activeId, setActiveId] = useState<string>('');
+  const [tiekatRoute, setTiekatRoute] = useState<string>('');
+  const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const controllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => { loadAssistantSessions().then((s) => { setSessions(s); if (s[0]) { setActiveId(s[0].id); setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content }))); } }); }, []);
+  useEffect(() => {
+    loadAssistantSessions().then((s) => {
+      setSessions(s);
+      if (s[0]) {
+        setActiveId(s[0].id);
+        setMessages(s[0].messages.map((m) => ({ role: m.role, content: m.content })));
+      }
+    });
+    setMemoryEntries(loadTiekatMemory());
+  }, []);
+
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
 
   const persist = async (nextMessages: { role: 'user' | 'assistant'; content: string; sources?: string[] }[]) => {
@@ -33,16 +49,56 @@ export default function AssistantPage() {
 
   const send = async () => {
     const s = loadSettings();
+    const ancestry = await loadAncestry();
+    const capsule = buildContextCapsule(ancestry);
     const next = [...messages, { role: 'user' as const, content: input }];
     setMessages(next);
     setInput('');
     controllerRef.current = new AbortController();
-    const res = await fetch('/api/assistant/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: input, demoMode: s.demoMode, strictReadingMode: s.strictReadingMode, autoSwitchReadingMode: s.autoSwitchReadingMode, provider: s.provider, model: s.model }), signal: controllerRef.current.signal });
+    const sessionId = activeId || crypto.randomUUID();
+
+    const res = await fetch('/api/assistant/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: input,
+        demoMode: s.demoMode,
+        strictReadingMode: s.strictReadingMode,
+        autoSwitchReadingMode: s.autoSwitchReadingMode,
+        provider: s.provider,
+        model: s.model,
+        tiekat: {
+          sessionId,
+          consent: {
+            allowAncestry: s.allowAncestryAi,
+            includeNames: s.includeNamesInAiContext,
+            hideLivingPersons: s.hideLivingPersons,
+            memoryEnabled: s.useSessionsInAssistant
+          },
+          moduleData: {
+            tarot: capsule.lastTarot,
+            genekeys: capsule.lastGeneKeys,
+            ancestry: capsule.ancestryPatterns
+          },
+          memoryEntries
+        }
+      }),
+      signal: controllerRef.current.signal
+    });
     const ct = res.headers.get('content-type') || '';
     if (ct.includes('application/json')) {
       const data = await res.json();
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
+      setTiekatRoute(data.tiekat?.route ?? '');
+      if (s.useSessionsInAssistant && data.tiekat?.verification?.passed) {
+        const entry = createTiekatMemoryEntry(sessionId, data.content, input.toLowerCase().split(/\W+/).filter(Boolean).slice(0, 8), data.tiekat?.verification?.usedModules ?? ['assistant']);
+        const nextMemory = [entry, ...memoryEntries].slice(0, 50);
+        setMemoryEntries(nextMemory);
+        saveTiekatMemory(nextMemory, true);
+      } else if (!s.useSessionsInAssistant) {
+        saveTiekatMemory([], false);
+      }
       await persist(withAssistant);
       return;
     }
@@ -92,6 +148,7 @@ export default function AssistantPage() {
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
+      {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
         <aside className="panel space-y-2 text-sm">
           <div className="flex gap-2"><button className="rounded border border-zinc-700 px-2" onClick={summarize}>Summarize session</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('md')}>Export MD</button><button className="rounded border border-zinc-700 px-2" onClick={() => exportSession('json')}>Export JSON</button></div>

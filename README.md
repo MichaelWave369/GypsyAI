@@ -98,3 +98,22 @@ For entertainment and self-reflection only. Gypsy AI does **not** provide legal,
 
 ## License
 MIT (existing LICENSE preserved).
+
+## TIEKAT Phase 1 (Assistant Kernel)
+- Assistant requests now run through a small internal **TIEKAT** kernel before response delivery.
+- Phase 1 scope is intentionally limited to the Assistant orchestration boundary:
+  - deterministic request routing/classification
+  - consent-aware context envelope assembly
+  - lightweight module adapters (Tarot, Astrology, Gene Keys, Ancestry)
+  - local-first, optional compact memory anchors
+  - deterministic verification pass on generated outputs
+- Privacy safeguards remain strict:
+  - ancestry context is only included when consent allows it
+  - name inclusion follows settings consent
+  - living-person hiding flags are propagated into kernel redaction metadata
+  - memory is disableable; when disabled, TIEKAT runs statelessly and does not persist memory
+- Out of scope in Phase 1:
+  - no full-app refactor
+  - no replacement of module engines
+  - no remote memory service
+  - no non-deterministic hidden classifier layer
