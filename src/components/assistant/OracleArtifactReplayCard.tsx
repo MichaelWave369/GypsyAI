@@ -39,6 +39,11 @@ export function OracleArtifactReplayCard(props: {
       <p className="text-zinc-400">Prompt: {artifact.summary.promptSummary}</p>
       <p className="text-zinc-400">Response: {artifact.summary.responseSummary}</p>
       <p className="text-zinc-400">Trend {artifact.trend || 'stable'} • Version state {artifact.versionSummaryState || 'insufficient_data'} • v55 framing {artifact.v55?.enabled ? 'on' : 'off'}</p>
+      {artifact.council ? (
+        <p className="text-zinc-400">
+          Council {artifact.council.mode} • roles {artifact.council.roles.join(', ') || 'none'} • turns {artifact.council.turnCount} • disagreement {artifact.council.disagreement ? 'yes' : 'no'}
+        </p>
+      ) : null}
       {props.diffView ? (
         <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="artifact-diff-view">
           <p className="font-semibold">{props.diffView.title}</p>

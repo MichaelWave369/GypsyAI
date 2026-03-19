@@ -17,6 +17,7 @@ import { verifyTiekatOutput } from '@/lib/tiekat/verification';
 import { computeGravityBootstrap } from '@/lib/tiekat/gravity';
 import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
 import { buildSessionModePromptFrame, getDefaultSessionMode, resolveSessionMode } from '@/lib/tiekat/sessionMode';
+import { buildCouncilInputEnvelope, runOracleCouncil, TiekatCouncilMode } from '@/lib/tiekat/oracleCouncil';
 
 const consentSchema = z.object({
   allowAncestry: z.boolean().default(false),
@@ -29,6 +30,7 @@ const tiekatSchema = z
   .object({
     sessionId: z.string().optional(),
     sessionMode: z.enum(['open_reflection', 'tarot_inquiry', 'astrology_reflection', 'genekeys_contemplation', 'ancestral_listening', 'synthesis_oracle']).optional(),
+    councilMode: z.enum(['disabled', 'oracle_council', 'deliberation_oracle', 'swarm_synthesis']).optional(),
     consent: consentSchema.optional(),
     moduleData: z
       .object({
@@ -101,6 +103,22 @@ export async function POST(req: NextRequest) {
   });
   tiekatSession.state.symbolicAnchors = tiekatEnvelope.symbolicAnchors;
   const tiekatPlan = buildTiekatReflectionPlan(tiekatSession.state, tiekatEnvelope);
+  const councilMode = (tiekat?.councilMode ?? 'disabled') as TiekatCouncilMode;
+  const councilEnvelope = buildCouncilInputEnvelope({
+    message: modeAdjustedMessage,
+    sessionMode,
+    route: tiekatSession.routing.route,
+    modules: tiekatPlan.modulesToConsult,
+    ritualFrame: modeFrame,
+    artifactContinuitySummary: tiekatPlan.contextSummary,
+    ancestrySummary: typeof tiekat?.moduleData?.ancestry === 'string' ? tiekat.moduleData.ancestry : 'ancestry summary not expanded',
+    consent
+  });
+  const councilResult = runOracleCouncil({
+    mode: councilMode,
+    consent,
+    envelope: councilEnvelope
+  });
 
   if (isTestMode() || demoMode) {
     const content = `Demo assistant (${intent}, mode=${sessionMode}): ${cleanMessage}\nOpening\nSpread overview\nCard-by-card\nHermetic Layer\nIntegration\nPractical steps\nClosing line`;
@@ -113,6 +131,7 @@ export async function POST(req: NextRequest) {
       tiekat: {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
+        council: councilResult?.summary ?? null,
         verification,
         gravityBootstrap,
         v54: v54Metadata,
@@ -153,6 +172,7 @@ export async function POST(req: NextRequest) {
       tiekat: {
         route: tiekatSession.routing.route,
         plan: tiekatPlan,
+        council: councilResult?.summary ?? null,
         verification,
         gravityBootstrap,
         v54: v54Metadata,
@@ -194,6 +214,7 @@ export async function POST(req: NextRequest) {
     tiekat: {
       route: tiekatSession.routing.route,
       plan: tiekatPlan,
+      council: councilResult?.summary ?? null,
       verification,
       gravityBootstrap,
       v54: v54Metadata,

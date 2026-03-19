@@ -4,6 +4,7 @@ import { OracleVersionSummary, TiekatOraclePresentation } from '@/lib/tiekat/ora
 import { getDefaultSessionMode, getSessionModeConfig, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { getTiekatV54Metadata } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
+import { TiekatCouncilMode, TiekatCouncilRole, TiekatCouncilSummary } from '@/lib/tiekat/oracleCouncil';
 
 export const TIEKAT_ORACLE_ARTIFACT_ROW_VERSION = 1 as const;
 const MAX_ORACLE_ARTIFACTS = 150;
@@ -51,6 +52,15 @@ export interface TiekatOracleArtifact {
   };
   trend?: 'rising' | 'stable' | 'falling';
   versionSummaryState?: OracleVersionSummary['state'];
+  council?: {
+    mode: TiekatCouncilMode;
+    roles: TiekatCouncilRole[];
+    turnCount: number;
+    disagreement: boolean;
+    synthesisNote: string;
+    roleSummaries: Array<{ role: TiekatCouncilRole; summary: string }>;
+    footer: string;
+  };
   consent: {
     memoryEnabled: boolean;
     includeNames: boolean;
@@ -102,6 +112,7 @@ export function buildOracleArtifact(args: {
   };
   enableV55Framing: boolean;
   sessionMode?: TiekatSessionModeKey;
+  council?: TiekatCouncilSummary | null;
 }): TiekatOracleArtifact {
   const now = new Date().toISOString();
   const v54 = getTiekatV54Metadata();
@@ -142,6 +153,15 @@ export function buildOracleArtifact(args: {
     v55: args.enableV55Framing ? { specVersion: v55.specVersion, enabled: true } : undefined,
     trend: args.trend,
     versionSummaryState: args.versionSummary?.state,
+    council: args.council ? {
+      mode: args.council.mode,
+      roles: args.council.roles,
+      turnCount: args.council.turnCount,
+      disagreement: args.council.disagreement,
+      synthesisNote: args.council.synthesisNote.slice(0, 200),
+      roleSummaries: args.council.roleSummaries.map((row) => ({ role: row.role, summary: row.summary.slice(0, 200) })).slice(0, 6),
+      footer: args.council.footer
+    } : undefined,
     consent: {
       memoryEnabled: args.consent.memoryEnabled,
       includeNames: args.consent.includeNames,
@@ -190,6 +210,18 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
     v55: value.v55?.enabled ? { specVersion: value.v55.specVersion || getTiekatV55Metadata().specVersion, enabled: true } : undefined,
     trend: value.trend || 'stable',
     versionSummaryState: value.versionSummaryState || 'insufficient_data',
+    council: value.council ? {
+      mode: value.council.mode || 'disabled',
+      roles: Array.isArray(value.council.roles) ? value.council.roles.slice(0, 8) as TiekatCouncilRole[] : [],
+      turnCount: Number(value.council.turnCount ?? 0),
+      disagreement: Boolean(value.council.disagreement),
+      synthesisNote: value.council.synthesisNote?.slice(0, 200) || '',
+      roleSummaries: Array.isArray(value.council.roleSummaries) ? value.council.roleSummaries.map((row) => ({
+        role: row.role,
+        summary: row.summary?.slice(0, 200) || ''
+      })).slice(0, 8) : [],
+      footer: value.council.footer?.slice(0, 180) || 'Modeled council deliberation only.'
+    } : undefined,
     consent: {
       memoryEnabled: Boolean(value.consent?.memoryEnabled),
       includeNames: Boolean(value.consent?.includeNames),

@@ -235,3 +235,10 @@ MIT (existing LICENSE preserved).
 - Added ritual deck JSON import validation + normalization for local round-trip reuse, with unsupported-version rejection.
 - Deck import/build remains local-only and summary-level; no raw transcript persistence paths were added.
 - Assistant ritual deck panel now includes filter controls, local recent-deck replay shortcuts, import, and delete actions while preserving modeled/theoretical footer language.
+
+## TIEKAT Phase 17 (Agentora Oracle Council Layer)
+- Added optional governed council modes (`disabled`, `oracle_council`, `deliberation_oracle`, `swarm_synthesis`) with deterministic roster planning under TIEKAT control.
+- Added compact council roles (`oracle_reader`, `pattern_weaver`, `skeptic_grounder`, optional consent-gated `lineage_keeper`, `final_integrator`) with deterministic ordering and purposes.
+- Added sanitized council input-envelope and deterministic deliberation summaries (agreement/disagreement, warnings, synthesis note) with modeled/theoretical footer language.
+- Assistant API now returns compact council summaries when enabled, while the default single-oracle path remains unchanged when council mode is disabled.
+- Oracle artifacts now support additive compact council metadata for replay/export compatibility without storing full council transcripts.

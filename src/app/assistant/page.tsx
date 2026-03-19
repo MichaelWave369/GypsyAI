@@ -31,6 +31,7 @@ import {
 } from '@/lib/tiekat/oracleConstellation';
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
+import { getCouncilModes, TiekatCouncilMode, TiekatCouncilSummary } from '@/lib/tiekat/oracleCouncil';
 import {
   appendRitualDeck,
   buildFilteredRitualDeck,
@@ -90,6 +91,8 @@ export default function AssistantPage() {
   const [recentRitualDecks, setRecentRitualDecks] = useState<TiekatRitualDeck[]>([]);
   const [ritualDeckFilters, setRitualDeckFilters] = useState<TiekatRitualDeckFilterState>(normalizeRitualDeckFilterState());
   const [ritualDeckImportError, setRitualDeckImportError] = useState('');
+  const [councilMode, setCouncilMode] = useState<TiekatCouncilMode>('disabled');
+  const [councilSummary, setCouncilSummary] = useState<TiekatCouncilSummary | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -227,7 +230,8 @@ export default function AssistantPage() {
             genekeys: capsule.lastGeneKeys,
             ancestry: capsule.ancestryPatterns
           },
-          memoryEntries
+          memoryEntries,
+          councilMode
         }
       }),
       signal: controllerRef.current.signal
@@ -240,6 +244,7 @@ export default function AssistantPage() {
       setTiekatRoute(data.tiekat?.route ?? modeConfig.defaultRouteBias);
       setLatestModules(data.tiekat?.plan?.modulesToConsult ?? ['assistant']);
       setLatestMode(data.tiekat?.plan?.mode ?? 'assistant_synthesis');
+      setCouncilSummary(data.tiekat?.council ?? null);
       if (data.tiekat?.gravityBootstrap) {
         const gb = data.tiekat.gravityBootstrap;
         setLatestGravity(gb as TiekatGravityBootstrapResult);
@@ -306,7 +311,8 @@ export default function AssistantPage() {
             hideLivingPersons: s.hideLivingPersons
           },
           enableV55Framing: useV55Framing,
-          sessionMode: resolvedMode
+          sessionMode: resolvedMode,
+          council: data.tiekat?.council ?? null
         });
         await appendOracleArtifact({ enabled: true, artifact });
         const recentArtifacts = await getRecentOracleArtifacts(8);
@@ -495,6 +501,20 @@ export default function AssistantPage() {
       {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
+      <label className="text-xs text-zinc-400">
+        Oracle council mode
+        <select className="ml-2 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5" value={councilMode} onChange={(e) => setCouncilMode(e.target.value as TiekatCouncilMode)}>
+          {getCouncilModes().map((mode) => <option key={mode} value={mode}>{mode}</option>)}
+        </select>
+      </label>
+      {councilSummary ? (
+        <div className="rounded border border-zinc-700 p-2 text-xs text-zinc-400" data-testid="council-summary">
+          <p className="font-semibold">Council: {councilSummary.mode}</p>
+          <p>Roles: {councilSummary.roles.join(', ') || 'none'} • Turns: {councilSummary.turnCount}</p>
+          <p>Debate: {councilSummary.disagreement ? 'disagreement detected' : 'aligned synthesis'}</p>
+          <p>{councilSummary.synthesisNote}</p>
+        </div>
+      ) : null}
       <PromptPresetChips
         group={presetGroup}
         onChoose={({ id, text }) => {
