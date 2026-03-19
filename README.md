@@ -214,3 +214,10 @@ MIT (existing LICENSE preserved).
 - Constellation is diagnostics-oriented and appears only when recent local artifacts exist.
 - Added diagnostics-only sacred-geometry rule legend chips using the current rule vocabulary.
 - Constellation captions remain modeled/theoretical and explicitly local-memory based.
+
+## TIEKAT Phase 14 (Constellation Filter Chips)
+- Added deterministic diagnostics-only constellation filters for mode, scoring version, and shift type.
+- Added compact filter option derivation and filter application helpers (`getConstellationFilterOptions`, `applyConstellationFilters`) with coherent node/edge retention.
+- Added lightweight diagnostics filter controls (`ConstellationFilterChips`) with reset support.
+- Added local-only persistence for last-used constellation filters (no telemetry/sync).
+- Filtered constellation captions remain explicitly local/modelled/theoretical and include deterministic empty-state messaging when no nodes match.

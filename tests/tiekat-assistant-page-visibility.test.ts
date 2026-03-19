@@ -30,12 +30,15 @@ describe('assistant visibility behaviors', () => {
     const diagnosticsHtml = renderToStaticMarkup(
       React.createElement('div', null,
         React.createElement('div', null, `Rule: ${geometry.trace.selectionReason}`),
+        React.createElement('div', { 'data-testid': 'constellation-filters' }, 'filters'),
         React.createElement(OracleConstellation, { state: constellation })
       )
     );
 
     expect(hiddenHtml).not.toContain('sacred-geometry');
+    expect(hiddenHtml).not.toContain('constellation-filters');
     expect(diagnosticsHtml).toContain('Rule:');
+    expect(diagnosticsHtml).toContain('constellation-filters');
     expect(diagnosticsHtml).toContain('oracle-constellation');
   });
 });

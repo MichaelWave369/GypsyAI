@@ -22,10 +22,24 @@ export interface TiekatConstellationState {
   caption: string;
 }
 
+export interface TiekatConstellationFilterState {
+  mode: string | 'all';
+  scoringVersion: string | 'all';
+  shiftType: TiekatConstellationEdge['type'] | 'all';
+}
+
+export interface TiekatConstellationFilterOptions {
+  modes: string[];
+  scoringVersions: string[];
+  shiftTypes: TiekatConstellationEdge['type'][];
+}
+
 export interface TiekatConstellationInput {
   artifacts: TiekatOracleArtifact[];
   limit?: number;
 }
+
+const CONSTELLATION_FILTER_KEY = 'gypsy-ai-tiekat-constellation-filter';
 
 function bucketIntensity(value: number): TiekatConstellationNode['intensityBucket'] {
   if (value >= 0.66) return 'high';
@@ -78,4 +92,57 @@ export function buildOracleConstellationState(input: TiekatConstellationInput): 
     edges,
     caption: `${formatConstellationCaption({ nodes, edges })} Constellation reflects local artifact memory only.`
   };
+}
+
+export function getConstellationFilterOptions(state: TiekatConstellationState): TiekatConstellationFilterOptions {
+  return {
+    modes: Array.from(new Set(state.nodes.map((node) => node.mode))).sort(),
+    scoringVersions: Array.from(new Set(state.nodes.map((node) => node.scoringVersion))).sort(),
+    shiftTypes: Array.from(new Set(state.edges.map((edge) => edge.type)))
+  };
+}
+
+export function applyConstellationFilters(state: TiekatConstellationState, filters: TiekatConstellationFilterState): TiekatConstellationState {
+  const modeFilteredNodes = filters.mode === 'all' ? state.nodes : state.nodes.filter((node) => node.mode === filters.mode);
+  const versionFilteredNodes = filters.scoringVersion === 'all' ? modeFilteredNodes : modeFilteredNodes.filter((node) => node.scoringVersion === filters.scoringVersion);
+  const keptIds = new Set(versionFilteredNodes.map((node) => node.id));
+  const edges = state.edges.filter((edge) => keptIds.has(edge.from) && keptIds.has(edge.to));
+  const filteredEdges = filters.shiftType === 'all' ? edges : edges.filter((edge) => edge.type === filters.shiftType);
+  const edgeIds = new Set(filteredEdges.flatMap((edge) => [edge.from, edge.to]));
+  const filteredNodes = filters.shiftType === 'all'
+    ? versionFilteredNodes
+    : versionFilteredNodes.filter((node) => edgeIds.has(node.id));
+
+  const captionBase = filteredNodes.length
+    ? `Showing ${filters.mode === 'all' ? 'recent' : filters.mode} local artifacts${filters.scoringVersion === 'all' ? '' : ` at ${filters.scoringVersion}`}${filters.shiftType === 'all' ? '' : ` with ${filters.shiftType} edges`}.`
+    : 'No recent artifacts match the current filter.';
+
+  return {
+    nodes: filteredNodes,
+    edges: filteredEdges,
+    caption: `${captionBase} Constellation reflects modeled local oracle memory only.`
+  };
+}
+
+export function filterOracleConstellationState(state: TiekatConstellationState, filters: TiekatConstellationFilterState) {
+  return applyConstellationFilters(state, filters);
+}
+
+export function loadConstellationFilters(): TiekatConstellationFilterState {
+  if (typeof window === 'undefined') return { mode: 'all', scoringVersion: 'all', shiftType: 'all' };
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(CONSTELLATION_FILTER_KEY) ?? '{}') as Partial<TiekatConstellationFilterState>;
+    return {
+      mode: parsed.mode || 'all',
+      scoringVersion: parsed.scoringVersion || 'all',
+      shiftType: parsed.shiftType || 'all'
+    };
+  } catch {
+    return { mode: 'all', scoringVersion: 'all', shiftType: 'all' };
+  }
+}
+
+export function saveConstellationFilters(filters: TiekatConstellationFilterState) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(CONSTELLATION_FILTER_KEY, JSON.stringify(filters));
 }

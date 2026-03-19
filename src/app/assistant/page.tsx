@@ -21,10 +21,18 @@ import {
   TiekatOracleArtifact
 } from '@/lib/tiekat/oracleArtifact';
 import { getPromptPresetGroup, markPresetUsed, orderPresetsByRecent } from '@/lib/tiekat/promptPresets';
-import { buildOracleConstellationState } from '@/lib/tiekat/oracleConstellation';
+import {
+  applyConstellationFilters,
+  buildOracleConstellationState,
+  getConstellationFilterOptions,
+  loadConstellationFilters,
+  saveConstellationFilters,
+  TiekatConstellationFilterState
+} from '@/lib/tiekat/oracleConstellation';
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
+import { ConstellationFilterChips } from '@/components/assistant/ConstellationFilterChips';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
 import { OracleArtifactList } from '@/components/assistant/OracleArtifactList';
 import { OracleArtifactReplayCard } from '@/components/assistant/OracleArtifactReplayCard';
@@ -59,6 +67,7 @@ export default function AssistantPage() {
   const [selectedArtifactId, setSelectedArtifactId] = useState<string>('');
   const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>([]);
   const [artifactImportError, setArtifactImportError] = useState<string>('');
+  const [constellationFilters, setConstellationFilters] = useState<TiekatConstellationFilterState>({ mode: 'all', scoringVersion: 'all', shiftType: 'all' });
   const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -81,6 +90,7 @@ export default function AssistantPage() {
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
     setShowGeometry(loadGeometryVisibilityPreference(false));
+    setConstellationFilters(loadConstellationFilters());
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
@@ -114,6 +124,14 @@ export default function AssistantPage() {
     if (oracleArtifacts.length < 2) return null;
     return buildOracleConstellationState({ artifacts: oracleArtifacts, limit: 6 });
   }, [oracleArtifacts]);
+  const filteredConstellationState = useMemo(() => {
+    if (!constellationState) return null;
+    return applyConstellationFilters(constellationState, constellationFilters);
+  }, [constellationState, constellationFilters]);
+  const constellationFilterOptions = useMemo(() => {
+    if (!constellationState) return null;
+    return getConstellationFilterOptions(constellationState);
+  }, [constellationState]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -419,7 +437,24 @@ export default function AssistantPage() {
               </div>
             </div>
           ) : null}
-          {constellationState ? <OracleConstellation state={constellationState} /> : null}
+          {constellationState && constellationFilterOptions ? (
+            <div className="space-y-2">
+              <ConstellationFilterChips
+                options={constellationFilterOptions}
+                value={constellationFilters}
+                onChange={(next) => {
+                  setConstellationFilters(next);
+                  saveConstellationFilters(next);
+                }}
+                onReset={() => {
+                  const reset = { mode: 'all', scoringVersion: 'all', shiftType: 'all' } as TiekatConstellationFilterState;
+                  setConstellationFilters(reset);
+                  saveConstellationFilters(reset);
+                }}
+              />
+              {filteredConstellationState?.nodes.length ? <OracleConstellation state={filteredConstellationState} /> : <p className="text-xs text-zinc-500">No recent artifacts match the current filter.</p>}
+            </div>
+          ) : null}
         </>
       ) : null}
       <div className="grid gap-4 md:grid-cols-[280px_1fr]">
