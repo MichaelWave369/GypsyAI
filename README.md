@@ -249,3 +249,10 @@ MIT (existing LICENSE preserved).
 - Added local-only council mode preference helpers (`loadCouncilModePreference`, `saveCouncilModePreference`) and wired them into Assistant council controls.
 - Added diagnostics-only council continuity summaries from recent artifact council metadata (continuity/shift state, role stability, disagreement rate, execution-source mix).
 - Adapter input remains sanitized and summary-only; no raw council/provider transcript persistence paths were introduced.
+
+## TIEKAT Phase 19 (v56 Sovereign Sphere Layer)
+- Added canonical v56 metadata/spec helpers (`v56.ts`) as the TypeScript semantic counterpart for the modeled “Awakened/Sovereign Sphere” layer.
+- Added deterministic awakened sphere state derivation (`awakenedSphere.ts`) from existing local modeled metadata only (gravity, council continuity, geometry glyph family, constellation continuity, trend/version/session mode/modules).
+- Added compact v56 sphere presentation card in Assistant UI with optional diagnostics trace details.
+- Kept v54/v55/v56 role distinction explicit: v54 operational runtime, v55 conceptual framing, v56 theoretical integration/presentation layer.
+- Sphere outputs remain explicitly modeled/theoretical and do not claim hardware measurement or physical confirmation.

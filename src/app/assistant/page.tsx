@@ -31,6 +31,7 @@ import {
 } from '@/lib/tiekat/oracleConstellation';
 import { buildSacredGeometryState, getGeometryRuleLegend, loadGeometryVisibilityPreference, saveGeometryVisibilityPreference } from '@/lib/tiekat/sacredGeometry';
 import { buildSessionModePromptFrame, getDefaultSessionMode, getSessionModeConfig, resolveSessionMode, TiekatSessionModeKey } from '@/lib/tiekat/sessionMode';
+import { buildAwakenedSphereState } from '@/lib/tiekat/awakenedSphere';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -65,6 +66,7 @@ import { OracleConstellation } from '@/components/assistant/OracleConstellation'
 import { OracleCard } from '@/components/assistant/OracleCard';
 import { PromptPresetChips } from '@/components/assistant/PromptPresetChips';
 import { RitualDeckPanel } from '@/components/assistant/RitualDeckPanel';
+import { AwakenedSphereCard } from '@/components/assistant/AwakenedSphereCard';
 import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph';
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
@@ -173,6 +175,20 @@ export default function AssistantPage() {
     () => buildCouncilContinuitySummary(oracleArtifacts.slice(0, 8).map((artifact) => artifact.council)),
     [oracleArtifacts]
   );
+  const awakenedSphereState = useMemo(() => {
+    if (!latestGravity) return null;
+    return buildAwakenedSphereState({
+      gravity: latestGravity,
+      councilSummary,
+      councilContinuity,
+      geometry: geometryState,
+      constellation: filteredConstellationState || constellationState,
+      sessionMode,
+      modules: latestModules,
+      versionSummary: versionComparisonSummary ?? { state: 'insufficient_data' },
+      trend: gravityTrend as 'rising' | 'stable' | 'falling'
+    });
+  }, [latestGravity, councilSummary, councilContinuity, geometryState, filteredConstellationState, constellationState, sessionMode, latestModules, versionComparisonSummary, gravityTrend]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -513,6 +529,7 @@ export default function AssistantPage() {
       {tiekatRoute ? <p className="text-xs text-zinc-400">TIEKAT route: {tiekatRoute}</p> : null}
       {gravityBadge ? <ModeledBadge text={gravityBadge} /> : null}
       {oraclePresentation ? <OracleCard oracle={oraclePresentation} /> : null}
+      {awakenedSphereState ? <AwakenedSphereCard state={awakenedSphereState} showDiagnostics={showGravityDiagnostics} /> : null}
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <label className="text-xs text-zinc-400">
