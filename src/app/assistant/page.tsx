@@ -36,12 +36,19 @@ import { buildAwakenedSphereState } from '@/lib/tiekat/awakenedSphere';
 import {
   appendHabitatProfile,
   applyHabitatProfile,
+  buildHabitatProfileDiff,
   buildHabitatProfile,
+  formatHabitatProfileDiff,
   deleteHabitatProfile,
   exportHabitatProfileJson,
   getRecentHabitatProfiles,
   importHabitatProfileJson,
+  pinHabitatProfile,
+  reorderHabitatProfiles,
+  saveHabitatProfiles,
+  sortHabitatProfiles,
   TiekatHabitatProfile,
+  unpinHabitatProfile,
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
 import {
@@ -221,6 +228,31 @@ export default function AssistantPage() {
     () => habitatProfiles.find((profile) => profile.id === selectedHabitatProfileId) ?? null,
     [habitatProfiles, selectedHabitatProfileId]
   );
+  const habitatApplyPreview = useMemo(() => {
+    if (!selectedHabitatProfile) return null;
+    const current = buildHabitatProfile({
+      id: 'habitat-current-runtime',
+      name: 'Current Runtime',
+      description: 'Current assistant runtime preferences',
+      preferences: {
+        sessionMode,
+        councilMode,
+        preferProviderBackedCouncil,
+        showGeometry,
+        showDiagnostics: showGravityDiagnostics,
+        enableV55Framing,
+        constellationFilters,
+        ritualDeckFilters,
+        promptPresetMode: sessionMode
+      }
+    });
+    const settings = loadSettings();
+    return buildHabitatProfileDiff({
+      current,
+      target: selectedHabitatProfile,
+      allowAncestry: settings.allowAncestryAi
+    });
+  }, [selectedHabitatProfile, sessionMode, councilMode, preferProviderBackedCouncil, showGeometry, showGravityDiagnostics, enableV55Framing, constellationFilters, ritualDeckFilters]);
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -557,7 +589,7 @@ export default function AssistantPage() {
   };
 
   const refreshHabitatProfiles = async (nextSelectedId?: string) => {
-    const rows = await getRecentHabitatProfiles(12);
+    const rows = sortHabitatProfiles(await getRecentHabitatProfiles(12));
     setHabitatProfiles(rows);
     const fallback = rows[0]?.id || '';
     const selected = nextSelectedId && rows.some((profile) => profile.id === nextSelectedId) ? nextSelectedId : fallback;
@@ -609,6 +641,7 @@ export default function AssistantPage() {
       name: habitatNameDraft.trim() || 'Sovereign Habitat',
       description: habitatDescriptionDraft.trim() || 'Compact local oracle habitat profile.',
       now,
+      sortOrder: habitatProfiles.length,
       preferences: captureCurrentHabitatPreferences()
     });
     await appendHabitatProfile(profile);
@@ -664,6 +697,22 @@ export default function AssistantPage() {
     }
   };
 
+  const togglePinSelectedHabitatProfile = async () => {
+    if (!selectedHabitatProfile) return;
+    const next = selectedHabitatProfile.pinned
+      ? unpinHabitatProfile(habitatProfiles, selectedHabitatProfile.id)
+      : pinHabitatProfile(habitatProfiles, selectedHabitatProfile.id);
+    await saveHabitatProfiles(next);
+    await refreshHabitatProfiles(selectedHabitatProfile.id);
+  };
+
+  const reorderSelectedHabitatProfile = async (direction: 'up' | 'down') => {
+    if (!selectedHabitatProfile) return;
+    const reordered = reorderHabitatProfiles(habitatProfiles, selectedHabitatProfile.id, direction);
+    await saveHabitatProfiles(reordered);
+    await refreshHabitatProfiles(selectedHabitatProfile.id);
+  };
+
   return (
     <main className="space-y-4">
       <h2 className="text-2xl text-gold">Conversational Oracle</h2>
@@ -692,9 +741,14 @@ export default function AssistantPage() {
         onDelete={deleteCurrentHabitatProfile}
         onExport={exportCurrentHabitatProfile}
         onImport={importHabitatProfile}
+        onTogglePin={togglePinSelectedHabitatProfile}
+        onMoveUp={() => reorderSelectedHabitatProfile('up')}
+        onMoveDown={() => reorderSelectedHabitatProfile('down')}
+        diffPreview={habitatApplyPreview}
         note={habitatProfileNote}
         error={habitatProfileError}
       />
+      {habitatApplyPreview?.changed ? <p className="text-xs text-zinc-500">Preview only. Changes apply when you click Apply. {formatHabitatProfileDiff(habitatApplyPreview).split('\n').length} diff line(s).</p> : null}
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <label className="text-xs text-zinc-400">

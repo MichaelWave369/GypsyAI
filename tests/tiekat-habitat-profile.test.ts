@@ -12,14 +12,21 @@ vi.mock('@/lib/local/db', () => ({
 import {
   appendHabitatProfile,
   applyHabitatProfile,
+  buildHabitatProfileDiff,
+  compareHabitatProfiles,
   buildDefaultHabitatProfiles,
   buildHabitatProfile,
   deleteHabitatProfile,
   exportHabitatProfileJson,
+  formatHabitatProfileDiff,
   getRecentHabitatProfiles,
   importHabitatProfileJson,
   loadHabitatProfiles,
   normalizeHabitatProfile,
+  pinHabitatProfile,
+  reorderHabitatProfiles,
+  sortHabitatProfiles,
+  unpinHabitatProfile,
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
 
@@ -55,6 +62,8 @@ describe('tiekat habitat profiles', () => {
     const normalized = normalizeHabitatProfile({ id: 'legacy' });
     expect(normalized.preferences.sessionMode).toBe('open_reflection');
     expect(normalized.preferences.constellationFilters.shiftType).toBe('all');
+    expect(normalized.pinned).toBe(false);
+    expect(normalized.sortOrder).toBe(0);
 
     const defaults = buildDefaultHabitatProfiles();
     expect(defaults.map((profile) => profile.name)).toEqual([
@@ -101,6 +110,8 @@ describe('tiekat habitat profiles', () => {
     const imported = importHabitatProfileJson(json);
     expect(imported.id).toBe(profile.id);
     expect(imported.preferences.sessionMode).toBe(profile.preferences.sessionMode);
+    expect(imported.pinned).toBe(profile.pinned);
+    expect(imported.sortOrder).toBe(profile.sortOrder);
     expect(() => importHabitatProfileJson(JSON.stringify({ version: { exportVersion: 'bad-version' } }))).toThrow('Unsupported habitat profile export version');
   });
 
@@ -127,5 +138,33 @@ describe('tiekat habitat profiles', () => {
 
     const allowed = applyHabitatProfile({ profile, allowAncestry: true });
     expect(allowed.appliedSessionMode).toBe('ancestral_listening');
+  });
+
+  it('builds compact profile diff preview and avoids private/raw leakage', () => {
+    const current = buildDefaultHabitatProfiles()[0];
+    const target = buildDefaultHabitatProfiles()[4];
+    const comparison = compareHabitatProfiles(current, target);
+    expect(comparison.sessionModeChanged).toBe(true);
+    expect(comparison.diagnosticsVisibilityChanged).toBe(true);
+
+    const diff = buildHabitatProfileDiff({ current, target, allowAncestry: true });
+    const text = formatHabitatProfileDiff(diff);
+    expect(diff.lines.length).toBeGreaterThan(0);
+    expect(text).toContain('Session mode');
+    expect(text).not.toContain('messages');
+    expect(text).not.toContain('ancestor name');
+  });
+
+  it('sorts/pins/unpins/reorders profiles deterministically', () => {
+    const defaults = buildDefaultHabitatProfiles();
+    const pinned = pinHabitatProfile(defaults, defaults[2].id);
+    expect(pinned[0].id).toBe(defaults[2].id);
+    expect(pinned[0].pinned).toBe(true);
+
+    const unpinned = unpinHabitatProfile(pinned, defaults[2].id);
+    expect(unpinned.some((profile) => profile.id === defaults[2].id && profile.pinned)).toBe(false);
+
+    const reordered = reorderHabitatProfiles(sortHabitatProfiles(defaults), defaults[1].id, 'down');
+    expect(reordered.length).toBe(defaults.length);
   });
 });

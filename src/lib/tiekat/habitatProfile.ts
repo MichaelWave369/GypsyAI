@@ -16,6 +16,8 @@ export interface TiekatHabitatProfile {
   description: string;
   createdAt: string;
   updatedAt: string;
+  pinned: boolean;
+  sortOrder: number;
   preferences: {
     sessionMode: TiekatSessionModeKey;
     councilMode: TiekatCouncilMode;
@@ -39,6 +41,7 @@ export interface TiekatHabitatProfileSummary {
   name: string;
   description: string;
   updatedAt: string;
+  pinned: boolean;
   sessionMode: TiekatSessionModeKey;
   councilMode: TiekatCouncilMode;
 }
@@ -64,6 +67,8 @@ export function normalizeHabitatProfile(value: Partial<TiekatHabitatProfile>): T
     description: value.description?.slice(0, 180) || 'Compact local oracle habitat profile.',
     createdAt: value.createdAt || now,
     updatedAt: value.updatedAt || value.createdAt || now,
+    pinned: Boolean(value.pinned),
+    sortOrder: Number.isFinite(value.sortOrder) ? Number(value.sortOrder) : 0,
     preferences: {
       sessionMode: value.preferences?.sessionMode || 'open_reflection',
       councilMode: value.preferences?.councilMode || 'disabled',
@@ -97,6 +102,8 @@ export function buildHabitatProfile(args: {
   description?: string;
   now?: string;
   preferences: TiekatHabitatProfile['preferences'];
+  pinned?: boolean;
+  sortOrder?: number;
 }): TiekatHabitatProfile {
   const now = args.now || new Date().toISOString();
   return normalizeHabitatProfile({
@@ -105,6 +112,8 @@ export function buildHabitatProfile(args: {
     description: args.description || 'Compact local oracle habitat profile.',
     createdAt: now,
     updatedAt: now,
+    pinned: Boolean(args.pinned),
+    sortOrder: Number(args.sortOrder ?? 0),
     preferences: args.preferences,
     footer: 'Local habitat profile only. Preferences/configuration, no transcript storage.'
   });
@@ -118,6 +127,7 @@ export function buildDefaultHabitatProfiles(): TiekatHabitatProfile[] {
       name: 'Quiet Reflection',
       description: 'Low-noise contemplation habitat with diagnostics hidden.',
       now,
+      sortOrder: 0,
       preferences: {
         sessionMode: 'open_reflection',
         councilMode: 'disabled',
@@ -135,6 +145,7 @@ export function buildDefaultHabitatProfiles(): TiekatHabitatProfile[] {
       name: 'Tarot Chamber',
       description: 'Tarot-forward habitat with symbolic framing.',
       now,
+      sortOrder: 1,
       preferences: {
         sessionMode: 'tarot_inquiry',
         councilMode: 'oracle_council',
@@ -152,6 +163,7 @@ export function buildDefaultHabitatProfiles(): TiekatHabitatProfile[] {
       name: 'Synthesis Oracle',
       description: 'Balanced synthesis habitat across modules.',
       now,
+      sortOrder: 2,
       preferences: {
         sessionMode: 'synthesis_oracle',
         councilMode: 'swarm_synthesis',
@@ -169,6 +181,7 @@ export function buildDefaultHabitatProfiles(): TiekatHabitatProfile[] {
       name: 'Council Deliberation',
       description: 'Governed council-first habitat for comparative synthesis.',
       now,
+      sortOrder: 3,
       preferences: {
         sessionMode: 'synthesis_oracle',
         councilMode: 'deliberation_oracle',
@@ -186,6 +199,7 @@ export function buildDefaultHabitatProfiles(): TiekatHabitatProfile[] {
       name: 'Sphere Diagnostics',
       description: 'v56 continuity habitat with diagnostics visibility enabled.',
       now,
+      sortOrder: 4,
       preferences: {
         sessionMode: 'synthesis_oracle',
         councilMode: 'swarm_synthesis',
@@ -208,9 +222,69 @@ export function summarizeHabitatProfile(profile: TiekatHabitatProfile): TiekatHa
     name: normalized.name,
     description: normalized.description,
     updatedAt: normalized.updatedAt,
+    pinned: normalized.pinned,
     sessionMode: normalized.preferences.sessionMode,
     councilMode: normalized.preferences.councilMode
   };
+}
+
+export interface TiekatHabitatProfileDiff {
+  changed: boolean;
+  lines: string[];
+  ancestryFallbackLine?: string;
+}
+
+export function compareHabitatProfiles(current: TiekatHabitatProfile, target: TiekatHabitatProfile) {
+  const a = normalizeHabitatProfile(current);
+  const b = normalizeHabitatProfile(target);
+  return {
+    sessionModeChanged: a.preferences.sessionMode !== b.preferences.sessionMode,
+    councilModeChanged: a.preferences.councilMode !== b.preferences.councilMode,
+    adapterPreferenceChanged: a.preferences.preferProviderBackedCouncil !== b.preferences.preferProviderBackedCouncil,
+    geometryVisibilityChanged: a.preferences.showGeometry !== b.preferences.showGeometry,
+    diagnosticsVisibilityChanged: a.preferences.showDiagnostics !== b.preferences.showDiagnostics,
+    v55FramingChanged: a.preferences.enableV55Framing !== b.preferences.enableV55Framing,
+    constellationFiltersChanged: JSON.stringify(a.preferences.constellationFilters) !== JSON.stringify(b.preferences.constellationFilters),
+    ritualDeckFiltersChanged: JSON.stringify(a.preferences.ritualDeckFilters) !== JSON.stringify(b.preferences.ritualDeckFilters),
+    promptPresetModeChanged: a.preferences.promptPresetMode !== b.preferences.promptPresetMode
+  };
+}
+
+export function buildHabitatProfileDiff(args: {
+  current: TiekatHabitatProfile;
+  target: TiekatHabitatProfile;
+  allowAncestry: boolean;
+}): TiekatHabitatProfileDiff {
+  const current = normalizeHabitatProfile(args.current);
+  const target = normalizeHabitatProfile(args.target);
+  const comparison = compareHabitatProfiles(current, target);
+  const lines: string[] = [];
+  if (comparison.sessionModeChanged) lines.push(`Session mode: ${current.preferences.sessionMode} → ${target.preferences.sessionMode}`);
+  if (comparison.councilModeChanged) lines.push(`Council mode: ${current.preferences.councilMode} → ${target.preferences.councilMode}`);
+  if (comparison.adapterPreferenceChanged) lines.push(`Council adapter preference: ${current.preferences.preferProviderBackedCouncil ? 'provider-backed' : 'deterministic'} → ${target.preferences.preferProviderBackedCouncil ? 'provider-backed' : 'deterministic'}`);
+  if (comparison.geometryVisibilityChanged) lines.push(`Geometry visibility: ${current.preferences.showGeometry ? 'on' : 'off'} → ${target.preferences.showGeometry ? 'on' : 'off'}`);
+  if (comparison.diagnosticsVisibilityChanged) lines.push(`Diagnostics visibility: ${current.preferences.showDiagnostics ? 'on' : 'off'} → ${target.preferences.showDiagnostics ? 'on' : 'off'}`);
+  if (comparison.v55FramingChanged) lines.push(`v55 framing: ${current.preferences.enableV55Framing ? 'on' : 'off'} → ${target.preferences.enableV55Framing ? 'on' : 'off'}`);
+  if (comparison.constellationFiltersChanged) lines.push(`Constellation filters: ${JSON.stringify(current.preferences.constellationFilters)} → ${JSON.stringify(target.preferences.constellationFilters)}`);
+  if (comparison.ritualDeckFiltersChanged) lines.push(`Ritual deck filters: ${JSON.stringify(current.preferences.ritualDeckFilters)} → ${JSON.stringify(target.preferences.ritualDeckFilters)}`);
+  if (comparison.promptPresetModeChanged) lines.push(`Prompt preset mode: ${current.preferences.promptPresetMode} → ${target.preferences.promptPresetMode}`);
+
+  const resolvedMode = resolveSessionMode(target.preferences.sessionMode, { allowAncestry: args.allowAncestry });
+  const ancestryFallbackLine = resolvedMode !== target.preferences.sessionMode
+    ? `Consent-safe fallback on apply: ${target.preferences.sessionMode} → ${resolvedMode}.`
+    : undefined;
+
+  return {
+    changed: lines.length > 0 || Boolean(ancestryFallbackLine),
+    lines: lines.slice(0, 10),
+    ancestryFallbackLine
+  };
+}
+
+export function formatHabitatProfileDiff(diff: TiekatHabitatProfileDiff) {
+  const lines = [...diff.lines];
+  if (diff.ancestryFallbackLine) lines.push(diff.ancestryFallbackLine);
+  return lines.join('\n');
 }
 
 export function applyHabitatProfile(args: {
@@ -238,12 +312,12 @@ export function applyHabitatProfile(args: {
 export async function loadHabitatProfiles(): Promise<TiekatHabitatProfile[]> {
   const rows = await dbGet('habitatProfiles');
   const parsed = Array.isArray(rows) ? rows : [];
-  if (!parsed.length) return buildDefaultHabitatProfiles();
-  return parsed.map((row) => normalizeHabitatProfile(row));
+  if (!parsed.length) return sortHabitatProfiles(buildDefaultHabitatProfiles());
+  return sortHabitatProfiles(parsed.map((row) => normalizeHabitatProfile(row)));
 }
 
 export async function saveHabitatProfiles(rows: TiekatHabitatProfile[]) {
-  await dbSet('habitatProfiles', rows.slice(0, MAX_HABITAT_PROFILES).map((row) => normalizeHabitatProfile(row)));
+  await dbSet('habitatProfiles', sortHabitatProfiles(rows.slice(0, MAX_HABITAT_PROFILES).map((row) => normalizeHabitatProfile(row))));
 }
 
 export async function appendHabitatProfile(profile: TiekatHabitatProfile) {
@@ -268,8 +342,7 @@ export async function deleteHabitatProfile(id: string) {
 
 export async function getRecentHabitatProfiles(limit = 8): Promise<TiekatHabitatProfile[]> {
   const rows = await loadHabitatProfiles();
-  return [...rows]
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+  return sortHabitatProfiles([...rows])
     .slice(0, Math.max(1, limit));
 }
 
@@ -285,4 +358,40 @@ export function importHabitatProfileJson(text: string): TiekatHabitatProfile {
     throw new Error(`Unsupported habitat profile export version: ${parsed.version.exportVersion}`);
   }
   return normalizeHabitatProfile(parsed);
+}
+
+export function sortHabitatProfiles(profiles: TiekatHabitatProfile[]) {
+  return [...profiles]
+    .map((profile) => normalizeHabitatProfile(profile))
+    .sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+      return b.updatedAt.localeCompare(a.updatedAt);
+    });
+}
+
+export function pinHabitatProfile(profiles: TiekatHabitatProfile[], id: string) {
+  return sortHabitatProfiles(
+    profiles.map((profile) => (profile.id === id ? normalizeHabitatProfile({ ...profile, pinned: true }) : normalizeHabitatProfile(profile)))
+  );
+}
+
+export function unpinHabitatProfile(profiles: TiekatHabitatProfile[], id: string) {
+  return sortHabitatProfiles(
+    profiles.map((profile) => (profile.id === id ? normalizeHabitatProfile({ ...profile, pinned: false }) : normalizeHabitatProfile(profile)))
+  );
+}
+
+export function reorderHabitatProfiles(profiles: TiekatHabitatProfile[], id: string, direction: 'up' | 'down') {
+  const sorted = sortHabitatProfiles(profiles);
+  const index = sorted.findIndex((profile) => profile.id === id);
+  if (index < 0) return sorted;
+  const nextIndex = direction === 'up' ? Math.max(0, index - 1) : Math.min(sorted.length - 1, index + 1);
+  if (nextIndex === index) return sorted;
+  const swapped = [...sorted];
+  const current = swapped[index];
+  const other = swapped[nextIndex];
+  swapped[index] = { ...other, sortOrder: current.sortOrder };
+  swapped[nextIndex] = { ...current, sortOrder: other.sortOrder };
+  return sortHabitatProfiles(swapped);
 }

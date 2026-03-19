@@ -271,3 +271,10 @@ MIT (existing LICENSE preserved).
 - Assistant UI now includes a compact habitat panel for apply/save/update/delete/export/import profile flows.
 - Profile application is explicit and consent-safe: ancestry-forward requests resolve through existing session-mode governance when ancestry consent is disabled.
 - Profiles remain local-only and preserve modeled/theoretical runtime posture (no hardware/physical measurement claims and no ontology changes to v54/v55/v56 roles).
+
+## TIEKAT Phase 22 (Habitat Diff Preview + Pinning)
+- Added deterministic habitat profile diff helpers to preview config changes before apply (session mode, council mode, adapter preference, geometry/diagnostics/v55 toggles, constellation/ritual filters, prompt preset mode).
+- Apply preview now surfaces consent-safe ancestry fallback messaging when a profile requests ancestry-forward mode while ancestry consent is disabled.
+- Habitat profiles now support additive local-only pinning/order metadata (`pinned`, `sortOrder`) with normalization-safe defaults for legacy profiles.
+- Added compact habitat UI controls for pin/unpin and light move up/down ordering without introducing a large management dashboard.
+- Pinned/ordered profile data persists locally and round-trips through import/export while remaining configuration-only and privacy-safe.
