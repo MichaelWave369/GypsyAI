@@ -33,6 +33,7 @@ describe('habitat profile ui', () => {
         transitionChips: [{ key: 'session_mode', label: 'Session mode: open_reflection → synthesis_oracle', severity: 'high' }],
         profileUsageSummary: 'Used 5 times • Last mode synthesis_oracle',
         profileLastAppliedLabel: 'Last applied 2 hours ago',
+        usageBadge: 'Frequently Used',
         constellationContinuityNote: 'Recent continuity favors Synthesis Oracle.',
         constellationTransitionNote: 'Recent transition: Quiet Reflection → Synthesis Oracle.',
         note: 'Applied habitat profile Quiet Reflection.',
@@ -50,6 +51,7 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Habitat memory');
     expect(html).toContain('Last applied 2 hours ago');
     expect(html).toContain('Used 5 times');
+    expect(html).toContain('Frequently Used');
     expect(html).toContain('Recent continuity favors Synthesis Oracle.');
     expect(html).toContain('Expand chip details');
     expect(html).toContain('Shortcuts: Alt+Shift+P');
@@ -79,9 +81,11 @@ describe('habitat profile ui', () => {
         onMoveDown: vi.fn(),
         transitionChips: [],
         profileUsageSummary: 'Never applied',
-        profileLastAppliedLabel: 'Never applied'
+        profileLastAppliedLabel: 'Never applied',
+        usageBadge: 'Never Applied'
       })
     );
     expect(html).toContain('Never applied');
+    expect(html).toContain('Never Applied');
   });
 });

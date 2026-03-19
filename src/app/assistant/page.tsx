@@ -55,6 +55,7 @@ import {
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
 import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
+import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -299,18 +300,15 @@ export default function AssistantPage() {
   );
 
   const habitatLastAppliedLabel = useMemo(() => {
-    if (!selectedHabitatMemorySummary?.lastAppliedAt) return 'Never applied';
-    const nowMs = Date.now();
-    const lastMs = Date.parse(selectedHabitatMemorySummary.lastAppliedAt);
-    if (Number.isNaN(lastMs)) return `Last applied ${selectedHabitatMemorySummary.lastAppliedAt}`;
-    const deltaMs = Math.max(0, nowMs - lastMs);
-    const deltaMinutes = Math.floor(deltaMs / 60000);
-    if (deltaMinutes < 1) return 'Last applied just now';
-    if (deltaMinutes < 60) return `Last applied ${deltaMinutes} minute${deltaMinutes === 1 ? '' : 's'} ago`;
-    const deltaHours = Math.floor(deltaMinutes / 60);
-    if (deltaHours < 24) return `Last applied ${deltaHours} hour${deltaHours === 1 ? '' : 's'} ago`;
-    const deltaDays = Math.floor(deltaHours / 24);
-    return `Last applied ${deltaDays} day${deltaDays === 1 ? '' : 's'} ago`;
+    if (!selectedHabitatMemorySummary) return 'Never applied';
+    return formatHabitatLastAppliedLabel({ lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt });
+  }, [selectedHabitatMemorySummary]);
+  const habitatUsageBadge = useMemo(() => {
+    if (!selectedHabitatMemorySummary) return 'Never Applied';
+    return formatHabitatUsageBadge(classifyHabitatUsage({
+      lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt,
+      applyCount: selectedHabitatMemorySummary.applyCount
+    }));
   }, [selectedHabitatMemorySummary]);
 
   const sparklinePoints = useMemo(() => {
@@ -860,6 +858,7 @@ export default function AssistantPage() {
         transitionChips={habitatTransitionPreview?.chips ?? []}
         profileUsageSummary={selectedHabitatMemorySummary ? formatHabitatUsageSummary(selectedHabitatMemorySummary) : ''}
         profileLastAppliedLabel={habitatLastAppliedLabel}
+        usageBadge={habitatUsageBadge}
         constellationContinuityNote={habitatConstellationSummary.compactContinuityNote}
         constellationTransitionNote={habitatConstellationSummary.recentTransitionLine}
         note={habitatProfileNote}

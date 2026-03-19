@@ -293,3 +293,10 @@ MIT (existing LICENSE preserved).
 - Assistant habitat panel now shows lightweight memory cues (`last applied`, `used N times`, `never applied`) plus compact continuity lines to make habitats feel like living local context.
 - Added optional chip-detail expansion control so transition chips stay compact by default but can be expanded on demand.
 - Export/import remains additive and local-first; habitat memory stores only config usage metadata and preserves existing consent-safe/modeled-theoretical safety rails.
+
+## TIEKAT Phase 25 (Habitat Time Semantics + Continuity Polish)
+- Extracted compact deterministic habitat time helpers (`habitatTime.ts`) so relative-time labels are reusable/testable instead of page-inline logic.
+- Added consistent local labels for habitat recency (`just now`, `5m ago`, `2h ago`, `3d ago`, `never applied`) and a dedicated `formatHabitatLastAppliedLabel(...)` helper.
+- Added lightweight continuity-status classification/formatting (`never_applied`, `recently_active`, `frequently_used`, `stale`) for compact habitat memory polish.
+- Assistant habitat selector now renders a tiny usage-status badge alongside existing memory cues while remaining compact and additive.
+- Time/continuity semantics remain local-only metadata transforms with no transcript/private ancestry payload usage, no hidden tracking, and no oracle ontology changes.

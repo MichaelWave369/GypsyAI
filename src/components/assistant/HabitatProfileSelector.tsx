@@ -25,6 +25,7 @@ export function HabitatProfileSelector(props: {
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
   profileUsageSummary?: string;
   profileLastAppliedLabel?: string;
+  usageBadge?: string;
   constellationContinuityNote?: string | null;
   constellationTransitionNote?: string | null;
   note?: string;
@@ -47,6 +48,7 @@ export function HabitatProfileSelector(props: {
           <p className="font-semibold text-zinc-300">Habitat memory</p>
           {props.profileLastAppliedLabel ? <p>{props.profileLastAppliedLabel}</p> : <p>Never applied</p>}
           {props.profileUsageSummary ? <p>{props.profileUsageSummary}</p> : null}
+          {props.usageBadge ? <p className="text-[10px] uppercase tracking-wide text-zinc-500">{props.usageBadge}</p> : null}
         </div>
       ) : null}
       <label className="block text-zinc-400">
