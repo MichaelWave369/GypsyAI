@@ -106,7 +106,19 @@ export function summarizeGravityVersionDrift(history: TiekatGravityHistoryEntry[
 
 export type GravityComparisonState = 'single_version' | 'mixed_versions' | 'drift_detected' | 'insufficient_data';
 
-export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry[], currentScoringVersion: string) {
+export interface GravityVersionComparisonSummary {
+  state: GravityComparisonState;
+  currentScoringVersion: string;
+  versionCount: number;
+  drift: {
+    from: string;
+    to: string;
+    informationIntegralDrift: number;
+    deltaGDrift: number;
+  } | null;
+}
+
+export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry[], currentScoringVersion: string): GravityVersionComparisonSummary {
   const versionCount = Object.keys(groupGravityHistoryByScoringVersion(history)).length;
   if (history.length < 2) {
     return {
@@ -141,6 +153,11 @@ export function buildVersionComparisonSummary(history: TiekatGravityHistoryEntry
     state: (driftDetected ? 'drift_detected' : 'mixed_versions') as GravityComparisonState,
     currentScoringVersion,
     versionCount,
-    drift
+    drift: {
+      from: drift.from,
+      to: drift.to,
+      informationIntegralDrift: drift.informationIntegralDrift,
+      deltaGDrift: drift.deltaGDrift
+    }
   };
 }

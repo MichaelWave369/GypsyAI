@@ -59,6 +59,8 @@ export interface TiekatOracleArtifact {
     disagreement: boolean;
     synthesisNote: string;
     roleSummaries: Array<{ role: TiekatCouncilRole; summary: string }>;
+    selectedModules: TiekatModuleKey[];
+    warnings: string[];
     executionSource: TiekatCouncilSummary['executionSource'];
     adapterName?: string;
     adapterAvailable: boolean;
@@ -163,6 +165,8 @@ export function buildOracleArtifact(args: {
       disagreement: args.council.disagreement,
       synthesisNote: args.council.synthesisNote.slice(0, 200),
       roleSummaries: args.council.roleSummaries.map((row) => ({ role: row.role, summary: row.summary.slice(0, 200) })).slice(0, 6),
+      selectedModules: args.council.selectedModules.slice(0, 6),
+      warnings: args.council.warnings.slice(0, 6).map((warning) => warning.slice(0, 80)),
       executionSource: args.council.executionSource,
       adapterName: args.council.adapterName?.slice(0, 80),
       adapterAvailable: args.council.adapterAvailable,
@@ -226,6 +230,8 @@ export function normalizeOracleArtifact(value: Partial<TiekatOracleArtifact>): T
         role: row.role,
         summary: row.summary?.slice(0, 200) || ''
       })).slice(0, 8) : [],
+      selectedModules: Array.isArray(value.council.selectedModules) ? value.council.selectedModules.slice(0, 6) as TiekatModuleKey[] : ['assistant'],
+      warnings: Array.isArray(value.council.warnings) ? value.council.warnings.slice(0, 8).map((warning) => warning.slice(0, 80)) : [],
       executionSource: value.council.executionSource || 'deterministic_stub',
       adapterName: value.council.adapterName?.slice(0, 80),
       adapterAvailable: value.council.adapterAvailable ?? false,
