@@ -1,4 +1,5 @@
 import { dbGet, dbSet } from '@/lib/local/db';
+import { HABITAT_STALE_MS } from '@/lib/tiekat/habitatConstants';
 import { TiekatConstellationFilterState } from '@/lib/tiekat/oracleConstellation';
 import { TiekatCouncilMode } from '@/lib/tiekat/oracleCouncil';
 import { TiekatRitualDeckFilterState } from '@/lib/tiekat/ritualDeck';
@@ -18,6 +19,9 @@ export interface TiekatHabitatProfile {
   updatedAt: string;
   pinned: boolean;
   sortOrder: number;
+  lastAppliedAt: string | null;
+  applyCount: number;
+  lastAppliedSessionMode: TiekatSessionModeKey | null;
   preferences: {
     sessionMode: TiekatSessionModeKey;
     councilMode: TiekatCouncilMode;
@@ -44,6 +48,9 @@ export interface TiekatHabitatProfileSummary {
   pinned: boolean;
   sessionMode: TiekatSessionModeKey;
   councilMode: TiekatCouncilMode;
+  lastAppliedAt: string | null;
+  applyCount: number;
+  lastAppliedSessionMode: TiekatSessionModeKey | null;
 }
 
 export interface TiekatHabitatProfileStoreEntry {
@@ -69,6 +76,9 @@ export function normalizeHabitatProfile(value: Partial<TiekatHabitatProfile>): T
     updatedAt: value.updatedAt || value.createdAt || now,
     pinned: Boolean(value.pinned),
     sortOrder: Number.isFinite(value.sortOrder) ? Number(value.sortOrder) : 0,
+    lastAppliedAt: typeof value.lastAppliedAt === 'string' ? value.lastAppliedAt : null,
+    applyCount: Number.isFinite(value.applyCount) ? Math.max(0, Number(value.applyCount)) : 0,
+    lastAppliedSessionMode: value.lastAppliedSessionMode || null,
     preferences: {
       sessionMode: value.preferences?.sessionMode || 'open_reflection',
       councilMode: value.preferences?.councilMode || 'disabled',
@@ -224,8 +234,93 @@ export function summarizeHabitatProfile(profile: TiekatHabitatProfile): TiekatHa
     updatedAt: normalized.updatedAt,
     pinned: normalized.pinned,
     sessionMode: normalized.preferences.sessionMode,
-    councilMode: normalized.preferences.councilMode
+    councilMode: normalized.preferences.councilMode,
+    lastAppliedAt: normalized.lastAppliedAt,
+    applyCount: normalized.applyCount,
+    lastAppliedSessionMode: normalized.lastAppliedSessionMode
   };
+}
+
+export interface TiekatHabitatProfileMemorySummary {
+  id: string;
+  name: string;
+  applyCount: number;
+  lastAppliedAt: string | null;
+  lastAppliedSessionMode: TiekatSessionModeKey | null;
+  neverApplied: boolean;
+  stale: boolean;
+  pinnedNeverApplied: boolean;
+}
+
+export interface TiekatHabitatConstellationSummary {
+  recentlyUsed: string[];
+  mostUsed: string | null;
+  pinnedNeverApplied: string[];
+  staleHabitats: string[];
+  compactContinuityNote: string;
+  recentTransitionLine: string | null;
+}
+
+function toMs(value: string | null): number {
+  if (!value) return Number.NEGATIVE_INFINITY;
+  const parsed = Date.parse(value);
+  return Number.isNaN(parsed) ? Number.NEGATIVE_INFINITY : parsed;
+}
+
+export function buildHabitatProfileMemorySummary(profile: TiekatHabitatProfile, now = new Date().toISOString()): TiekatHabitatProfileMemorySummary {
+  const normalized = normalizeHabitatProfile(profile);
+  const nowMs = toMs(now);
+  const lastAppliedMs = toMs(normalized.lastAppliedAt);
+  return {
+    id: normalized.id,
+    name: normalized.name,
+    applyCount: normalized.applyCount,
+    lastAppliedAt: normalized.lastAppliedAt,
+    lastAppliedSessionMode: normalized.lastAppliedSessionMode,
+    neverApplied: normalized.applyCount <= 0 || !normalized.lastAppliedAt,
+    stale: normalized.applyCount > 0 && Number.isFinite(nowMs) && Number.isFinite(lastAppliedMs) && nowMs - lastAppliedMs > HABITAT_STALE_MS,
+    pinnedNeverApplied: normalized.pinned && (normalized.applyCount <= 0 || !normalized.lastAppliedAt)
+  };
+}
+
+export function buildHabitatConstellationSummary(args: {
+  profiles: TiekatHabitatProfile[];
+  now?: string;
+  recentTransition?: { from: string; to: string } | null;
+}): TiekatHabitatConstellationSummary {
+  const summaries = args.profiles.map((profile) => buildHabitatProfileMemorySummary(profile, args.now));
+  const byRecent = [...summaries]
+    .filter((row) => !row.neverApplied)
+    .sort((a, b) => toMs(b.lastAppliedAt) - toMs(a.lastAppliedAt) || b.applyCount - a.applyCount || a.name.localeCompare(b.name));
+  const recentlyUsed = byRecent.slice(0, 2).map((row) => row.name);
+  const mostUsed = [...summaries].sort((a, b) => b.applyCount - a.applyCount || toMs(b.lastAppliedAt) - toMs(a.lastAppliedAt) || a.name.localeCompare(b.name))[0];
+  const pinnedNeverApplied = summaries.filter((row) => row.pinnedNeverApplied).map((row) => row.name).sort((a, b) => a.localeCompare(b));
+  const staleHabitats = summaries.filter((row) => row.stale).map((row) => row.name).sort((a, b) => a.localeCompare(b));
+  const continuityParts: string[] = [];
+  if (recentlyUsed.length) continuityParts.push(`Recent continuity favors ${recentlyUsed[0]}.`);
+  if (mostUsed && mostUsed.applyCount > 0) continuityParts.push(`Most used: ${mostUsed.name} (${mostUsed.applyCount}).`);
+  if (pinnedNeverApplied.length) continuityParts.push('Pinned habitats waiting for first apply.');
+  if (staleHabitats.length) continuityParts.push('Some habitats are stale.');
+  if (!continuityParts.length) continuityParts.push('No habitat usage memory yet. Apply a profile to start continuity.');
+  const recentTransitionLine = args.recentTransition
+    ? `Recent transition: ${args.recentTransition.from} → ${args.recentTransition.to}.`
+    : null;
+  return {
+    recentlyUsed,
+    mostUsed: mostUsed && mostUsed.applyCount > 0 ? mostUsed.name : null,
+    pinnedNeverApplied,
+    staleHabitats,
+    compactContinuityNote: continuityParts.join(' '),
+    recentTransitionLine
+  };
+}
+
+export function formatHabitatUsageSummary(summary: TiekatHabitatProfileMemorySummary): string {
+  if (summary.neverApplied) return 'Never applied';
+  const countPart = summary.applyCount === 1 ? 'Used 1 time' : `Used ${summary.applyCount} times`;
+  return summary.lastAppliedSessionMode
+    ? `${countPart} • Last mode ${summary.lastAppliedSessionMode}`
+    : countPart;
 }
 
 export interface TiekatHabitatProfileDiff {
@@ -290,6 +385,7 @@ export function formatHabitatProfileDiff(diff: TiekatHabitatProfileDiff) {
 export function applyHabitatProfile(args: {
   profile: TiekatHabitatProfile;
   allowAncestry: boolean;
+  now?: string;
 }): {
   profile: TiekatHabitatProfile;
   appliedSessionMode: TiekatSessionModeKey;
@@ -297,15 +393,22 @@ export function applyHabitatProfile(args: {
   note: string;
 } {
   const profile = normalizeHabitatProfile(args.profile);
+  const now = args.now || new Date().toISOString();
   const appliedSessionMode = resolveSessionMode(profile.preferences.sessionMode, { allowAncestry: args.allowAncestry });
   const ancestryFallbackApplied = appliedSessionMode !== profile.preferences.sessionMode;
+  const updatedProfile = normalizeHabitatProfile({
+    ...profile,
+    lastAppliedAt: now,
+    applyCount: profile.applyCount + 1,
+    lastAppliedSessionMode: appliedSessionMode
+  });
   return {
-    profile,
+    profile: updatedProfile,
     appliedSessionMode,
     ancestryFallbackApplied,
     note: ancestryFallbackApplied
-      ? `Habitat requested ${profile.preferences.sessionMode}; applied ${appliedSessionMode} because ancestry consent is disabled.`
-      : `Applied habitat profile ${profile.name}.`
+      ? `Habitat requested ${updatedProfile.preferences.sessionMode}; applied ${appliedSessionMode} because ancestry consent is disabled.`
+      : `Applied habitat profile ${updatedProfile.name}.`
   };
 }
 
