@@ -32,6 +32,9 @@ export function HabitatProfileSelector(props: {
   onRequestDeleteRecentDeck?: (id: string) => void;
   onCancelDeleteRecentDeck?: () => void;
   onConfirmDeleteRecentDeck?: (id: string) => void;
+  sourceLabel?: string;
+  sourceUrl?: string;
+  sourceLicenseId?: string;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
   transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
@@ -187,6 +190,12 @@ export function HabitatProfileSelector(props: {
       {props.error ? <p className="text-xs text-rose-400">{props.error}</p> : null}
       <p className="text-zinc-500">Shortcuts: Alt+Shift+P (pin), Alt+Shift+↑/↓ (reorder), Alt+Shift+A (apply).</p>
       <p className="text-zinc-500">Modeled/theoretical posture is unchanged by profile switching.</p>
+      {props.sourceLabel && props.sourceUrl ? (
+        <p className="text-[10px] text-zinc-600">
+          <a href={props.sourceUrl} target="_blank" rel="noreferrer" className="underline">{props.sourceLabel}</a>
+          {props.sourceLicenseId ? ` • ${props.sourceLicenseId}` : ''}
+        </p>
+      ) : null}
     </section>
   );
 }

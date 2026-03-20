@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { classifyIntent } from '@/lib/assistant/router';
 import { buildContextCapsule } from '@/lib/assistant/context';
+import { APP_LICENSE_ID, APP_SOURCE_LABEL, APP_SOURCE_URL } from '@/lib/app/sourceInfo';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
 import { loadAncestry } from '@/lib/ancestry/storage';
 import { loadSettings } from '@/lib/local/settings';
@@ -151,6 +152,7 @@ export default function AssistantPage() {
   const [habitatProfileError, setHabitatProfileError] = useState('');
   const [habitatDeck, setHabitatDeck] = useState<TiekatHabitatDeck | null>(null);
   const [recentHabitatDecks, setRecentHabitatDecks] = useState<TiekatHabitatDeck[]>([]);
+  const [deckTimeNow, setDeckTimeNow] = useState(() => new Date().toISOString());
   const [pendingDeleteHabitatDeckId, setPendingDeleteHabitatDeckId] = useState<string | null>(null);
   const [habitatDeckNote, setHabitatDeckNote] = useState('');
   const [habitatDeckError, setHabitatDeckError] = useState('');
@@ -198,6 +200,13 @@ export default function AssistantPage() {
     setShowGeometry(loadGeometryVisibilityPreference(false));
     setConstellationFilters(loadConstellationFilters());
     setCouncilMode(loadCouncilModePreference('disabled'));
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setDeckTimeNow(new Date().toISOString());
+    }, 60_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
@@ -988,13 +997,16 @@ export default function AssistantPage() {
           createdAt: deck.createdAt,
           cardCount: deck.cards.length,
           kind: deck.kind,
-          savedLabel: formatHabitatDeckSavedLabel(deck)
+          savedLabel: formatHabitatDeckSavedLabel(deck, deckTimeNow)
         }))}
         onSelectRecentDeck={selectRecentHabitatDeck}
         pendingDeleteDeckId={pendingDeleteHabitatDeckId}
         onRequestDeleteRecentDeck={setPendingDeleteHabitatDeckId}
         onCancelDeleteRecentDeck={() => setPendingDeleteHabitatDeckId(null)}
         onConfirmDeleteRecentDeck={(id) => { void deleteRecentHabitatDeck(id); }}
+        sourceLabel={APP_SOURCE_LABEL}
+        sourceUrl={APP_SOURCE_URL}
+        sourceLicenseId={APP_LICENSE_ID}
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}

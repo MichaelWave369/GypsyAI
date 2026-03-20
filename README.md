@@ -341,3 +341,10 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added lightweight inline delete confirmation controls (Delete → Confirm/Cancel) for recent deck removal without introducing modal/dashboard complexity.
 - Persistence behavior remains explicit-intent only (build/import save, explicit delete remove), with no background sync or hidden tracking.
 - Deck replay polish remains local-only/config-only and privacy-safe (no transcript/session/private ancestry payload usage).
+
+## TIEKAT Phase 31 (Source Link + Continuity Refresh Polish)
+- Added a lightweight visible `Source` link in the habitat control surface for hosted AGPL transparency clarity.
+- Added tiny source metadata constants (`APP_SOURCE_LABEL`, `APP_SOURCE_URL`, `APP_LICENSE_ID`) for deterministic, update-friendly source-link wiring.
+- Added minute-level local saved-time refresh so recent habitat deck labels stay current during long-open sessions without mutating persisted data.
+- Saved-time refresh remains display-only and local; persistence semantics are unchanged (explicit build/import save, explicit confirmed delete).
+- No telemetry/sync paths were added; source/saved-time polish remains privacy-safe and configuration-oriented.
