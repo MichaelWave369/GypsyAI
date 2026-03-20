@@ -348,3 +348,9 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added minute-level local saved-time refresh so recent habitat deck labels stay current during long-open sessions without mutating persisted data.
 - Saved-time refresh remains display-only and local; persistence semantics are unchanged (explicit build/import save, explicit confirmed delete).
 - No telemetry/sync paths were added; source/saved-time polish remains privacy-safe and configuration-oriented.
+
+## TIEKAT Phase 32 (Footer/About Memory Surface)
+- Added a compact reusable footer/about surface that unifies source + license visibility, local-first/privacy-safe notes, and modeled/theoretical posture.
+- Added deterministic app-about metadata constants (`aboutInfo.ts`) for app identity, source/license labels, commercial-licensing note label/path, and short safety notes.
+- Footer optionally shows one compact habitat status line using already-safe runtime metadata only (selected habitat name, usage badge, recent deck count, current mode).
+- Footer/about content is static + local metadata only: no transcript/session/private ancestry payloads, no telemetry, no cloud sync, and no hidden persistence.

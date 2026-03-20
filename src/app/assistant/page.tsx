@@ -97,6 +97,7 @@ import {
   TiekatRitualDeck,
   TiekatRitualDeckFilterState
 } from '@/lib/tiekat/ritualDeck';
+import { AppFooterInfo } from '@/components/app/AppFooterInfo';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ConstellationFilterChips } from '@/components/assistant/ConstellationFilterChips';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
@@ -352,6 +353,11 @@ export default function AssistantPage() {
     [selectedHabitatProfile]
   );
   const habitatDeckSummary = useMemo(() => (habitatDeck ? summarizeHabitatDeck(habitatDeck) : null), [habitatDeck]);
+  const footerHabitatStatusLine = useMemo(() => {
+    const habitatName = selectedHabitatProfile?.name ?? 'No habitat selected';
+    const deckHint = recentHabitatDecks.length ? `${recentHabitatDecks.length} recent deck(s)` : 'no recent decks';
+    return `Habitat: ${habitatName} • ${habitatUsageBadge} • ${deckHint} • mode ${sessionMode}.`;
+  }, [selectedHabitatProfile, recentHabitatDecks, habitatUsageBadge, sessionMode]);
 
   const refreshRecentHabitatDecks = async (nextSelectedId?: string) => {
     const rows = await getRecentHabitatDecks(8);
@@ -1176,6 +1182,7 @@ export default function AssistantPage() {
           <div className="flex gap-2"><button className="rounded bg-gold px-3 py-1 text-black" onClick={send}>Send</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => controllerRef.current?.abort()}>Stop</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => setInput(messages.filter((m) => m.role === 'user').at(-1)?.content || '')}>Regenerate</button></div>
         </section>
       </div>
+      <AppFooterInfo habitatStatusLine={footerHabitatStatusLine} />
     </main>
   );
 }
