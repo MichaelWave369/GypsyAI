@@ -77,6 +77,23 @@ TEST_MODE=1 pnpm test:e2e
 ## Backup encryption notes
 Encrypted backups use browser WebCrypto (`PBKDF2` + `AES-GCM`) and store required metadata (salt/iv) in the backup envelope. This protects backup portability but still depends on strong user passwords and local device security.
 
+
+## Vessel oracle integration (additive)
+- Added additive `POST /api/vessel-oracle` for Φ.Vessel Oracle responses.
+- Existing `POST /api/assistant/chat` remains unchanged for backward compatibility.
+- `/assistant` is now wired with the Vessel hook (`useVesselOracle`) and includes council mode selection:
+  - `single`
+  - `oracle_council`
+  - `deliberation_oracle`
+  - `swarm_synthesis`
+- Privacy/consent behavior remains preserved: ancestry context is only passed when ancestry consent is enabled.
+- Provider support remains optional and follows existing env conventions (`ANTHROPIC_*`, `OPENAI_*`, `XAI_*`, `OLLAMA_*`, optional `AGENTORA_*`).
+
+## CI simplification
+- CI is intentionally reduced to one reliable core validation workflow on `ubuntu-latest`.
+- Workflow runs only install, lint, test, and build.
+- Vercel/deployment-dependent and multi-OS matrix checks were intentionally dropped from CI.
+
 ## Core routes
 - Tarot: `/tarot`
 - Astrology: `/astrology`
