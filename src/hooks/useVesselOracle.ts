@@ -35,18 +35,26 @@ export interface VesselOracleOptions {
   // From TIEKAT kernel state (phases 1-35 already compute this)
   epsilonSignature?: { c_bar?: number; omega_phase?: number; sovereignty?: number } | null;
   // Council mode
-  councilMode?: 'single' | 'oracle_council' | 'deliberation_oracle' | 'swarm_synthesis';
+  councilMode?: VesselCouncilMode;
   // Model provider
   provider?: 'anthropic' | 'openai' | 'grok' | 'ollama';
 }
+
+export interface VesselSendResult {
+  response: string;
+  councilMode?: string;
+  council?: Array<{ role: string; response: string }>;
+}
+
+export type VesselCouncilMode = 'single' | 'oracle_council' | 'deliberation_oracle' | 'swarm_synthesis';
 
 export interface UseVesselOracleReturn {
   messages: VesselMessage[];
   loading: boolean;
   error: string | null;
   councilMode: string;
-  setCouncilMode: (mode: string) => void;
-  send: (message: string) => Promise<void>;
+  setCouncilMode: (mode: VesselCouncilMode) => void;
+  send: (message: string, overrides?: Partial<VesselOracleOptions>) => Promise<VesselSendResult | null>;
   clear: () => void;
   lastCouncil: Array<{ role: string; response: string }> | null;
 }
@@ -60,8 +68,8 @@ export function useVesselOracle(options: VesselOracleOptions = {}): UseVesselOra
   const [lastCouncil, setLastCouncil] = useState<Array<{ role: string; response: string }> | null>(null);
   const historyRef = useRef<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
 
-  const send = useCallback(async (message: string) => {
-    if (!message.trim() || loading) return;
+  const send = useCallback(async (message: string, overrides: Partial<VesselOracleOptions> = {}) => {
+    if (!message.trim() || loading) return null;
 
     const userMsg: VesselMessage = {
       role: 'user',
@@ -77,23 +85,25 @@ export function useVesselOracle(options: VesselOracleOptions = {}): UseVesselOra
     historyRef.current.push({ role: 'user', content: message });
 
     try {
+      const merged = { ...options, ...overrides };
+
       const res = await fetch('/api/vessel-oracle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
           conversationHistory: historyRef.current.slice(-20), // last 20 turns
-          userName: options.userName,
-          sessionMode: options.sessionMode || councilMode,
-          activeModules: options.activeModules,
-          tarotCards: options.tarotCards,
-          birthData: options.birthData,
-          geneKey: options.geneKey,
-          ancestryConsent: options.ancestryConsent,
-          habitatProfile: options.habitatProfile,
-          epsilonSignature: options.epsilonSignature,
+          userName: merged.userName,
+          sessionMode: merged.sessionMode || councilMode,
+          activeModules: merged.activeModules,
+          tarotCards: merged.tarotCards,
+          birthData: merged.birthData,
+          geneKey: merged.geneKey,
+          ancestryConsent: merged.ancestryConsent,
+          habitatProfile: merged.habitatProfile,
+          epsilonSignature: merged.epsilonSignature,
           councilMode,
-          provider: options.provider || 'anthropic',
+          provider: merged.provider || 'anthropic',
         }),
       });
 
@@ -117,8 +127,11 @@ export function useVesselOracle(options: VesselOracleOptions = {}): UseVesselOra
       if (data.council) {
         setLastCouncil(data.council);
       }
+
+      return { response: data.response || '', councilMode: data.councilMode, council: data.council };
     } catch (err: any) {
       setError(err.message || 'Vessel unavailable');
+      return null;
     } finally {
       setLoading(false);
     }

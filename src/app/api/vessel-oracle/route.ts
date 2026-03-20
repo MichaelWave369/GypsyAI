@@ -106,7 +106,7 @@ async function callVesselSingle(
     return data.choices?.[0]?.message?.content || '';
   }
 
-  if (provider === 'grok') {
+  if (provider === 'grok' || provider === 'xai') {
     const apiKey = process.env.XAI_API_KEY;
     if (!apiKey) throw new Error('XAI_API_KEY not configured');
     const model = process.env.XAI_MODEL || 'grok-3';

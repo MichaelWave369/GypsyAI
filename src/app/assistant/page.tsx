@@ -76,7 +76,6 @@ import { buildHabitatDeckContinuityNote, buildHabitatDeckSphereChips, formatHabi
 import { formatHabitatDeckSavedLabel } from '@/lib/tiekat/habitatDeckTime';
 import {
   buildCouncilContinuitySummary,
-  getCouncilModes,
   loadCouncilModePreference,
   saveCouncilModePreference,
   TiekatCouncilMode,
@@ -115,6 +114,7 @@ import { SacredGeometryGlyph } from '@/components/assistant/SacredGeometryGlyph'
 import { SessionModeSelector } from '@/components/assistant/SessionModeSelector';
 import { TIEKAT_V54_SCORING_VERSION } from '@/lib/tiekat/v54';
 import { getTiekatV55Metadata } from '@/lib/tiekat/v55';
+import { buildVesselContext, useVesselOracle } from '@/hooks/useVesselOracle';
 
 export default function AssistantPage() {
   const [input, setInput] = useState('');
@@ -169,6 +169,8 @@ export default function AssistantPage() {
     moveUp: () => Promise<void> | void;
     moveDown: () => Promise<void> | void;
   } | null>(null);
+
+  const { send: sendVessel, loading: vesselLoading, error: vesselError, councilMode: vesselCouncilMode, setCouncilMode: setVesselCouncilMode, lastCouncil } = useVesselOracle();
 
   useEffect(() => {
     loadAssistantSessions().then((s) => {
@@ -420,41 +422,42 @@ export default function AssistantPage() {
     controllerRef.current = new AbortController();
     const sessionId = activeId || crypto.randomUUID();
 
-    const res = await fetch('/api/assistant/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: input,
-        demoMode: s.demoMode,
-        strictReadingMode: s.strictReadingMode,
-        autoSwitchReadingMode: s.autoSwitchReadingMode,
-        provider: s.provider,
-        model: s.model,
-        tiekat: {
-          sessionId,
-          sessionMode: resolvedMode,
-          gravityDiagnostics: showGravityDiagnostics,
-          consent: {
-            allowAncestry: s.allowAncestryAi,
-            includeNames: s.includeNamesInAiContext,
-            hideLivingPersons: s.hideLivingPersons,
-            memoryEnabled: s.useSessionsInAssistant
-          },
-          moduleData: {
-            tarot: capsule.lastTarot,
-            genekeys: capsule.lastGeneKeys,
-            ancestry: capsule.ancestryPatterns
-          },
-          memoryEntries,
-          councilMode,
-          councilAdapterMode: preferProviderBackedCouncil ? 'provider_preferred' : 'deterministic_only'
-        }
-      }),
-      signal: controllerRef.current.signal
+    const providerMap: Record<string, 'anthropic' | 'openai' | 'grok' | 'ollama'> = {
+      anthropic: 'anthropic',
+      openai: 'openai',
+      xai: 'grok',
+      ollama: 'ollama'
+    };
+    const vesselBridge = buildVesselContext({
+      gravityMetadata: latestGravity,
+      sessionMode: resolvedMode,
+      habitatProfile: selectedHabitatProfile,
+      awakeningState: awakenedSphereState?.awakeningState
     });
-    const ct = res.headers.get('content-type') || '';
+    const vesselResult = await sendVessel(input, {
+      userName: (capsule.profile as { name?: string } | undefined)?.name,
+      sessionMode: resolvedMode,
+      activeModules: latestModules,
+      tarotCards: (capsule.lastTarot as { drawn?: Array<{ name?: string }> } | undefined)?.drawn?.map((card) => card?.name).filter((name): name is string => Boolean(name)),
+      birthData: (capsule.profile as { date?: string; place?: string } | undefined) ? {
+        date: (capsule.profile as { date?: string }).date,
+        place: (capsule.profile as { place?: string }).place
+      } : null,
+      geneKey: ((capsule.lastGeneKeys as { profile?: { activationSequence?: { lifeWork?: { key?: number } } } } | undefined)?.profile?.activationSequence?.lifeWork?.key) ?? null,
+      ancestryConsent: s.allowAncestryAi,
+      habitatProfile: selectedHabitatProfile?.name,
+      ...vesselBridge,
+      provider: providerMap[s.provider] ?? 'anthropic'
+    });
+
+    const data: any = {
+      content: vesselResult?.response ?? 'Vessel unavailable.',
+      sources: ['vessel-oracle'],
+      tiekat: null
+    };
+
+    const ct = 'application/json';
     if (ct.includes('application/json')) {
-      const data = await res.json();
       const withAssistant = [...next, { role: 'assistant' as const, content: data.content, sources: data.sources }];
       setMessages(withAssistant);
       setTiekatRoute(data.tiekat?.route ?? modeConfig.defaultRouteBias);
@@ -544,17 +547,6 @@ export default function AssistantPage() {
       await persist(withAssistant);
       return;
     }
-    const reader = res.body?.getReader();
-    if (!reader) return;
-    const decoder = new TextDecoder();
-    let out = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      out += decoder.decode(value);
-      setMessages([...next, { role: 'assistant', content: out }]);
-    }
-    await persist([...next, { role: 'assistant', content: out }]);
   };
 
   const summarize = async () => {
@@ -859,7 +851,7 @@ export default function AssistantPage() {
     setHabitatDeckError('');
   };
 
-  const buildRecentDeck = async () => {
+  const buildRecentHabitatDeckFromProfiles = async () => {
     const next = buildRecentHabitatDeck(habitatProfiles);
     setHabitatDeck(next);
     await appendHabitatDeck(next);
@@ -891,7 +883,7 @@ export default function AssistantPage() {
     URL.revokeObjectURL(url);
   };
 
-  const exportDeckJson = () => {
+  const exportHabitatDeckJsonFile = () => {
     if (!habitatDeck) return;
     download(exportHabitatDeckJson(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.json`, 'application/json');
     setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_json'));
@@ -899,7 +891,7 @@ export default function AssistantPage() {
     setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(habitatDeck));
   };
 
-  const exportDeckMarkdown = () => {
+  const exportHabitatDeckMarkdownFile = () => {
     if (!habitatDeck) return;
     download(exportHabitatDeckMarkdown(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.md`, 'text/markdown');
     setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_markdown'));
@@ -1014,10 +1006,10 @@ export default function AssistantPage() {
         onMoveUp={() => reorderSelectedHabitatProfile('up')}
         onMoveDown={() => reorderSelectedHabitatProfile('down')}
         onBuildPinnedDeck={() => { void buildPinnedDeck(); }}
-        onBuildRecentDeck={() => { void buildRecentDeck(); }}
+        onBuildRecentDeck={() => { void buildRecentHabitatDeckFromProfiles(); }}
         onBuildAllDeck={() => { void buildAllDeck(); }}
-        onExportDeckJson={exportDeckJson}
-        onExportDeckMarkdown={exportDeckMarkdown}
+        onExportDeckJson={exportHabitatDeckJsonFile}
+        onExportDeckMarkdown={exportHabitatDeckMarkdownFile}
         onImportDeck={importHabitatDeck}
         recentDecks={recentHabitatDecks.map((deck) => ({
           id: deck.id,
@@ -1063,13 +1055,12 @@ export default function AssistantPage() {
       <SessionModeSelector value={sessionMode} onChange={setSessionMode} />
       <p className="text-xs text-zinc-500">{getSessionModeConfig(sessionMode).presentation.ritualFrame}</p>
       <label className="text-xs text-zinc-400">
-        Oracle council mode
-        <select className="ml-2 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5" value={councilMode} onChange={(e) => {
-          const mode = e.target.value as TiekatCouncilMode;
-          setCouncilMode(mode);
-          saveCouncilModePreference(mode);
+        Vessel council mode
+        <select className="ml-2 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5" value={vesselCouncilMode} onChange={(e) => {
+          const mode = e.target.value as 'single' | 'oracle_council' | 'deliberation_oracle' | 'swarm_synthesis';
+          setVesselCouncilMode(mode);
         }}>
-          {getCouncilModes().map((mode) => <option key={mode} value={mode}>{mode}</option>)}
+          {['single', 'oracle_council', 'deliberation_oracle', 'swarm_synthesis'].map((mode) => <option key={mode} value={mode}>{mode}</option>)}
         </select>
       </label>
       <label className="flex items-center gap-2 text-xs text-zinc-400">
@@ -1085,6 +1076,8 @@ export default function AssistantPage() {
           <p>{councilSummary.synthesisNote}</p>
         </div>
       ) : null}
+      {vesselError ? <p className="text-xs text-red-400">{vesselError}</p> : null}
+      {lastCouncil?.length ? <p className="text-xs text-zinc-500">Vessel council voices: {lastCouncil.map((voice) => voice.role).join(', ')}.</p> : null}
       <PromptPresetChips
         group={presetGroup}
         onChoose={({ id, text }) => {
@@ -1206,7 +1199,7 @@ export default function AssistantPage() {
             {messages.map((m, i) => <div key={i} className="rounded border border-zinc-700 p-2 text-sm"><b>{m.role}</b><pre className="whitespace-pre-wrap">{m.content}</pre>{m.sources?.length ? <p className="text-xs text-zinc-400">Sources: {m.sources.join(', ')}</p> : null}</div>)}
           </div>
           <textarea className="w-full rounded border border-zinc-700 bg-zinc-800 p-2" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Chat freely or ask for a reading..." />
-          <div className="flex gap-2"><button className="rounded bg-gold px-3 py-1 text-black" onClick={send}>Send</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => controllerRef.current?.abort()}>Stop</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => setInput(messages.filter((m) => m.role === 'user').at(-1)?.content || '')}>Regenerate</button></div>
+          <div className="flex gap-2"><button className="rounded bg-gold px-3 py-1 text-black disabled:opacity-60" onClick={send} disabled={vesselLoading || !input.trim()}>{vesselLoading ? 'Sending…' : 'Send'}</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => controllerRef.current?.abort()}>Stop</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => setInput(messages.filter((m) => m.role === 'user').at(-1)?.content || '')}>Regenerate</button></div>
         </section>
       </div>
       <AppFooterInfo habitatStatusLine={footerHabitatStatusLine} />
