@@ -31,6 +31,9 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
+        recentDecks: [{ id: 'deck-1', name: 'Recent habitat ritual deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 2 }],
+        onSelectRecentDeck: vi.fn(),
+        onDeleteRecentDeck: vi.fn(),
         diffPreview: { lines: ['Session mode: open_reflection → synthesis_oracle'], ancestryFallbackLine: 'Consent-safe fallback on apply: ancestral_listening → open_reflection.' },
         transitionSummary: {
           headline: 'Transitioning from Quiet Reflection to Synthesis Oracle.',
@@ -73,6 +76,8 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Export Deck JSON');
     expect(html).toContain('Export Deck Markdown');
     expect(html).toContain('Import Deck JSON');
+    expect(html).toContain('Recent habitat decks');
+    expect(html).toContain('Recent habitat ritual deck (2)');
     expect(html).toContain('2 habitat card(s). Lead: Synthesis Oracle.');
     expect(html).toContain('Deck cards: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
@@ -107,6 +112,9 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
+        recentDecks: [{ id: 'deck-quiet', name: 'Quiet deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 1 }],
+        onSelectRecentDeck: vi.fn(),
+        onDeleteRecentDeck: vi.fn(),
         transitionChips: [],
         profileUsageSummary: 'Never applied',
         profileLastAppliedLabel: 'Never applied',

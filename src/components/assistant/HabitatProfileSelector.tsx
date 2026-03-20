@@ -26,6 +26,9 @@ export function HabitatProfileSelector(props: {
   onExportDeckJson: () => void;
   onExportDeckMarkdown: () => void;
   onImportDeck: (file?: File) => void;
+  recentDecks?: Array<{ id: string; name: string; createdAt: string; cardCount: number }>;
+  onSelectRecentDeck?: (id: string) => void;
+  onDeleteRecentDeck?: (id: string) => void;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
   transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
@@ -97,6 +100,24 @@ export function HabitatProfileSelector(props: {
           <input type="file" accept="application/json" className="hidden" onChange={(e) => props.onImport(e.target.files?.[0])} />
         </label>
       </div>
+      {props.recentDecks?.length ? (
+        <div className="rounded border border-zinc-700 p-2 text-zinc-400" data-testid="habitat-recent-decks">
+          <p className="font-semibold text-zinc-300">Recent habitat decks</p>
+          <ul className="space-y-1">
+            {props.recentDecks.slice(0, 5).map((deck) => (
+              <li key={deck.id} className="flex items-center gap-1">
+                <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onSelectRecentDeck?.(deck.id)}>
+                  Open
+                </button>
+                <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onDeleteRecentDeck?.(deck.id)}>
+                  Delete
+                </button>
+                <span className="text-[10px]">{deck.name} ({deck.cardCount})</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildPinnedDeck}>Pinned Deck</button>
         <button className="rounded border border-zinc-700 px-2 py-1" onClick={props.onBuildRecentDeck}>Recent Deck</button>

@@ -61,8 +61,11 @@ import {
   buildHabitatDeck,
   buildPinnedHabitatDeck,
   buildRecentHabitatDeck,
+  appendHabitatDeck,
+  deleteHabitatDeck as deleteStoredHabitatDeck,
   exportHabitatDeckJson,
   exportHabitatDeckMarkdown,
+  getRecentHabitatDecks,
   importHabitatDeckJson,
   summarizeHabitatDeck,
   TiekatHabitatDeck
@@ -146,6 +149,7 @@ export default function AssistantPage() {
   const [habitatProfileNote, setHabitatProfileNote] = useState('');
   const [habitatProfileError, setHabitatProfileError] = useState('');
   const [habitatDeck, setHabitatDeck] = useState<TiekatHabitatDeck | null>(null);
+  const [recentHabitatDecks, setRecentHabitatDecks] = useState<TiekatHabitatDeck[]>([]);
   const [habitatDeckNote, setHabitatDeckNote] = useState('');
   const [habitatDeckError, setHabitatDeckError] = useState('');
   const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
@@ -177,6 +181,10 @@ export default function AssistantPage() {
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
     getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows));
+    getRecentHabitatDecks(8).then((rows) => {
+      setRecentHabitatDecks(rows);
+      if (rows[0]) setHabitatDeck(rows[0]);
+    });
     getRecentHabitatProfiles(12).then((rows) => {
       setHabitatProfiles(rows);
       if (rows[0]) {
@@ -333,6 +341,19 @@ export default function AssistantPage() {
     [selectedHabitatProfile]
   );
   const habitatDeckSummary = useMemo(() => (habitatDeck ? summarizeHabitatDeck(habitatDeck) : null), [habitatDeck]);
+
+  const refreshRecentHabitatDecks = async (nextSelectedId?: string) => {
+    const rows = await getRecentHabitatDecks(8);
+    setRecentHabitatDecks(rows);
+    if (nextSelectedId) {
+      const found = rows.find((deck) => deck.id === nextSelectedId);
+      if (found) {
+        setHabitatDeck(found);
+        return;
+      }
+    }
+    if (!habitatDeck || !rows.some((deck) => deck.id === habitatDeck.id)) setHabitatDeck(rows[0] ?? null);
+  };
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -806,23 +827,29 @@ export default function AssistantPage() {
     await refreshHabitatProfiles(selectedHabitatProfile.id);
   };
 
-  const buildPinnedDeck = () => {
+  const buildPinnedDeck = async () => {
     const next = buildPinnedHabitatDeck(habitatProfiles);
     setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
     setHabitatDeckNote(`Built ${next.name}.`);
     setHabitatDeckError('');
   };
 
-  const buildRecentDeck = () => {
+  const buildRecentDeck = async () => {
     const next = buildRecentHabitatDeck(habitatProfiles);
     setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
     setHabitatDeckNote(`Built ${next.name}.`);
     setHabitatDeckError('');
   };
 
-  const buildAllDeck = () => {
+  const buildAllDeck = async () => {
     const next = buildHabitatDeck({ profiles: habitatProfiles, kind: 'all', name: 'All habitat ritual deck' });
     setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
     setHabitatDeckNote(`Built ${next.name}.`);
     setHabitatDeckError('');
   };
@@ -852,11 +879,28 @@ export default function AssistantPage() {
     try {
       const parsed = importHabitatDeckJson(await file.text());
       setHabitatDeck(parsed);
+      await appendHabitatDeck(parsed);
+      await refreshRecentHabitatDecks(parsed.id);
       setHabitatDeckNote(`Imported deck ${parsed.name}.`);
       setHabitatDeckError('');
     } catch (error) {
       setHabitatDeckError(error instanceof Error ? error.message : 'Failed to import habitat deck');
     }
+  };
+
+  const selectRecentHabitatDeck = (id: string) => {
+    const found = recentHabitatDecks.find((deck) => deck.id === id);
+    if (!found) return;
+    setHabitatDeck(found);
+    setHabitatDeckNote(`Reopened deck ${found.name}.`);
+    setHabitatDeckError('');
+  };
+
+  const deleteRecentHabitatDeck = async (id: string) => {
+    await deleteStoredHabitatDeck(id);
+    await refreshRecentHabitatDecks();
+    setHabitatDeckNote('Deleted local habitat deck.');
+    setHabitatDeckError('');
   };
 
   useEffect(() => {
@@ -929,12 +973,15 @@ export default function AssistantPage() {
         onTogglePin={togglePinSelectedHabitatProfile}
         onMoveUp={() => reorderSelectedHabitatProfile('up')}
         onMoveDown={() => reorderSelectedHabitatProfile('down')}
-        onBuildPinnedDeck={buildPinnedDeck}
-        onBuildRecentDeck={buildRecentDeck}
-        onBuildAllDeck={buildAllDeck}
+        onBuildPinnedDeck={() => { void buildPinnedDeck(); }}
+        onBuildRecentDeck={() => { void buildRecentDeck(); }}
+        onBuildAllDeck={() => { void buildAllDeck(); }}
         onExportDeckJson={exportDeckJson}
         onExportDeckMarkdown={exportDeckMarkdown}
         onImportDeck={importHabitatDeck}
+        recentDecks={recentHabitatDecks.map((deck) => ({ id: deck.id, name: deck.name, createdAt: deck.createdAt, cardCount: deck.cards.length }))}
+        onSelectRecentDeck={selectRecentHabitatDeck}
+        onDeleteRecentDeck={(id) => { void deleteRecentHabitatDeck(id); }}
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}

@@ -327,3 +327,10 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Assistant habitat selector now shows a tiny “Modeled habitat sphere signature” cue (glyph + awakening/shield/synchrony + compact caption/confidence line).
 - Habitat ritual cards/decks now carry additive sphere-signature metadata and include sphere lines in markdown export while preserving existing local/config-only posture.
 - Sphere-profile logic remains local-only/config-derived, avoids transcript/private ancestry payloads, and makes no hardware/physical measurement claims.
+
+## TIEKAT Phase 29 (Habitat Deck Memory)
+- Added optional local habitat deck persistence in IndexedDB (`habitatDecks`) with normalized additive row entries and capped recent history.
+- Habitat deck persistence is explicit-intent only: decks are saved when users build/import them, not in hidden background flows.
+- Added compact recent habitat deck replay controls (open/delete) in the habitat selector for lightweight local deck memory continuity.
+- Existing deck export/import behavior remains stable (JSON/Markdown export plus versioned JSON import validation), now interoperating with local recent deck memory.
+- Stored deck memory remains configuration/profile-usage-only and excludes transcript/session/private ancestry payloads.

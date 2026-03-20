@@ -1,11 +1,15 @@
+import { dbGet, dbSet } from '@/lib/local/db';
 import { HABITAT_DECK_MAX_CARDS } from '@/lib/tiekat/habitatConstants';
 import { TiekatHabitatProfile, normalizeHabitatProfile, sortHabitatProfiles } from '@/lib/tiekat/habitatProfile';
 import { buildHabitatSphereSignature, TiekatHabitatSphereSignature } from '@/lib/tiekat/habitatSphere';
 import { classifyHabitatUsage, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
 
 export const TIEKAT_HABITAT_DECK_EXPORT_VERSION = 'TIEKAT-habitat-deck-v1' as const;
+export const TIEKAT_HABITAT_DECK_ROW_VERSION = 1 as const;
 export type TiekatHabitatDeckExportVersion = typeof TIEKAT_HABITAT_DECK_EXPORT_VERSION;
+export type TiekatHabitatDeckRowVersion = typeof TIEKAT_HABITAT_DECK_ROW_VERSION;
 export type TiekatHabitatDeckKind = 'pinned' | 'recent' | 'all' | 'selected';
+const MAX_HABITAT_DECKS = 30;
 
 export interface TiekatHabitatCard {
   id: string;
@@ -44,6 +48,11 @@ export interface TiekatHabitatDeckSummary {
   cardCount: number;
   topCardName: string | null;
   line: string;
+}
+
+export interface TiekatHabitatDeckStoreEntry {
+  rowVersion: TiekatHabitatDeckRowVersion;
+  deck: TiekatHabitatDeck;
 }
 
 function toMs(value: string | null): number {
@@ -111,6 +120,34 @@ export function buildHabitatDeck(args: {
   };
 }
 
+export function normalizeHabitatDeck(value: Partial<TiekatHabitatDeck>): TiekatHabitatDeck {
+  const createdAt = value.createdAt || new Date().toISOString();
+  const kind = value.kind === 'pinned' || value.kind === 'recent' || value.kind === 'all' || value.kind === 'selected'
+    ? value.kind
+    : 'all';
+  const cards = Array.isArray(value.cards) ? value.cards.map((card) => ({
+    ...card,
+    sphereSignature: card.sphereSignature ?? {
+      awakeningState: 'quiet',
+      shieldStatus: 'open',
+      synchronyState: 'solo',
+      glyphFamily: 'quiet_lotus',
+      caption: 'Configuration-derived sphere profile: quiet • open • solo.',
+      confidenceNote: 'Modeled habitat sphere signature (theoretical, local configuration identity only).',
+      specVersion: 'TIEKAT-habitat-sphere-v1'
+    }
+  })) : [];
+  return {
+    id: value.id || `habitat-deck:${kind}:${createdAt}`,
+    name: value.name || `Habitat ${kind} ritual deck`,
+    kind,
+    createdAt,
+    cards: cards.slice(0, HABITAT_DECK_MAX_CARDS),
+    footer: value.footer || 'Local habitat ritual object — configuration only.',
+    version: TIEKAT_HABITAT_DECK_EXPORT_VERSION
+  };
+}
+
 export function buildPinnedHabitatDeck(profiles: TiekatHabitatProfile[], now?: string) {
   return buildHabitatDeck({ profiles, kind: 'pinned', now, name: 'Pinned habitat ritual deck' });
 }
@@ -161,13 +198,48 @@ export function importHabitatDeckJson(text: string): TiekatHabitatDeck {
     if (typeof card.profileId !== 'string' || typeof card.profileName !== 'string') throw new Error('Invalid habitat card identity');
     return card as TiekatHabitatCard;
   });
-  return {
+  return normalizeHabitatDeck({
     id: typeof parsed.id === 'string' ? parsed.id : `habitat-deck:import:${new Date().toISOString()}`,
     name: typeof parsed.name === 'string' ? parsed.name : 'Imported habitat ritual deck',
-    kind: parsed.kind === 'pinned' || parsed.kind === 'recent' || parsed.kind === 'all' || parsed.kind === 'selected' ? parsed.kind : 'all',
+    kind: parsed.kind,
     createdAt: typeof parsed.createdAt === 'string' ? parsed.createdAt : new Date().toISOString(),
     cards: cards.slice(0, HABITAT_DECK_MAX_CARDS),
     footer: typeof parsed.footer === 'string' ? parsed.footer : 'Local habitat ritual object — configuration only.',
     version: TIEKAT_HABITAT_DECK_EXPORT_VERSION
-  };
+  });
+}
+
+export async function loadHabitatDecks(): Promise<TiekatHabitatDeckStoreEntry[]> {
+  const rows = await dbGet('habitatDecks');
+  const parsed = Array.isArray(rows) ? rows : [];
+  return parsed.map((row) => ({
+    rowVersion: TIEKAT_HABITAT_DECK_ROW_VERSION,
+    deck: normalizeHabitatDeck((row as Partial<TiekatHabitatDeckStoreEntry>).deck || {})
+  }));
+}
+
+export async function saveHabitatDecks(entries: TiekatHabitatDeckStoreEntry[]) {
+  const normalized = entries.slice(0, MAX_HABITAT_DECKS).map((entry) => ({
+    rowVersion: TIEKAT_HABITAT_DECK_ROW_VERSION,
+    deck: normalizeHabitatDeck(entry.deck)
+  }));
+  await dbSet('habitatDecks', normalized);
+}
+
+export async function appendHabitatDeck(deck: TiekatHabitatDeck) {
+  const rows = await loadHabitatDecks();
+  await saveHabitatDecks([{ rowVersion: TIEKAT_HABITAT_DECK_ROW_VERSION, deck: normalizeHabitatDeck(deck) }, ...rows.filter((row) => row.deck.id !== deck.id)]);
+}
+
+export async function getRecentHabitatDecks(limit = 8): Promise<TiekatHabitatDeck[]> {
+  const rows = await loadHabitatDecks();
+  return rows
+    .map((row) => row.deck)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, Math.max(1, limit));
+}
+
+export async function deleteHabitatDeck(id: string) {
+  const rows = await loadHabitatDecks();
+  await saveHabitatDecks(rows.filter((row) => row.deck.id !== id));
 }
