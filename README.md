@@ -368,3 +368,9 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added compact continuity-note/chip rendering in habitat controls without adding modals, dashboards, or extra persistence.
 - Export/import semantics remain unchanged in substance; continuity additions are presentation-only and local.
 - Continuity echo text remains configuration-derived and modeled/theoretical (no transcript/session/private ancestry payloads, no telemetry/cloud sync, no physical measurement claims).
+
+## TIEKAT Phase 35 (Unified Continuity Formatting Layer)
+- Added a shared continuity formatter (`continuityFormatting.ts`) to centralize deterministic tuple/note/chip conventions and chip ordering caps.
+- Habitat deck continuity helpers now use the shared formatter, preserving compact modeled/local continuity wording while removing bespoke ordering logic.
+- Ritual deck continuity summaries/chips now use the same shared conventions, aligning ritual and habitat deck continuity surfaces.
+- Shared continuity formatting remains local-only and metadata-only (no transcript/session/private ancestry payloads, no telemetry/cloud sync, no persistence model changes).

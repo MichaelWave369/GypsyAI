@@ -15,6 +15,8 @@ import { RitualDeckPanel } from '@/components/assistant/RitualDeckPanel';
 import { normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 import {
   appendRitualDeck,
+  buildRitualDeckContinuityChips,
+  buildRitualDeckContinuityNote,
   buildFilteredRitualDeck,
   buildRecentRitualDeck,
   buildRitualCardFromArtifact,
@@ -151,6 +153,8 @@ describe('tiekat ritual deck round-trip + persistence', () => {
   it('summarizes deck and renders compact replay panel controls', () => {
     const deck = buildRecentRitualDeck(artifacts, 2);
     const summary = summarizeRitualDeck(deck);
+    const continuityNote = buildRitualDeckContinuityNote(deck);
+    const continuityChips = buildRitualDeckContinuityChips(deck);
     const html = renderToStaticMarkup(
       React.createElement(RitualDeckPanel, {
         deck,
@@ -172,8 +176,13 @@ describe('tiekat ritual deck round-trip + persistence', () => {
     );
 
     expect(summary.cardCount).toBe(2);
+    expect(summary.continuityNote).toContain('Modeled ritual deck continuity');
+    expect(summary.continuityChips?.length).toBeGreaterThan(0);
+    expect(continuityNote).toContain('Configuration-derived continuity');
+    expect(continuityChips[continuityChips.length - 1]).toBe('modeled');
     expect(html).toContain('Create Filtered Ritual Deck');
     expect(html).toContain('Recent Ritual Decks');
+    expect(html).toContain('Modeled ritual deck continuity');
     expect(html).toContain('not a physical measurement');
   });
 });

@@ -1,4 +1,5 @@
 import { TiekatHabitatDeck } from '@/lib/tiekat/habitatDeck';
+import { buildContinuityChips, formatContinuityNote, formatContinuityTuple } from '@/lib/tiekat/continuityFormatting';
 
 export type TiekatHabitatDeckAction = 'opened' | 'imported' | 'exported_json' | 'exported_markdown' | 'created';
 
@@ -6,16 +7,22 @@ export function buildHabitatDeckSphereChips(deck: TiekatHabitatDeck): string[] {
   const continuityType = deck.sphereSummary.dominantAwakeningState === 'mixed' || deck.sphereSummary.dominantGlyphFamily === 'mixed'
     ? 'mixed'
     : 'dominant';
-  return [
-    deck.sphereSummary.dominantAwakeningState,
-    deck.sphereSummary.dominantGlyphFamily,
-    continuityType,
-    'modeled'
-  ];
+  return buildContinuityChips({
+    awakening: deck.sphereSummary.dominantAwakeningState,
+    glyph: deck.sphereSummary.dominantGlyphFamily,
+    continuityType
+  });
 }
 
 export function buildHabitatDeckContinuityNote(deck: TiekatHabitatDeck): string {
-  return `${deck.sphereSummary.line} ${deck.sphereSummary.sphereContinuityLabel} Configuration-derived continuity.`;
+  const continuityType = deck.sphereSummary.dominantAwakeningState === 'mixed' || deck.sphereSummary.dominantGlyphFamily === 'mixed'
+    ? 'mixed'
+    : 'dominant';
+  return `${deck.sphereSummary.line} ${deck.sphereSummary.sphereContinuityLabel} ${formatContinuityNote({
+    awakening: deck.sphereSummary.dominantAwakeningState,
+    glyph: deck.sphereSummary.dominantGlyphFamily,
+    continuityType
+  }, 'Modeled habitat deck continuity')}`;
 }
 
 export function formatHabitatDeckActionEcho(deck: TiekatHabitatDeck, action: TiekatHabitatDeckAction): string {
@@ -26,5 +33,12 @@ export function formatHabitatDeckActionEcho(deck: TiekatHabitatDeck, action: Tie
     exported_markdown: 'Exported Markdown for',
     created: 'Created'
   };
-  return `${actionLabel[action]} ${deck.name} with modeled habitat deck sphere memory (${deck.sphereSummary.dominantAwakeningState} / ${deck.sphereSummary.dominantGlyphFamily}).`;
+  const continuityType = deck.sphereSummary.dominantAwakeningState === 'mixed' || deck.sphereSummary.dominantGlyphFamily === 'mixed'
+    ? 'mixed'
+    : 'dominant';
+  return `${actionLabel[action]} ${deck.name} with modeled habitat deck sphere memory (${formatContinuityTuple({
+    awakening: deck.sphereSummary.dominantAwakeningState,
+    glyph: deck.sphereSummary.dominantGlyphFamily,
+    continuityType
+  })}).`;
 }
