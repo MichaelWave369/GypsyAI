@@ -334,3 +334,10 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added compact recent habitat deck replay controls (open/delete) in the habitat selector for lightweight local deck memory continuity.
 - Existing deck export/import behavior remains stable (JSON/Markdown export plus versioned JSON import validation), now interoperating with local recent deck memory.
 - Stored deck memory remains configuration/profile-usage-only and excludes transcript/session/private ancestry payloads.
+
+## TIEKAT Phase 30 (Habitat Deck Continuity Polish)
+- Added deterministic compact habitat-deck saved-time helpers (`formatHabitatDeckRelativeTime`, `formatHabitatDeckSavedLabel`) for replay trust cues.
+- Recent habitat deck replay list now shows compact metadata (`name`, `kind`, `cardCount`, `saved X ago`) using helper output instead of inline date formatting.
+- Added lightweight inline delete confirmation controls (Delete → Confirm/Cancel) for recent deck removal without introducing modal/dashboard complexity.
+- Persistence behavior remains explicit-intent only (build/import save, explicit delete remove), with no background sync or hidden tracking.
+- Deck replay polish remains local-only/config-only and privacy-safe (no transcript/session/private ancestry payload usage).

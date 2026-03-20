@@ -70,6 +70,7 @@ import {
   summarizeHabitatDeck,
   TiekatHabitatDeck
 } from '@/lib/tiekat/habitatDeck';
+import { formatHabitatDeckSavedLabel } from '@/lib/tiekat/habitatDeckTime';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -150,6 +151,7 @@ export default function AssistantPage() {
   const [habitatProfileError, setHabitatProfileError] = useState('');
   const [habitatDeck, setHabitatDeck] = useState<TiekatHabitatDeck | null>(null);
   const [recentHabitatDecks, setRecentHabitatDecks] = useState<TiekatHabitatDeck[]>([]);
+  const [pendingDeleteHabitatDeckId, setPendingDeleteHabitatDeckId] = useState<string | null>(null);
   const [habitatDeckNote, setHabitatDeckNote] = useState('');
   const [habitatDeckError, setHabitatDeckError] = useState('');
   const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
@@ -899,6 +901,7 @@ export default function AssistantPage() {
   const deleteRecentHabitatDeck = async (id: string) => {
     await deleteStoredHabitatDeck(id);
     await refreshRecentHabitatDecks();
+    setPendingDeleteHabitatDeckId(null);
     setHabitatDeckNote('Deleted local habitat deck.');
     setHabitatDeckError('');
   };
@@ -979,9 +982,19 @@ export default function AssistantPage() {
         onExportDeckJson={exportDeckJson}
         onExportDeckMarkdown={exportDeckMarkdown}
         onImportDeck={importHabitatDeck}
-        recentDecks={recentHabitatDecks.map((deck) => ({ id: deck.id, name: deck.name, createdAt: deck.createdAt, cardCount: deck.cards.length }))}
+        recentDecks={recentHabitatDecks.map((deck) => ({
+          id: deck.id,
+          name: deck.name,
+          createdAt: deck.createdAt,
+          cardCount: deck.cards.length,
+          kind: deck.kind,
+          savedLabel: formatHabitatDeckSavedLabel(deck)
+        }))}
         onSelectRecentDeck={selectRecentHabitatDeck}
-        onDeleteRecentDeck={(id) => { void deleteRecentHabitatDeck(id); }}
+        pendingDeleteDeckId={pendingDeleteHabitatDeckId}
+        onRequestDeleteRecentDeck={setPendingDeleteHabitatDeckId}
+        onCancelDeleteRecentDeck={() => setPendingDeleteHabitatDeckId(null)}
+        onConfirmDeleteRecentDeck={(id) => { void deleteRecentHabitatDeck(id); }}
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}

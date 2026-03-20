@@ -31,9 +31,12 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
-        recentDecks: [{ id: 'deck-1', name: 'Recent habitat ritual deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 2 }],
+        recentDecks: [{ id: 'deck-1', name: 'Recent habitat ritual deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 2, kind: 'recent', savedLabel: 'saved 5m ago' }],
         onSelectRecentDeck: vi.fn(),
-        onDeleteRecentDeck: vi.fn(),
+        pendingDeleteDeckId: null,
+        onRequestDeleteRecentDeck: vi.fn(),
+        onCancelDeleteRecentDeck: vi.fn(),
+        onConfirmDeleteRecentDeck: vi.fn(),
         diffPreview: { lines: ['Session mode: open_reflection → synthesis_oracle'], ancestryFallbackLine: 'Consent-safe fallback on apply: ancestral_listening → open_reflection.' },
         transitionSummary: {
           headline: 'Transitioning from Quiet Reflection to Synthesis Oracle.',
@@ -77,7 +80,7 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Export Deck Markdown');
     expect(html).toContain('Import Deck JSON');
     expect(html).toContain('Recent habitat decks');
-    expect(html).toContain('Recent habitat ritual deck (2)');
+    expect(html).toContain('Recent habitat ritual deck (recent, 2) • saved 5m ago');
     expect(html).toContain('2 habitat card(s). Lead: Synthesis Oracle.');
     expect(html).toContain('Deck cards: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
@@ -112,9 +115,12 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
-        recentDecks: [{ id: 'deck-quiet', name: 'Quiet deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 1 }],
+        recentDecks: [{ id: 'deck-quiet', name: 'Quiet deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 1, kind: 'pinned', savedLabel: 'saved just now' }],
         onSelectRecentDeck: vi.fn(),
-        onDeleteRecentDeck: vi.fn(),
+        pendingDeleteDeckId: 'deck-quiet',
+        onRequestDeleteRecentDeck: vi.fn(),
+        onCancelDeleteRecentDeck: vi.fn(),
+        onConfirmDeleteRecentDeck: vi.fn(),
         transitionChips: [],
         profileUsageSummary: 'Never applied',
         profileLastAppliedLabel: 'Never applied',
@@ -129,5 +135,8 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Constellation: Quiet Reflection');
     expect(html).toContain('Modeled habitat sphere signature: quiet_lotus • quiet/open/solo');
     expect(html).toContain('Deck cards: Quiet Reflection');
+    expect(html).toContain('Confirm');
+    expect(html).toContain('Cancel');
+    expect(html).toContain('saved just now');
   });
 });

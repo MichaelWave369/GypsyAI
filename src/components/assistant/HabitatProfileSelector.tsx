@@ -26,9 +26,12 @@ export function HabitatProfileSelector(props: {
   onExportDeckJson: () => void;
   onExportDeckMarkdown: () => void;
   onImportDeck: (file?: File) => void;
-  recentDecks?: Array<{ id: string; name: string; createdAt: string; cardCount: number }>;
+  recentDecks?: Array<{ id: string; name: string; createdAt: string; cardCount: number; kind: string; savedLabel: string }>;
   onSelectRecentDeck?: (id: string) => void;
-  onDeleteRecentDeck?: (id: string) => void;
+  pendingDeleteDeckId?: string | null;
+  onRequestDeleteRecentDeck?: (id: string) => void;
+  onCancelDeleteRecentDeck?: () => void;
+  onConfirmDeleteRecentDeck?: (id: string) => void;
   diffPreview?: { lines: string[]; ancestryFallbackLine?: string } | null;
   transitionSummary?: { headline: string; line: string; fallbackLine?: string } | null;
   transitionChips?: Array<{ key: string; label: string; severity: 'high' | 'medium' | 'low' }>;
@@ -109,10 +112,21 @@ export function HabitatProfileSelector(props: {
                 <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onSelectRecentDeck?.(deck.id)}>
                   Open
                 </button>
-                <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onDeleteRecentDeck?.(deck.id)}>
-                  Delete
-                </button>
-                <span className="text-[10px]">{deck.name} ({deck.cardCount})</span>
+                {props.pendingDeleteDeckId === deck.id ? (
+                  <>
+                    <button className="rounded border border-rose-500 px-1 py-0.5 text-[10px]" onClick={() => props.onConfirmDeleteRecentDeck?.(deck.id)}>
+                      Confirm
+                    </button>
+                    <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onCancelDeleteRecentDeck?.()}>
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]" onClick={() => props.onRequestDeleteRecentDeck?.(deck.id)}>
+                    Delete
+                  </button>
+                )}
+                <span className="text-[10px]">{deck.name} ({deck.kind}, {deck.cardCount}) • {deck.savedLabel}</span>
               </li>
             ))}
           </ul>
