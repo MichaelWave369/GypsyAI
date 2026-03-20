@@ -97,7 +97,13 @@ For entertainment and self-reflection only. Gypsy AI does **not** provide legal,
 - GEDCOM parsing and ancestry derivation logic are implemented in-project (local-first)
 
 ## License
-MIT (existing LICENSE preserved).
+GypsyAI is licensed under the **GNU Affero General Public License v3.0 or later** (`AGPL-3.0-or-later`).
+
+If you modify GypsyAI and run it as a networked service, you must make the corresponding source code of your modified version available under the AGPL.
+
+For organizations seeking proprietary or closed-source hosted/commercial use without AGPL reciprocity obligations, commercial licensing is available from the project owner (see `COMMERCIAL-LICENSING.md`).
+
+GypsyAI remains local-first, privacy-conscious, and community-available, but hosted modifications are subject to AGPL network-use obligations. Deployments should provide users with a visible source-access notice when interacting with the app remotely.
 
 ## TIEKAT Phase 1 (Assistant Kernel)
 - Assistant requests now run through a small internal **TIEKAT** kernel before response delivery.
