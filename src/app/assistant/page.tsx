@@ -72,6 +72,7 @@ import {
   summarizeHabitatDeck,
   TiekatHabitatDeck
 } from '@/lib/tiekat/habitatDeck';
+import { buildHabitatDeckContinuityNote, buildHabitatDeckSphereChips, formatHabitatDeckActionEcho } from '@/lib/tiekat/habitatDeckContinuity';
 import { formatHabitatDeckSavedLabel } from '@/lib/tiekat/habitatDeckTime';
 import {
   buildCouncilContinuitySummary,
@@ -157,6 +158,8 @@ export default function AssistantPage() {
   const [deckTimeNow, setDeckTimeNow] = useState(() => new Date().toISOString());
   const [pendingDeleteHabitatDeckId, setPendingDeleteHabitatDeckId] = useState<string | null>(null);
   const [habitatDeckNote, setHabitatDeckNote] = useState('');
+  const [habitatDeckContinuityNote, setHabitatDeckContinuityNote] = useState('');
+  const [habitatDeckContinuityChips, setHabitatDeckContinuityChips] = useState<string[]>([]);
   const [habitatDeckError, setHabitatDeckError] = useState('');
   const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
@@ -850,7 +853,9 @@ export default function AssistantPage() {
     setHabitatDeck(next);
     await appendHabitatDeck(next);
     await refreshRecentHabitatDecks(next.id);
-    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
     setHabitatDeckError('');
   };
 
@@ -859,7 +864,9 @@ export default function AssistantPage() {
     setHabitatDeck(next);
     await appendHabitatDeck(next);
     await refreshRecentHabitatDecks(next.id);
-    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
     setHabitatDeckError('');
   };
 
@@ -868,7 +875,9 @@ export default function AssistantPage() {
     setHabitatDeck(next);
     await appendHabitatDeck(next);
     await refreshRecentHabitatDecks(next.id);
-    setHabitatDeckNote(`Built ${next.name}.`);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
     setHabitatDeckError('');
   };
 
@@ -885,11 +894,17 @@ export default function AssistantPage() {
   const exportDeckJson = () => {
     if (!habitatDeck) return;
     download(exportHabitatDeckJson(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.json`, 'application/json');
+    setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_json'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(habitatDeck));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(habitatDeck));
   };
 
   const exportDeckMarkdown = () => {
     if (!habitatDeck) return;
     download(exportHabitatDeckMarkdown(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.md`, 'text/markdown');
+    setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_markdown'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(habitatDeck));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(habitatDeck));
   };
 
   const importHabitatDeck = async (file?: File) => {
@@ -899,7 +914,9 @@ export default function AssistantPage() {
       setHabitatDeck(parsed);
       await appendHabitatDeck(parsed);
       await refreshRecentHabitatDecks(parsed.id);
-      setHabitatDeckNote(`Imported deck ${parsed.name}.`);
+      setHabitatDeckNote(formatHabitatDeckActionEcho(parsed, 'imported'));
+      setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(parsed));
+      setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(parsed));
       setHabitatDeckError('');
     } catch (error) {
       setHabitatDeckError(error instanceof Error ? error.message : 'Failed to import habitat deck');
@@ -910,7 +927,9 @@ export default function AssistantPage() {
     const found = recentHabitatDecks.find((deck) => deck.id === id);
     if (!found) return;
     setHabitatDeck(found);
-    setHabitatDeckNote(`Reopened deck ${found.name}.`);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(found, 'opened'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(found));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(found));
     setHabitatDeckError('');
   };
 
@@ -919,6 +938,8 @@ export default function AssistantPage() {
     await refreshRecentHabitatDecks();
     setPendingDeleteHabitatDeckId(null);
     setHabitatDeckNote('Deleted local habitat deck.');
+    setHabitatDeckContinuityNote('');
+    setHabitatDeckContinuityChips([]);
     setHabitatDeckError('');
   };
 
@@ -1027,6 +1048,8 @@ export default function AssistantPage() {
         constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
         deckSummaryLine={habitatDeckSummary?.line ?? null}
         deckSphereSummaryLine={habitatDeck ? summarizeHabitatDeckSphereContinuity(habitatDeck) : null}
+        deckContinuityNote={habitatDeckContinuityNote || null}
+        deckContinuityChips={habitatDeckContinuityChips}
         deckPreviewLabels={habitatDeck?.cards.map((card) => card.profileName) ?? []}
         sphereLabel={habitatSphereSignature ? `${habitatSphereSignature.glyphFamily} • ${habitatSphereSignature.awakeningState}/${habitatSphereSignature.shieldStatus}/${habitatSphereSignature.synchronyState}` : null}
         sphereCaption={habitatSphereSignature?.caption ?? null}

@@ -361,3 +361,10 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added backward-compatible normalization for older/local persisted or imported deck shapes missing sphere summary/signature fields, with safe modeled defaults.
 - Added lightweight replay UI sphere cues in recent habitat deck memory rows and compact opened-deck sphere continuity text.
 - Sphere-memory cues remain local-only/configuration-derived and modeled/theoretical (no transcript/session/private ancestry payloads, no telemetry/cloud sync, no physical measurement claims).
+
+## TIEKAT Phase 34 (Deck Continuity Notes + Export Echo)
+- Added compact habitat-deck continuity helpers (`buildHabitatDeckContinuityNote`, `buildHabitatDeckSphereChips`, `formatHabitatDeckActionEcho`) for deterministic action echoes.
+- Habitat deck create/open/import/export flows now emit concise continuity echo text and 2–4 quiet sphere-memory chips (awakening, glyph, dominant/mixed, modeled).
+- Added compact continuity-note/chip rendering in habitat controls without adding modals, dashboards, or extra persistence.
+- Export/import semantics remain unchanged in substance; continuity additions are presentation-only and local.
+- Continuity echo text remains configuration-derived and modeled/theoretical (no transcript/session/private ancestry payloads, no telemetry/cloud sync, no physical measurement claims).

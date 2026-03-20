@@ -58,6 +58,8 @@ export function HabitatProfileSelector(props: {
   sphereConfidenceNote?: string | null;
   deckSummaryLine?: string | null;
   deckSphereSummaryLine?: string | null;
+  deckContinuityNote?: string | null;
+  deckContinuityChips?: string[];
   deckPreviewLabels?: string[];
   deckNote?: string;
   deckError?: string;
@@ -196,6 +198,14 @@ export function HabitatProfileSelector(props: {
       {props.sphereConfidenceNote ? <p className="text-[10px] text-zinc-600">{props.sphereConfidenceNote}</p> : null}
       {props.deckSummaryLine ? <p className="text-zinc-500">{props.deckSummaryLine}</p> : null}
       {props.deckSphereSummaryLine ? <p className="text-[10px] text-zinc-600">{props.deckSphereSummaryLine}</p> : null}
+      {props.deckContinuityNote ? <p className="text-[10px] text-zinc-600">{props.deckContinuityNote}</p> : null}
+      {props.deckContinuityChips?.length ? (
+        <div className="flex flex-wrap gap-1" data-testid="habitat-deck-continuity-chips">
+          {props.deckContinuityChips.slice(0, 4).map((chip) => (
+            <span key={chip} className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]">{chip}</span>
+          ))}
+        </div>
+      ) : null}
       {props.deckPreviewLabels?.length ? <p className="text-[10px] text-zinc-600">Deck cards: {props.deckPreviewLabels.slice(0, 4).join(' • ')}</p> : null}
       {props.deckNote ? <p className="text-zinc-500">{props.deckNote}</p> : null}
       {props.deckError ? <p className="text-xs text-rose-400">{props.deckError}</p> : null}

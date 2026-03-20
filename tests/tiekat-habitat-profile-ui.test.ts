@@ -66,6 +66,8 @@ describe('habitat profile ui', () => {
         sphereConfidenceNote: 'Modeled habitat sphere signature (theoretical, local configuration identity only).',
         deckSummaryLine: '2 habitat card(s). Lead: Synthesis Oracle.',
         deckSphereSummaryLine: 'Modeled habitat deck sphere memory: coherent / resonant_orbit. Dominant sphere identity: coherent / resonant_orbit.',
+        deckContinuityNote: 'Opened Recent habitat ritual deck with modeled habitat deck sphere memory (coherent / resonant_orbit).',
+        deckContinuityChips: ['coherent', 'resonant_orbit', 'dominant', 'modeled'],
         deckPreviewLabels: ['Synthesis Oracle', 'Council Deliberation'],
         deckNote: 'Built pinned habitat ritual deck.',
         note: 'Applied habitat profile Quiet Reflection.',
@@ -98,6 +100,9 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Dominant sphere identity: coherent / resonant_orbit.');
     expect(html).toContain('2 habitat card(s). Lead: Synthesis Oracle.');
     expect(html).toContain('Modeled habitat deck sphere memory: coherent / resonant_orbit.');
+    expect(html).toContain('Opened Recent habitat ritual deck with modeled habitat deck sphere memory');
+    expect(html).toContain('resonant_orbit');
+    expect(html).toContain('dominant');
     expect(html).toContain('Deck cards: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
     expect(html).toContain('Shortcuts: Alt+Shift+P');
@@ -157,6 +162,8 @@ describe('habitat profile ui', () => {
         constellationNodeLabels: ['Quiet Reflection'],
         sphereLabel: 'quiet_lotus • quiet/open/solo',
         deckSphereSummaryLine: 'Modeled habitat deck sphere memory: quiet / quiet_lotus. Dominant sphere identity: quiet / quiet_lotus.',
+        deckContinuityNote: 'Opened Quiet deck with modeled habitat deck sphere memory (quiet / quiet_lotus).',
+        deckContinuityChips: ['quiet', 'quiet_lotus', 'dominant', 'modeled'],
         deckPreviewLabels: ['Quiet Reflection']
       })
     );
@@ -170,5 +177,6 @@ describe('habitat profile ui', () => {
     expect(html).toContain('saved just now');
     expect(html).toContain('Modeled sphere: quiet / quiet_lotus');
     expect(html).toContain('Modeled habitat deck sphere memory: quiet / quiet_lotus.');
+    expect(html).toContain('Opened Quiet deck with modeled habitat deck sphere memory');
   });
 });
