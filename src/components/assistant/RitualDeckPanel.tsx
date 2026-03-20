@@ -64,7 +64,17 @@ export function RitualDeckPanel(props: {
       <input className="pt-1" type="file" accept="application/json" onChange={(e) => props.onImportDeck(e.target.files?.[0])} />
       {!props.deck ? <p className="text-zinc-500">No ritual deck generated yet.</p> : null}
       {props.summary ? (
-        <p className="text-zinc-500">{props.summary.cardCount} cards • modes: {props.summary.modeKeys.join(', ') || 'none'} • versions: {props.summary.scoringVersions.join(', ') || 'none'}</p>
+        <>
+          <p className="text-zinc-500">{props.summary.cardCount} cards • modes: {props.summary.modeKeys.join(', ') || 'none'} • versions: {props.summary.scoringVersions.join(', ') || 'none'}</p>
+          {props.summary.continuityNote ? <p className="text-[10px] text-zinc-600">{props.summary.continuityNote}</p> : null}
+          {props.summary.continuityChips?.length ? (
+            <div className="flex flex-wrap gap-1" data-testid="ritual-deck-continuity-chips">
+              {props.summary.continuityChips.map((chip) => (
+                <span key={chip} className="rounded border border-zinc-700 px-1 py-0.5 text-[10px]">{chip}</span>
+              ))}
+            </div>
+          ) : null}
+        </>
       ) : null}
       {props.recentDecks.length ? (
         <div className="space-y-1 rounded border border-zinc-700 p-2" data-testid="ritual-deck-list">

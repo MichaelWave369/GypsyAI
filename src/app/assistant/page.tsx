@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { classifyIntent } from '@/lib/assistant/router';
 import { buildContextCapsule } from '@/lib/assistant/context';
+import { APP_LICENSE_ID, APP_SOURCE_LABEL, APP_SOURCE_URL } from '@/lib/app/sourceInfo';
 import { AssistantSession, loadAssistantSessions, saveAssistantSessions, sessionsToMarkdown } from '@/lib/assistant/storage';
 import { loadAncestry } from '@/lib/ancestry/storage';
 import { loadSettings } from '@/lib/local/settings';
@@ -38,7 +39,9 @@ import {
   applyHabitatProfile,
   buildHabitatProfileDiff,
   buildHabitatProfile,
+  buildHabitatProfileMemorySummary,
   formatHabitatProfileDiff,
+  formatHabitatUsageSummary,
   deleteHabitatProfile,
   exportHabitatProfileJson,
   getRecentHabitatProfiles,
@@ -52,6 +55,25 @@ import {
   updateHabitatProfile
 } from '@/lib/tiekat/habitatProfile';
 import { buildHabitatTransition, resolveHabitatShortcut } from '@/lib/tiekat/habitatTransition';
+import { classifyHabitatUsage, formatHabitatLastAppliedLabel, formatHabitatUsageBadge } from '@/lib/tiekat/habitatTime';
+import { buildHabitatConstellationState, buildHabitatConstellationSummary } from '@/lib/tiekat/habitatConstellation';
+import { buildHabitatSphereSignature } from '@/lib/tiekat/habitatSphere';
+import {
+  buildHabitatDeck,
+  buildPinnedHabitatDeck,
+  buildRecentHabitatDeck,
+  appendHabitatDeck,
+  deleteHabitatDeck as deleteStoredHabitatDeck,
+  exportHabitatDeckJson,
+  exportHabitatDeckMarkdown,
+  getRecentHabitatDecks,
+  importHabitatDeckJson,
+  summarizeHabitatDeckSphereContinuity,
+  summarizeHabitatDeck,
+  TiekatHabitatDeck
+} from '@/lib/tiekat/habitatDeck';
+import { buildHabitatDeckContinuityNote, buildHabitatDeckSphereChips, formatHabitatDeckActionEcho } from '@/lib/tiekat/habitatDeckContinuity';
+import { formatHabitatDeckSavedLabel } from '@/lib/tiekat/habitatDeckTime';
 import {
   buildCouncilContinuitySummary,
   getCouncilModes,
@@ -77,6 +99,7 @@ import {
   TiekatRitualDeck,
   TiekatRitualDeckFilterState
 } from '@/lib/tiekat/ritualDeck';
+import { AppFooterInfo } from '@/components/app/AppFooterInfo';
 import { DiagnosticsSection } from '@/components/assistant/DiagnosticsSection';
 import { ConstellationFilterChips } from '@/components/assistant/ConstellationFilterChips';
 import { ModeledBadge } from '@/components/assistant/ModeledBadge';
@@ -130,6 +153,15 @@ export default function AssistantPage() {
   const [habitatDescriptionDraft, setHabitatDescriptionDraft] = useState('');
   const [habitatProfileNote, setHabitatProfileNote] = useState('');
   const [habitatProfileError, setHabitatProfileError] = useState('');
+  const [habitatDeck, setHabitatDeck] = useState<TiekatHabitatDeck | null>(null);
+  const [recentHabitatDecks, setRecentHabitatDecks] = useState<TiekatHabitatDeck[]>([]);
+  const [deckTimeNow, setDeckTimeNow] = useState(() => new Date().toISOString());
+  const [pendingDeleteHabitatDeckId, setPendingDeleteHabitatDeckId] = useState<string | null>(null);
+  const [habitatDeckNote, setHabitatDeckNote] = useState('');
+  const [habitatDeckContinuityNote, setHabitatDeckContinuityNote] = useState('');
+  const [habitatDeckContinuityChips, setHabitatDeckContinuityChips] = useState<string[]>([]);
+  const [habitatDeckError, setHabitatDeckError] = useState('');
+  const [recentHabitatTransition, setRecentHabitatTransition] = useState<{ from: string; to: string } | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const habitatShortcutHandlersRef = useRef<{
     apply: () => void;
@@ -158,6 +190,10 @@ export default function AssistantPage() {
       if (rows[0]) setSelectedArtifactId(rows[0].id);
     });
     getRecentRitualDecks(8).then((rows) => setRecentRitualDecks(rows));
+    getRecentHabitatDecks(8).then((rows) => {
+      setRecentHabitatDecks(rows);
+      if (rows[0]) setHabitatDeck(rows[0]);
+    });
     getRecentHabitatProfiles(12).then((rows) => {
       setHabitatProfiles(rows);
       if (rows[0]) {
@@ -169,6 +205,13 @@ export default function AssistantPage() {
     setShowGeometry(loadGeometryVisibilityPreference(false));
     setConstellationFilters(loadConstellationFilters());
     setCouncilMode(loadCouncilModePreference('disabled'));
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setDeckTimeNow(new Date().toISOString());
+    }, 60_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const active = useMemo(() => sessions.find((s) => s.id === activeId), [sessions, activeId]);
@@ -285,6 +328,53 @@ export default function AssistantPage() {
       allowAncestry: settings.allowAncestryAi
     });
   }, [selectedHabitatProfile, sessionMode, councilMode, preferProviderBackedCouncil, showGeometry, showGravityDiagnostics, enableV55Framing, constellationFilters, ritualDeckFilters]);
+  const selectedHabitatMemorySummary = useMemo(
+    () => (selectedHabitatProfile ? buildHabitatProfileMemorySummary(selectedHabitatProfile) : null),
+    [selectedHabitatProfile]
+  );
+  const habitatConstellationState = useMemo(
+    () => buildHabitatConstellationState({ profiles: habitatProfiles, recentTransition: recentHabitatTransition }),
+    [habitatProfiles, recentHabitatTransition]
+  );
+  const habitatConstellationSummary = useMemo(
+    () => buildHabitatConstellationSummary({ state: habitatConstellationState }),
+    [habitatConstellationState]
+  );
+
+  const habitatLastAppliedLabel = useMemo(() => {
+    if (!selectedHabitatMemorySummary) return 'Never applied';
+    return formatHabitatLastAppliedLabel({ lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt });
+  }, [selectedHabitatMemorySummary]);
+  const habitatUsageBadge = useMemo(() => {
+    if (!selectedHabitatMemorySummary) return 'Never Applied';
+    return formatHabitatUsageBadge(classifyHabitatUsage({
+      lastAppliedAt: selectedHabitatMemorySummary.lastAppliedAt,
+      applyCount: selectedHabitatMemorySummary.applyCount
+    }));
+  }, [selectedHabitatMemorySummary]);
+  const habitatSphereSignature = useMemo(
+    () => (selectedHabitatProfile ? buildHabitatSphereSignature(selectedHabitatProfile) : null),
+    [selectedHabitatProfile]
+  );
+  const habitatDeckSummary = useMemo(() => (habitatDeck ? summarizeHabitatDeck(habitatDeck) : null), [habitatDeck]);
+  const footerHabitatStatusLine = useMemo(() => {
+    const habitatName = selectedHabitatProfile?.name ?? 'No habitat selected';
+    const deckHint = recentHabitatDecks.length ? `${recentHabitatDecks.length} recent deck(s)` : 'no recent decks';
+    return `Habitat: ${habitatName} • ${habitatUsageBadge} • ${deckHint} • mode ${sessionMode}.`;
+  }, [selectedHabitatProfile, recentHabitatDecks, habitatUsageBadge, sessionMode]);
+
+  const refreshRecentHabitatDecks = async (nextSelectedId?: string) => {
+    const rows = await getRecentHabitatDecks(8);
+    setRecentHabitatDecks(rows);
+    if (nextSelectedId) {
+      const found = rows.find((deck) => deck.id === nextSelectedId);
+      if (found) {
+        setHabitatDeck(found);
+        return;
+      }
+    }
+    if (!habitatDeck || !rows.some((deck) => deck.id === habitatDeck.id)) setHabitatDeck(rows[0] ?? null);
+  };
 
   const sparklinePoints = useMemo(() => {
     if (!recentGravity.length) return '';
@@ -645,9 +735,17 @@ export default function AssistantPage() {
     promptPresetMode: sessionMode
   });
 
-  const applySelectedHabitatProfile = () => {
+  const applySelectedHabitatProfile = async () => {
     if (!selectedHabitatProfile) return;
     const settings = loadSettings();
+    const previousApplied = [...habitatProfiles]
+      .sort((a, b) => {
+        const aMs = Number.isNaN(Date.parse(a.lastAppliedAt || '')) ? Number.NEGATIVE_INFINITY : Date.parse(a.lastAppliedAt || '');
+        const bMs = Number.isNaN(Date.parse(b.lastAppliedAt || '')) ? Number.NEGATIVE_INFINITY : Date.parse(b.lastAppliedAt || '');
+        return bMs - aMs;
+      })
+      .find((profile) => profile.lastAppliedAt);
+    const previousName = previousApplied?.name || 'Current Runtime';
     const applied = applyHabitatProfile({
       profile: selectedHabitatProfile,
       allowAncestry: settings.allowAncestryAi
@@ -663,8 +761,12 @@ export default function AssistantPage() {
     setConstellationFilters(applied.profile.preferences.constellationFilters);
     saveConstellationFilters(applied.profile.preferences.constellationFilters);
     setRitualDeckFilters(applied.profile.preferences.ritualDeckFilters);
+    const nextProfiles = habitatProfiles.map((profile) => (profile.id === applied.profile.id ? applied.profile : profile));
+    await saveHabitatProfiles(nextProfiles);
+    await refreshHabitatProfiles(applied.profile.id);
+    setRecentHabitatTransition({ from: previousName, to: applied.profile.name });
     const summaryLine = habitatTransitionPreview?.summary.line;
-    setHabitatProfileNote(`Transition complete: ${selectedHabitatProfile.name}. ${summaryLine || applied.note}`);
+    setHabitatProfileNote(`Transition complete: ${applied.profile.name}. ${summaryLine || applied.note}`);
     setHabitatProfileError('');
   };
 
@@ -746,9 +848,106 @@ export default function AssistantPage() {
     await refreshHabitatProfiles(selectedHabitatProfile.id);
   };
 
+  const buildPinnedDeck = async () => {
+    const next = buildPinnedHabitatDeck(habitatProfiles);
+    setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
+    setHabitatDeckError('');
+  };
+
+  const buildRecentDeck = async () => {
+    const next = buildRecentHabitatDeck(habitatProfiles);
+    setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
+    setHabitatDeckError('');
+  };
+
+  const buildAllDeck = async () => {
+    const next = buildHabitatDeck({ profiles: habitatProfiles, kind: 'all', name: 'All habitat ritual deck' });
+    setHabitatDeck(next);
+    await appendHabitatDeck(next);
+    await refreshRecentHabitatDecks(next.id);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(next, 'created'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(next));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(next));
+    setHabitatDeckError('');
+  };
+
+  const download = (content: string, name: string, type: string) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportDeckJson = () => {
+    if (!habitatDeck) return;
+    download(exportHabitatDeckJson(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.json`, 'application/json');
+    setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_json'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(habitatDeck));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(habitatDeck));
+  };
+
+  const exportDeckMarkdown = () => {
+    if (!habitatDeck) return;
+    download(exportHabitatDeckMarkdown(habitatDeck), `${habitatDeck.name.replace(/\s+/g, '-').toLowerCase()}.md`, 'text/markdown');
+    setHabitatDeckNote(formatHabitatDeckActionEcho(habitatDeck, 'exported_markdown'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(habitatDeck));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(habitatDeck));
+  };
+
+  const importHabitatDeck = async (file?: File) => {
+    if (!file) return;
+    try {
+      const parsed = importHabitatDeckJson(await file.text());
+      setHabitatDeck(parsed);
+      await appendHabitatDeck(parsed);
+      await refreshRecentHabitatDecks(parsed.id);
+      setHabitatDeckNote(formatHabitatDeckActionEcho(parsed, 'imported'));
+      setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(parsed));
+      setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(parsed));
+      setHabitatDeckError('');
+    } catch (error) {
+      setHabitatDeckError(error instanceof Error ? error.message : 'Failed to import habitat deck');
+    }
+  };
+
+  const selectRecentHabitatDeck = (id: string) => {
+    const found = recentHabitatDecks.find((deck) => deck.id === id);
+    if (!found) return;
+    setHabitatDeck(found);
+    setHabitatDeckNote(formatHabitatDeckActionEcho(found, 'opened'));
+    setHabitatDeckContinuityNote(buildHabitatDeckContinuityNote(found));
+    setHabitatDeckContinuityChips(buildHabitatDeckSphereChips(found));
+    setHabitatDeckError('');
+  };
+
+  const deleteRecentHabitatDeck = async (id: string) => {
+    await deleteStoredHabitatDeck(id);
+    await refreshRecentHabitatDecks();
+    setPendingDeleteHabitatDeckId(null);
+    setHabitatDeckNote('Deleted local habitat deck.');
+    setHabitatDeckContinuityNote('');
+    setHabitatDeckContinuityChips([]);
+    setHabitatDeckError('');
+  };
+
   useEffect(() => {
     habitatShortcutHandlersRef.current = {
-      apply: applySelectedHabitatProfile,
+      apply: () => {
+        void applySelectedHabitatProfile();
+      },
       togglePin: () => togglePinSelectedHabitatProfile(),
       moveUp: () => reorderSelectedHabitatProfile('up'),
       moveDown: () => reorderSelectedHabitatProfile('down')
@@ -770,7 +969,7 @@ export default function AssistantPage() {
         void habitatShortcutHandlersRef.current?.togglePin();
       } else if (action === 'apply') {
         event.preventDefault();
-        habitatShortcutHandlersRef.current?.apply();
+        void habitatShortcutHandlersRef.current?.apply();
       } else if (action === 'move_up') {
         event.preventDefault();
         void habitatShortcutHandlersRef.current?.moveUp();
@@ -814,9 +1013,49 @@ export default function AssistantPage() {
         onTogglePin={togglePinSelectedHabitatProfile}
         onMoveUp={() => reorderSelectedHabitatProfile('up')}
         onMoveDown={() => reorderSelectedHabitatProfile('down')}
+        onBuildPinnedDeck={() => { void buildPinnedDeck(); }}
+        onBuildRecentDeck={() => { void buildRecentDeck(); }}
+        onBuildAllDeck={() => { void buildAllDeck(); }}
+        onExportDeckJson={exportDeckJson}
+        onExportDeckMarkdown={exportDeckMarkdown}
+        onImportDeck={importHabitatDeck}
+        recentDecks={recentHabitatDecks.map((deck) => ({
+          id: deck.id,
+          name: deck.name,
+          createdAt: deck.createdAt,
+          cardCount: deck.cards.length,
+          kind: deck.kind,
+          savedLabel: formatHabitatDeckSavedLabel(deck, deckTimeNow),
+          sphereLabel: `Modeled sphere: ${deck.sphereSummary.dominantAwakeningState} / ${deck.sphereSummary.dominantGlyphFamily}`,
+          sphereContinuityLabel: deck.sphereSummary.sphereContinuityLabel
+        }))}
+        onSelectRecentDeck={selectRecentHabitatDeck}
+        pendingDeleteDeckId={pendingDeleteHabitatDeckId}
+        onRequestDeleteRecentDeck={setPendingDeleteHabitatDeckId}
+        onCancelDeleteRecentDeck={() => setPendingDeleteHabitatDeckId(null)}
+        onConfirmDeleteRecentDeck={(id) => { void deleteRecentHabitatDeck(id); }}
+        sourceLabel={APP_SOURCE_LABEL}
+        sourceUrl={APP_SOURCE_URL}
+        sourceLicenseId={APP_LICENSE_ID}
         diffPreview={habitatApplyPreview}
         transitionSummary={habitatTransitionPreview?.summary ?? null}
         transitionChips={habitatTransitionPreview?.chips ?? []}
+        profileUsageSummary={selectedHabitatMemorySummary ? formatHabitatUsageSummary(selectedHabitatMemorySummary) : ''}
+        profileLastAppliedLabel={habitatLastAppliedLabel}
+        usageBadge={habitatUsageBadge}
+        constellationContinuityNote={habitatConstellationSummary.headline}
+        constellationTransitionNote={habitatConstellationSummary.pairLine || habitatConstellationSummary.line}
+        constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
+        deckSummaryLine={habitatDeckSummary?.line ?? null}
+        deckSphereSummaryLine={habitatDeck ? summarizeHabitatDeckSphereContinuity(habitatDeck) : null}
+        deckContinuityNote={habitatDeckContinuityNote || null}
+        deckContinuityChips={habitatDeckContinuityChips}
+        deckPreviewLabels={habitatDeck?.cards.map((card) => card.profileName) ?? []}
+        sphereLabel={habitatSphereSignature ? `${habitatSphereSignature.glyphFamily} • ${habitatSphereSignature.awakeningState}/${habitatSphereSignature.shieldStatus}/${habitatSphereSignature.synchronyState}` : null}
+        sphereCaption={habitatSphereSignature?.caption ?? null}
+        sphereConfidenceNote={habitatSphereSignature?.confidenceNote ?? null}
+        deckNote={habitatDeckNote}
+        deckError={habitatDeckError}
         note={habitatProfileNote}
         error={habitatProfileError}
       />
@@ -970,6 +1209,7 @@ export default function AssistantPage() {
           <div className="flex gap-2"><button className="rounded bg-gold px-3 py-1 text-black" onClick={send}>Send</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => controllerRef.current?.abort()}>Stop</button><button className="rounded border border-zinc-700 px-3 py-1" onClick={() => setInput(messages.filter((m) => m.role === 'user').at(-1)?.content || '')}>Regenerate</button></div>
         </section>
       </div>
+      <AppFooterInfo habitatStatusLine={footerHabitatStatusLine} />
     </main>
   );
 }

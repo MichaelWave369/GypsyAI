@@ -1,6 +1,7 @@
 import { dbGet, dbSet } from '@/lib/local/db';
 import { TiekatOracleArtifact, normalizeOracleArtifact } from '@/lib/tiekat/oracleArtifact';
 import { buildSacredGeometryState } from '@/lib/tiekat/sacredGeometry';
+import { buildContinuityChips, formatContinuityNote, formatContinuityTuple } from '@/lib/tiekat/continuityFormatting';
 
 export type TiekatRitualDeckExportVersion = 'TIEKAT-ritual-deck-v1';
 export const TIEKAT_RITUAL_DECK_ROW_VERSION = 1 as const;
@@ -74,6 +75,8 @@ export interface TiekatRitualDeckSummary {
     end: string;
   } | null;
   footer: string;
+  continuityNote?: string;
+  continuityChips?: string[];
 }
 
 export interface TiekatRitualDeckFilterOptions {
@@ -283,8 +286,39 @@ export function summarizeRitualDeck(deck: TiekatRitualDeck): TiekatRitualDeckSum
         end: sorted[sorted.length - 1].timestamp
       }
       : null,
-    footer: deck.footer
+    footer: deck.footer,
+    continuityNote: buildRitualDeckContinuityNote(deck),
+    continuityChips: buildRitualDeckContinuityChips(deck)
   };
+}
+
+function dominantLabel(values: string[]): string {
+  if (!values.length) return 'mixed';
+  const counts = new Map<string, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  if (!sorted[0]) return 'mixed';
+  const top = sorted[0];
+  const tied = sorted.filter((entry) => entry[1] === top[1]);
+  return tied.length > 1 ? 'mixed' : top[0];
+}
+
+export function buildRitualDeckContinuityMeta(deck: TiekatRitualDeck) {
+  const awakenings = deck.cards.map((card) => card.v56?.awakeningState || 'mixed');
+  const glyphs = deck.cards.map((card) => card.v56?.glyphFamily || 'mixed');
+  const awakening = dominantLabel(awakenings);
+  const glyph = dominantLabel(glyphs);
+  const continuityType: 'dominant' | 'mixed' = awakening === 'mixed' || glyph === 'mixed' ? 'mixed' : 'dominant';
+  return { awakening, glyph, continuityType };
+}
+
+export function buildRitualDeckContinuityNote(deck: TiekatRitualDeck): string {
+  const meta = buildRitualDeckContinuityMeta(deck);
+  return `Modeled ritual deck continuity: ${formatContinuityTuple(meta)}. ${formatContinuityNote(meta, 'Modeled ritual deck continuity')}`;
+}
+
+export function buildRitualDeckContinuityChips(deck: TiekatRitualDeck): string[] {
+  return buildContinuityChips(buildRitualDeckContinuityMeta(deck));
 }
 
 export async function loadRitualDecks(): Promise<TiekatRitualDeckStoreEntry[]> {
