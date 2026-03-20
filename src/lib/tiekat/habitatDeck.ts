@@ -38,8 +38,16 @@ export interface TiekatHabitatDeck {
   kind: TiekatHabitatDeckKind;
   createdAt: string;
   cards: TiekatHabitatCard[];
+  sphereSummary: TiekatHabitatDeckSphereSummary;
   footer: string;
   version: TiekatHabitatDeckExportVersion;
+}
+export interface TiekatHabitatDeckSphereSummary {
+  dominantGlyphFamily: TiekatHabitatSphereSignature['glyphFamily'] | 'mixed';
+  dominantAwakeningState: TiekatHabitatSphereSignature['awakeningState'] | 'mixed';
+  sphereContinuityLabel: string;
+  line: string;
+  confidenceNote: string;
 }
 
 export interface TiekatHabitatDeckSummary {
@@ -48,6 +56,7 @@ export interface TiekatHabitatDeckSummary {
   cardCount: number;
   topCardName: string | null;
   line: string;
+  sphereLine: string;
 }
 
 export interface TiekatHabitatDeckStoreEntry {
@@ -109,15 +118,47 @@ export function buildHabitatDeck(args: {
     scoped = normalized.filter((profile) => selected.has(profile.id));
   }
   const cards = scoped.slice(0, HABITAT_DECK_MAX_CARDS).map((profile) => buildHabitatCardFromProfile(profile, now));
+  const sphereSummary = buildHabitatDeckSphereSummary({ cards });
   return {
     id: `habitat-deck:${args.kind}:${now}`,
     name: args.name || `Habitat ${args.kind} ritual deck`,
     kind: args.kind,
     createdAt: now,
     cards,
+    sphereSummary,
     footer: 'Local habitat ritual object — configuration only.',
     version: TIEKAT_HABITAT_DECK_EXPORT_VERSION
   };
+}
+
+function dominantLabel<T extends string>(values: T[]): T | 'mixed' {
+  if (!values.length) return 'mixed';
+  const counts = new Map<T, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  if (!sorted[0]) return 'mixed';
+  const top = sorted[0];
+  const tied = sorted.filter((entry) => entry[1] === top[1]);
+  return tied.length > 1 ? 'mixed' : top[0];
+}
+
+export function buildHabitatDeckSphereSummary(deck: Pick<TiekatHabitatDeck, 'cards'>): TiekatHabitatDeckSphereSummary {
+  const glyph = dominantLabel(deck.cards.map((card) => card.sphereSignature.glyphFamily));
+  const awakening = dominantLabel(deck.cards.map((card) => card.sphereSignature.awakeningState));
+  const continuityLabel = glyph === 'mixed' || awakening === 'mixed'
+    ? `Mixed sphere memory across ${deck.cards.length} habitat(s).`
+    : `Dominant sphere identity: ${awakening} / ${glyph}.`;
+  return {
+    dominantGlyphFamily: glyph,
+    dominantAwakeningState: awakening,
+    sphereContinuityLabel: continuityLabel,
+    line: `Modeled habitat deck sphere memory: ${awakening === 'mixed' ? 'mixed' : awakening} / ${glyph === 'mixed' ? 'mixed' : glyph}.`,
+    confidenceNote: 'Configuration-derived sphere continuity (theoretical, local configuration identity only).'
+  };
+}
+
+export function summarizeHabitatDeckSphereContinuity(deck: Pick<TiekatHabitatDeck, 'sphereSummary'>) {
+  return `${deck.sphereSummary.line} ${deck.sphereSummary.sphereContinuityLabel}`;
 }
 
 export function normalizeHabitatDeck(value: Partial<TiekatHabitatDeck>): TiekatHabitatDeck {
@@ -137,12 +178,23 @@ export function normalizeHabitatDeck(value: Partial<TiekatHabitatDeck>): TiekatH
       specVersion: 'TIEKAT-habitat-sphere-v1'
     }
   })) : [];
+  const derivedSphereSummary = buildHabitatDeckSphereSummary({ cards });
+  const sphereSummary = value.sphereSummary && typeof value.sphereSummary === 'object'
+    ? {
+      dominantGlyphFamily: value.sphereSummary.dominantGlyphFamily ?? derivedSphereSummary.dominantGlyphFamily,
+      dominantAwakeningState: value.sphereSummary.dominantAwakeningState ?? derivedSphereSummary.dominantAwakeningState,
+      sphereContinuityLabel: value.sphereSummary.sphereContinuityLabel ?? derivedSphereSummary.sphereContinuityLabel,
+      line: value.sphereSummary.line ?? derivedSphereSummary.line,
+      confidenceNote: value.sphereSummary.confidenceNote ?? derivedSphereSummary.confidenceNote
+    }
+    : derivedSphereSummary;
   return {
     id: value.id || `habitat-deck:${kind}:${createdAt}`,
     name: value.name || `Habitat ${kind} ritual deck`,
     kind,
     createdAt,
     cards: cards.slice(0, HABITAT_DECK_MAX_CARDS),
+    sphereSummary,
     footer: value.footer || 'Local habitat ritual object — configuration only.',
     version: TIEKAT_HABITAT_DECK_EXPORT_VERSION
   };
@@ -162,7 +214,8 @@ export function summarizeHabitatDeck(deck: TiekatHabitatDeck): TiekatHabitatDeck
     kind: deck.kind,
     cardCount: deck.cards.length,
     topCardName: deck.cards[0]?.profileName ?? null,
-    line: deck.cards.length ? `${deck.cards.length} habitat card(s). Lead: ${deck.cards[0].profileName}.` : 'No habitat cards in this deck.'
+    line: deck.cards.length ? `${deck.cards.length} habitat card(s). Lead: ${deck.cards[0].profileName}.` : 'No habitat cards in this deck.',
+    sphereLine: deck.sphereSummary.line
   };
 }
 
@@ -183,6 +236,7 @@ export function exportHabitatDeckMarkdown(deck: TiekatHabitatDeck) {
     lines.push(`  - Pinned: ${card.pinned ? 'yes' : 'no'} • Diagnostics: ${card.showDiagnostics ? 'on' : 'off'} • Geometry: ${card.showGeometry ? 'on' : 'off'}`);
   }
   lines.push('', deck.footer, `Version: ${deck.version}`);
+  lines.splice(5, 0, `Sphere memory: ${deck.sphereSummary.line}`, deck.sphereSummary.sphereContinuityLabel);
   return lines.join('\n');
 }
 

@@ -354,3 +354,10 @@ GypsyAI remains local-first, privacy-conscious, and community-available, but hos
 - Added deterministic app-about metadata constants (`aboutInfo.ts`) for app identity, source/license labels, commercial-licensing note label/path, and short safety notes.
 - Footer optionally shows one compact habitat status line using already-safe runtime metadata only (selected habitat name, usage badge, recent deck count, current mode).
 - Footer/about content is static + local metadata only: no transcript/session/private ancestry payloads, no telemetry, no cloud sync, and no hidden persistence.
+
+## TIEKAT Phase 33 (Habitat Deck Sphere Memory)
+- Extended habitat deck schema additively with deterministic deck-level `sphereSummary` metadata (dominant awakening/glyph + continuity label + compact confidence note).
+- Added deterministic helpers to build/summarize deck sphere continuity (`buildHabitatDeckSphereSummary`, `summarizeHabitatDeckSphereContinuity`) from card-level sphere signatures only.
+- Added backward-compatible normalization for older/local persisted or imported deck shapes missing sphere summary/signature fields, with safe modeled defaults.
+- Added lightweight replay UI sphere cues in recent habitat deck memory rows and compact opened-deck sphere continuity text.
+- Sphere-memory cues remain local-only/configuration-derived and modeled/theoretical (no transcript/session/private ancestry payloads, no telemetry/cloud sync, no physical measurement claims).

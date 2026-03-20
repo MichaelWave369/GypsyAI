@@ -26,7 +26,16 @@ export function HabitatProfileSelector(props: {
   onExportDeckJson: () => void;
   onExportDeckMarkdown: () => void;
   onImportDeck: (file?: File) => void;
-  recentDecks?: Array<{ id: string; name: string; createdAt: string; cardCount: number; kind: string; savedLabel: string }>;
+  recentDecks?: Array<{
+    id: string;
+    name: string;
+    createdAt: string;
+    cardCount: number;
+    kind: string;
+    savedLabel: string;
+    sphereLabel?: string;
+    sphereContinuityLabel?: string;
+  }>;
   onSelectRecentDeck?: (id: string) => void;
   pendingDeleteDeckId?: string | null;
   onRequestDeleteRecentDeck?: (id: string) => void;
@@ -48,6 +57,7 @@ export function HabitatProfileSelector(props: {
   sphereCaption?: string | null;
   sphereConfidenceNote?: string | null;
   deckSummaryLine?: string | null;
+  deckSphereSummaryLine?: string | null;
   deckPreviewLabels?: string[];
   deckNote?: string;
   deckError?: string;
@@ -130,6 +140,8 @@ export function HabitatProfileSelector(props: {
                   </button>
                 )}
                 <span className="text-[10px]">{deck.name} ({deck.kind}, {deck.cardCount}) • {deck.savedLabel}</span>
+                {deck.sphereLabel ? <span className="text-[10px] text-zinc-600">{deck.sphereLabel}</span> : null}
+                {deck.sphereContinuityLabel ? <span className="text-[10px] text-zinc-600">{deck.sphereContinuityLabel}</span> : null}
               </li>
             ))}
           </ul>
@@ -183,6 +195,7 @@ export function HabitatProfileSelector(props: {
       {props.sphereCaption ? <p className="text-zinc-500">{props.sphereCaption}</p> : null}
       {props.sphereConfidenceNote ? <p className="text-[10px] text-zinc-600">{props.sphereConfidenceNote}</p> : null}
       {props.deckSummaryLine ? <p className="text-zinc-500">{props.deckSummaryLine}</p> : null}
+      {props.deckSphereSummaryLine ? <p className="text-[10px] text-zinc-600">{props.deckSphereSummaryLine}</p> : null}
       {props.deckPreviewLabels?.length ? <p className="text-[10px] text-zinc-600">Deck cards: {props.deckPreviewLabels.slice(0, 4).join(' • ')}</p> : null}
       {props.deckNote ? <p className="text-zinc-500">{props.deckNote}</p> : null}
       {props.deckError ? <p className="text-xs text-rose-400">{props.deckError}</p> : null}

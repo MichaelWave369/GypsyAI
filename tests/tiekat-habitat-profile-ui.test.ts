@@ -31,7 +31,16 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
-        recentDecks: [{ id: 'deck-1', name: 'Recent habitat ritual deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 2, kind: 'recent', savedLabel: 'saved 5m ago' }],
+        recentDecks: [{
+          id: 'deck-1',
+          name: 'Recent habitat ritual deck',
+          createdAt: '2026-03-20T00:00:00.000Z',
+          cardCount: 2,
+          kind: 'recent',
+          savedLabel: 'saved 5m ago',
+          sphereLabel: 'Modeled sphere: coherent / resonant_orbit',
+          sphereContinuityLabel: 'Dominant sphere identity: coherent / resonant_orbit.'
+        }],
         onSelectRecentDeck: vi.fn(),
         pendingDeleteDeckId: null,
         onRequestDeleteRecentDeck: vi.fn(),
@@ -56,6 +65,7 @@ describe('habitat profile ui', () => {
         sphereCaption: 'Configuration-derived sphere profile: awakened • fortified • council_aligned.',
         sphereConfidenceNote: 'Modeled habitat sphere signature (theoretical, local configuration identity only).',
         deckSummaryLine: '2 habitat card(s). Lead: Synthesis Oracle.',
+        deckSphereSummaryLine: 'Modeled habitat deck sphere memory: coherent / resonant_orbit. Dominant sphere identity: coherent / resonant_orbit.',
         deckPreviewLabels: ['Synthesis Oracle', 'Council Deliberation'],
         deckNote: 'Built pinned habitat ritual deck.',
         note: 'Applied habitat profile Quiet Reflection.',
@@ -84,7 +94,10 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Import Deck JSON');
     expect(html).toContain('Recent habitat decks');
     expect(html).toContain('Recent habitat ritual deck (recent, 2) • saved 5m ago');
+    expect(html).toContain('Modeled sphere: coherent / resonant_orbit');
+    expect(html).toContain('Dominant sphere identity: coherent / resonant_orbit.');
     expect(html).toContain('2 habitat card(s). Lead: Synthesis Oracle.');
+    expect(html).toContain('Modeled habitat deck sphere memory: coherent / resonant_orbit.');
     expect(html).toContain('Deck cards: Synthesis Oracle • Council Deliberation');
     expect(html).toContain('Expand chip details');
     expect(html).toContain('Shortcuts: Alt+Shift+P');
@@ -120,7 +133,16 @@ describe('habitat profile ui', () => {
         onExportDeckJson: vi.fn(),
         onExportDeckMarkdown: vi.fn(),
         onImportDeck: vi.fn(),
-        recentDecks: [{ id: 'deck-quiet', name: 'Quiet deck', createdAt: '2026-03-20T00:00:00.000Z', cardCount: 1, kind: 'pinned', savedLabel: 'saved just now' }],
+        recentDecks: [{
+          id: 'deck-quiet',
+          name: 'Quiet deck',
+          createdAt: '2026-03-20T00:00:00.000Z',
+          cardCount: 1,
+          kind: 'pinned',
+          savedLabel: 'saved just now',
+          sphereLabel: 'Modeled sphere: quiet / quiet_lotus',
+          sphereContinuityLabel: 'Dominant sphere identity: quiet / quiet_lotus.'
+        }],
         onSelectRecentDeck: vi.fn(),
         pendingDeleteDeckId: 'deck-quiet',
         onRequestDeleteRecentDeck: vi.fn(),
@@ -134,6 +156,7 @@ describe('habitat profile ui', () => {
         usageBadge: 'Never Applied',
         constellationNodeLabels: ['Quiet Reflection'],
         sphereLabel: 'quiet_lotus • quiet/open/solo',
+        deckSphereSummaryLine: 'Modeled habitat deck sphere memory: quiet / quiet_lotus. Dominant sphere identity: quiet / quiet_lotus.',
         deckPreviewLabels: ['Quiet Reflection']
       })
     );
@@ -145,5 +168,7 @@ describe('habitat profile ui', () => {
     expect(html).toContain('Confirm');
     expect(html).toContain('Cancel');
     expect(html).toContain('saved just now');
+    expect(html).toContain('Modeled sphere: quiet / quiet_lotus');
+    expect(html).toContain('Modeled habitat deck sphere memory: quiet / quiet_lotus.');
   });
 });

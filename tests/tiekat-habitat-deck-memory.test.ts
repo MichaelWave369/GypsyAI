@@ -26,10 +26,15 @@ describe('tiekat habitat deck memory', () => {
   });
 
   it('normalizes legacy decks with safe defaults', () => {
-    const normalized = normalizeHabitatDeck({ name: 'Legacy Deck', cards: [] });
+    const normalized = normalizeHabitatDeck({
+      name: 'Legacy Deck',
+      cards: [{ profileId: 'legacy-id', profileName: 'Legacy Habitat' } as any]
+    });
     expect(normalized.kind).toBe('all');
     expect(normalized.footer.toLowerCase()).toContain('configuration only');
     expect(normalized.version).toBe('TIEKAT-habitat-deck-v1');
+    expect(normalized.cards[0].sphereSignature.glyphFamily).toBe('quiet_lotus');
+    expect(normalized.sphereSummary.line).toContain('Modeled habitat deck sphere memory');
   });
 
   it('supports append/load/getRecent/delete with local-only deterministic shape', async () => {
@@ -69,5 +74,6 @@ describe('tiekat habitat deck memory', () => {
     const recent = await getRecentHabitatDecks(3);
     expect(recent[0].id).toBe(imported.id);
     expect(recent[0].cards[0]?.sphereSignature?.specVersion).toBe('TIEKAT-habitat-sphere-v1');
+    expect(recent[0].sphereSummary.confidenceNote).toContain('Configuration-derived sphere continuity');
   });
 });

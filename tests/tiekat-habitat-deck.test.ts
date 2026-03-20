@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildHabitatCardFromProfile,
   buildHabitatDeck,
+  buildHabitatDeckSphereSummary,
   buildPinnedHabitatDeck,
   buildRecentHabitatDeck,
   exportHabitatDeckJson,
@@ -46,6 +47,9 @@ describe('tiekat habitat deck', () => {
     const summary = summarizeHabitatDeck(all);
     expect(summary.cardCount).toBe(3);
     expect(summary.topCardName).toBeTruthy();
+    expect(summary.sphereLine).toContain('Modeled habitat deck sphere memory');
+    const sphere = buildHabitatDeckSphereSummary(all);
+    expect(sphere.sphereContinuityLabel.length).toBeGreaterThan(0);
   });
 
   it('exports/imports habitat decks with validation', () => {
@@ -62,6 +66,7 @@ describe('tiekat habitat deck', () => {
     const markdown = exportHabitatDeckMarkdown(imported);
     expect(markdown).toContain('Local habitat ritual object');
     expect(markdown).toContain('Sphere:');
+    expect(markdown).toContain('Sphere memory:');
     expect(() => importHabitatDeckJson(JSON.stringify({ version: 'bad', cards: [] }))).toThrow('Unsupported habitat deck export version');
   });
 });

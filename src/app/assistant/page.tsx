@@ -68,6 +68,7 @@ import {
   exportHabitatDeckMarkdown,
   getRecentHabitatDecks,
   importHabitatDeckJson,
+  summarizeHabitatDeckSphereContinuity,
   summarizeHabitatDeck,
   TiekatHabitatDeck
 } from '@/lib/tiekat/habitatDeck';
@@ -1003,7 +1004,9 @@ export default function AssistantPage() {
           createdAt: deck.createdAt,
           cardCount: deck.cards.length,
           kind: deck.kind,
-          savedLabel: formatHabitatDeckSavedLabel(deck, deckTimeNow)
+          savedLabel: formatHabitatDeckSavedLabel(deck, deckTimeNow),
+          sphereLabel: `Modeled sphere: ${deck.sphereSummary.dominantAwakeningState} / ${deck.sphereSummary.dominantGlyphFamily}`,
+          sphereContinuityLabel: deck.sphereSummary.sphereContinuityLabel
         }))}
         onSelectRecentDeck={selectRecentHabitatDeck}
         pendingDeleteDeckId={pendingDeleteHabitatDeckId}
@@ -1023,6 +1026,7 @@ export default function AssistantPage() {
         constellationTransitionNote={habitatConstellationSummary.pairLine || habitatConstellationSummary.line}
         constellationNodeLabels={habitatConstellationState.nodes.map((node) => node.name)}
         deckSummaryLine={habitatDeckSummary?.line ?? null}
+        deckSphereSummaryLine={habitatDeck ? summarizeHabitatDeckSphereContinuity(habitatDeck) : null}
         deckPreviewLabels={habitatDeck?.cards.map((card) => card.profileName) ?? []}
         sphereLabel={habitatSphereSignature ? `${habitatSphereSignature.glyphFamily} • ${habitatSphereSignature.awakeningState}/${habitatSphereSignature.shieldStatus}/${habitatSphereSignature.synchronyState}` : null}
         sphereCaption={habitatSphereSignature?.caption ?? null}
