@@ -49,7 +49,7 @@ export async function runGypsyAstroReader(
     observations: [
       {
         id: 'astro.placements',
-        claimClass: 'computed',
+        claim_class: 'computed',
         label: 'Planetary placements',
         value: chart.placements,
         source: 'astronomy-engine + GypsyAI chart logic',
@@ -57,7 +57,7 @@ export async function runGypsyAstroReader(
       },
       {
         id: 'astro.aspects',
-        claimClass: 'computed',
+        claim_class: 'computed',
         label: 'Angular aspects',
         value: chart.aspects,
         source: 'GypsyAI aspect rules',
@@ -65,7 +65,7 @@ export async function runGypsyAstroReader(
       },
       {
         id: 'astro.houses',
-        claimClass: 'computed',
+        claim_class: 'computed',
         label: 'Equal-house cusps',
         value: chart.houses,
         source: 'GypsyAI equal-house calculation',
@@ -73,7 +73,7 @@ export async function runGypsyAstroReader(
       },
       {
         id: 'astro.angles',
-        claimClass: 'computed',
+        claim_class: 'computed',
         label: 'Ascendant and Midheaven',
         value: {
           ascendant: chart.ascendant,
@@ -89,17 +89,17 @@ export async function runGypsyAstroReader(
       {
         id: 'astro.hermetic_keys',
         framework: 'GypsyAI Hermetic correspondence layer',
-        claimClass: 'symbolic_interpretation',
+        claim_class: 'symbolic_interpretation',
         summary: chart.hermeticKeys.join(' · '),
-        basedOn: ['astro.placements', 'astro.angles'],
+        based_on: ['astro.placements', 'astro.angles'],
         note: 'Hermetic correspondence is a symbolic framework layered on computational chart data.',
       },
       {
         id: 'astro.aspect_themes',
         framework: 'GypsyAI aspect-tag vocabulary',
-        claimClass: 'symbolic_interpretation',
+        claim_class: 'symbolic_interpretation',
         summary: chart.aspectTags.join(' · '),
-        basedOn: ['astro.aspects'],
+        based_on: ['astro.aspects'],
       },
     ],
     provenance: [
@@ -130,7 +130,7 @@ export async function runGypsyAstroReader(
           'Astronomical calculations and symbolic astrological/Hermetic interpretation are separate claim classes.',
       },
     ],
-    claimBoundary:
+    claim_boundary:
       'This adapter exposes computational chart outputs plus explicitly labeled symbolic interpretations. It does not make astrology or Hermetic correspondence OBLP canon, scientific evidence, diagnosis, or fate.',
   };
 
