@@ -27,6 +27,10 @@ export async function runGypsyAstroReader(
     throw new Error('GYPSY_ASTRO_INVALID_LONGITUDE');
   }
 
+  // The Reader Bus defaults to the core body set. The existing app route can
+  // request extra bodies and fall back when an astronomy provider does not
+  // support one; this adapter stays deterministic and fail-visible instead.
+  const extraBodies = input.extraBodies ?? false;
   const chart = computeChart(
     date,
     input.lat,
@@ -34,7 +38,7 @@ export async function runGypsyAstroReader(
     input.orb ?? 6,
     input.zodiacMode ?? 'tropical',
     input.minorAspects ?? false,
-    input.extraBodies ?? true
+    extraBodies
   );
 
   const envelope: MothershipReaderEnvelope<GypsyAstroReaderInput> = {
@@ -45,7 +49,7 @@ export async function runGypsyAstroReader(
       version: '0.1.0',
       implementation: 'GypsyAI/src/lib/astro/engine.ts',
     },
-    input: { kind: 'birth_chart_coordinates', payload: input },
+    input: { kind: 'birth_chart_coordinates', payload: { ...input, extraBodies } },
     observations: [
       {
         id: 'astro.placements',
@@ -129,6 +133,16 @@ export async function runGypsyAstroReader(
         message:
           'Astronomical calculations and symbolic astrological/Hermetic interpretation are separate claim classes.',
       },
+      ...(extraBodies
+        ? [
+            {
+              code: 'EXTRA_BODY_PROVIDER_COMPATIBILITY',
+              severity: 'caution' as const,
+              message:
+                'Extra-body support depends on the underlying astronomy provider; the Reader Bus default is false.',
+            },
+          ]
+        : []),
     ],
     claim_boundary:
       'This adapter exposes computational chart outputs plus explicitly labeled symbolic interpretations. It does not make astrology or Hermetic correspondence OBLP canon, scientific evidence, diagnosis, or fate.',
