@@ -9,7 +9,7 @@ export type ReaderClaimClass =
 
 export interface ReaderObservation {
   id: string;
-  claimClass: ReaderClaimClass;
+  claim_class: ReaderClaimClass;
   label: string;
   value: unknown;
   source?: string;
@@ -20,9 +20,9 @@ export interface ReaderObservation {
 export interface ReaderInterpretation {
   id: string;
   framework: string;
-  claimClass: 'symbolic_interpretation' | 'modeled_theoretical' | 'experimental';
+  claim_class: 'symbolic_interpretation' | 'modeled_theoretical' | 'experimental';
   summary: string;
-  basedOn: string[];
+  based_on: string[];
   note?: string;
 }
 
@@ -57,9 +57,9 @@ export interface MothershipReaderEnvelope<TInput = unknown> {
   interpretations: ReaderInterpretation[];
   provenance: ReaderProvenance[];
   warnings: ReaderWarning[];
-  claimBoundary: string;
-  generatedAt?: string;
-  receiptHash?: string;
+  claim_boundary: string;
+  generated_at?: string;
+  receipt_hash?: string;
 }
 
 function sortObject(value: unknown): unknown {
@@ -67,7 +67,7 @@ function sortObject(value: unknown): unknown {
   if (value && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value as Record<string, unknown>)
-        .filter(([key]) => key !== 'generatedAt' && key !== 'receiptHash')
+        .filter(([key]) => key !== 'generated_at' && key !== 'receipt_hash')
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([key, child]) => [key, sortObject(child)])
     );
@@ -89,6 +89,6 @@ export async function hashReaderEnvelope(envelope: MothershipReaderEnvelope): Pr
 export async function finalizeReaderEnvelope<TInput>(
   envelope: MothershipReaderEnvelope<TInput>
 ): Promise<MothershipReaderEnvelope<TInput>> {
-  const receiptHash = await hashReaderEnvelope(envelope);
-  return { ...envelope, generatedAt: new Date().toISOString(), receiptHash };
+  const receipt_hash = await hashReaderEnvelope(envelope);
+  return { ...envelope, generated_at: new Date().toISOString(), receipt_hash };
 }
