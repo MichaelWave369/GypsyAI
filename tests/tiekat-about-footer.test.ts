@@ -17,24 +17,27 @@ import { AppFooterInfo } from '@/components/app/AppFooterInfo';
 describe('about/footer info surface', () => {
   it('exposes deterministic about info constants', () => {
     expect(APP_NAME).toBe('GypsyAI');
-    expect(APP_LICENSE_LABEL).toBe('AGPL-3.0-or-later');
+    expect(APP_LICENSE_LABEL).toBe('MIT');
     expect(APP_SOURCE_LINK_LABEL).toBe('Source');
     expect(APP_SOURCE_LINK_URL).toContain('github.com');
-    expect(APP_COMMERCIAL_NOTE_LABEL).toBe('Commercial licensing note');
-    expect(APP_COMMERCIAL_NOTE_PATH).toBe('/COMMERCIAL-LICENSING.md');
+    expect(APP_COMMERCIAL_NOTE_LABEL).toBe('MIT License');
+    expect(APP_COMMERCIAL_NOTE_PATH).toBe('/LICENSE');
     expect(APP_LOCAL_PRIVACY_NOTE.toLowerCase()).toContain('local-first');
     expect(APP_MODELED_NOTE.toLowerCase()).toContain('modeled/theoretical');
     expect(APP_IDENTITY_LINE.toLowerCase()).toContain('sovereign oracle habitat');
   });
 
   it('renders compact footer/about content and safe dynamic status line', () => {
-    const statusLine = 'Habitat: Quiet Reflection • Frequently Used • 2 recent deck(s) • mode synthesis_oracle.';
-    const html = renderToStaticMarkup(React.createElement(AppFooterInfo, { habitatStatusLine: statusLine }));
+    const statusLine =
+      'Habitat: Quiet Reflection • Frequently Used • 2 recent deck(s) • mode synthesis_oracle.';
+    const html = renderToStaticMarkup(
+      React.createElement(AppFooterInfo, { habitatStatusLine: statusLine })
+    );
 
     expect(html).toContain('GypsyAI');
     expect(html).toContain('Source');
-    expect(html).toContain('AGPL-3.0-or-later');
-    expect(html).toContain('Commercial licensing note');
+    expect(html).toContain('MIT');
+    expect(html).toContain('MIT License');
     expect(html).toContain('Local-first configuration memory only');
     expect(html).toContain('Modeled/theoretical oracle system; not a physical measurement device.');
     expect(html).toContain(statusLine);
