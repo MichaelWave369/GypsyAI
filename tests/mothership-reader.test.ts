@@ -16,19 +16,19 @@ describe('GypsyAI Mothership reader adapter', () => {
 
     expect(envelope.schema).toBe(MOTHERSHIP_READER_SCHEMA);
     expect(envelope.reader.id).toBe('gypsy.astro');
-    expect(envelope.observations.every((item) => item.claimClass === 'computed')).toBe(true);
+    expect(envelope.observations.every((item) => item.claim_class === 'computed')).toBe(true);
     expect(
-      envelope.interpretations.every((item) => item.claimClass === 'symbolic_interpretation')
+      envelope.interpretations.every((item) => item.claim_class === 'symbolic_interpretation')
     ).toBe(true);
-    expect(envelope.claimBoundary).toContain('does not make astrology');
+    expect(envelope.claim_boundary).toContain('does not make astrology');
   });
 
   it('keeps receipt identity stable across generation timestamps', async () => {
     const a = await runGypsyAstroReader(input);
     const b = await runGypsyAstroReader(input);
 
-    expect(a.receiptHash).toBe(b.receiptHash);
-    expect(a.receiptHash).toMatch(/^RDR-[0-9A-F]{16}$/);
+    expect(a.receipt_hash).toBe(b.receipt_hash);
+    expect(a.receipt_hash).toMatch(/^RDR-[0-9A-F]{16}$/);
   });
 
   it('rejects invalid coordinate input before producing a reading', async () => {
