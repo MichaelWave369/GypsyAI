@@ -19,8 +19,8 @@
   "dependencies": {
     "astronomy-engine": "^2.1.19",
     "next": "16.2.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "seedrandom": "^3.0.5",
     "tz-lookup": "^6.1.25",
     "zod": "^3.23.8"
@@ -30,7 +30,7 @@
     "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.5.0",
-    "@types/react": "^18.3.3",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
