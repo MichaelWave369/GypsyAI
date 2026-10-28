@@ -1,3 +1,5 @@
+> **GAIA · Gypsy Artificial Intelligence Ally:** The public GitHub Pages experience is now branded **GAIA** with a genuine local Reading Room, standalone reader chambers, and a consent-based local Oracle. The source repository and Pages pathname remain GypsyAI for compatibility. See [GAIA Reading Room](site/GAIA_READING_ROOM.md). The original Next.js GypsyAI application remains in place during the migration.
+
 > **GypsyAI Sovereign Portal (GitHub Pages migration):** A new static React frontend lives in [site/](site/README.md). After the Pages PR is merged, it is intended to publish at https://michaelwave369.github.io/GypsyAI/. The original Next.js application below is preserved for feature-parity and legacy-data migration; the new public Pages preview does **not** yet include the full TIEKAT experience. No Vercel runtime, cloud provider keys or hosted inference are needed for the new static frontend. Optional Ollama access is local and browser-permission-dependent.
 
 # GypsyAI
