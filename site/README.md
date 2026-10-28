@@ -1,3 +1,5 @@
+> **v0.2.2 Local Intelligence Lab:** Browser-initiated Ollama connection checks, reported loaded-model memory, one opt-in fixed-prompt inference observation and a read-only (not chat-ready) PhiStream research handshake. See [Local Lab evidence and security contract](LOCAL_LAB.md). No model speedup is claimed.
+
 > **TIEKAT Local Brain v0.2.1 (migration phase 2):** The Pages React Oracle now offers original TIEKAT reflection modes, a deterministic Oracle Council planning panel, consent-gated ancestry aggregates, opt-in locally stored note memory, and visible heuristic verification receipts. See [the v0.2.1 contract](TIEKAT_LOCAL_BRAIN.md). This is still one local Ollama response, not a set of independently operating agents or a PhiStream server.
 
 # GypsyAI Sovereign Portal | React / GitHub Pages
