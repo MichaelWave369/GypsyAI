@@ -86,3 +86,25 @@
 .brain-bridge code{color:#e9c894;overflow-wrap:anywhere}
 .brain-bridge .metric-row{margin:16px 0}
 .brain-bridge textarea{width:100%;min-height:90px}
+
+/* v0.2.6: bounded paired PocketBrain experiments and ephemeral answer review. */
+.brain-bridge .tiny-comparison{margin-top:24px;border:1px solid #5d5270}
+.tiny-comparison .actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.tiny-comparison .pbc-prompt{background:#161e2a;border:1px solid #4b4559;border-radius:8px;padding:14px 16px;margin:14px 0}
+.pbc-prompt strong{font-size:12px;color:#e6d2ad}
+.pbc-prompt p{font-size:14px;line-height:1.5;color:#dcd3e4;overflow-wrap:anywhere}
+.pbc-answers{margin-top:20px}
+.pbc-answer{margin:12px 0;padding:16px;border:1px solid #55496b;border-radius:8px;background:#171a28}
+.pbc-answer-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px}
+.pbc-answer-head strong{color:#e5cfaa}
+.pbc-answer-head span{color:#bdb2d2;font-variant-numeric:tabular-nums}
+.pbc-answer-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;color:#e1dbea;margin:12px 0}
+.pbc-rating-row{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin:12px 0 0}
+.pbc-rating-row label{display:flex;flex-direction:column;gap:6px;color:#c4bacf;font-size:12px;flex:1 1 170px}
+.pbc-rating-row select{width:100%}
+.pbc-summaries{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:22px 0}
+.pbc-summary{padding:16px;border:1px solid #554963;background:#171a29;border-radius:8px;min-width:0}
+.pbc-summary h4{margin:0 0 8px;color:#e7d0a4}
+.pbc-summary .data-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;font-size:12px}
+.pbc-summary .data-row span{overflow-wrap:anywhere;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:580px){.pbc-summary .data-row span{text-align:left}.pbc-answer{padding:12px}}
