@@ -4,6 +4,7 @@
  * Historical agreement is NOT empirical proof of divination.
  */
 import type { TarotCard } from '@/types';
+import deck from '@/lib/tarot/deck.json';
 
 export const HERMETIC_AUDIT_REFERENCES = [
   {
@@ -113,5 +114,20 @@ export function auditHermeticCard(card: TarotCard): HermeticAuditRecord {
   return {
     status:fields.length?'checked-in-golden-dawn-tradition':'pending-specialist-review',
     cardId:card.id,fields,pendingFields,notes,sources
+  };
+}
+
+const auditedDeck=deck as TarotCard[];
+export function getHermeticAuditForCard(cardId:string):HermeticAuditRecord|null{
+  const card=auditedDeck.find(c=>c.id===cardId);
+  return card?auditHermeticCard(card):null;
+}
+export function hermeticAuditCoverage(){
+  const audits=auditedDeck.map(auditHermeticCard);
+  return {
+    total:audits.length,
+    traditionChecked:audits.filter(a=>a.status==='checked-in-golden-dawn-tradition').length,
+    specialistPending:audits.filter(a=>a.status==='pending-specialist-review').length,
+    note:'Reviewed mappings apply to Golden Dawn historical convention, not supernatural or scientific evidence.'
   };
 }
