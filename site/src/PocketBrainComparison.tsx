@@ -153,7 +153,7 @@ export function PocketBrainComparison({ client, status, blocked, onBusyChange, o
         const r = observation.evidence.engineReceipt;
         return <article className="pbc-answer" key={observation.index}>
           <div className="pbc-answer-head"><strong>#{observation.index} · {observation.label}</strong>
-            <span>{numberText(r.generationWallMs as number | null)} ms · {r.observedTokenCallbackEvents ?? 'n/a'} JS callbacks · {r.outputCharCount ?? 'n/a'} chars</span></div>
+            <span>{numberText(r.generationWallMs as number | null)} ms · {String(r.observedTokenCallbackEvents ?? 'n/a')} JS callbacks · {String(r.outputCharCount ?? 'n/a')} chars</span></div>
           <p className="pbc-answer-text">{answer?.text || '(text not available)'}</p>
           <div className="pbc-rating-row">
             <label>Coherence
