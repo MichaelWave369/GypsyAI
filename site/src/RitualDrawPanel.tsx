@@ -2,9 +2,10 @@ import { useState } from 'react';
 import type { DrawnCard } from '@/types';
 import {
   shuffledRitualDeck, cutRitualDeck, chooseRitualCard, ritualReadingPacket,
-  selectedCardMeaning, getRitualThreads
+  selectedCardMeaning
 } from './ritualDraw';
 import type { RitualCard, RitualSpread } from './ritualDraw';
+import { FieldLoomPanel } from './FieldLoomPanel';
 
 const PAGE_SIZE = 12;
 const SPREAD_SIZE: Record<RitualSpread, number> = { single: 1, 'three-card': 3 };
@@ -27,7 +28,6 @@ export function RitualDrawPanel({ onReflect }: {
   const total = SPREAD_SIZE[spread];
   const complete = selected.length === total;
   const allRevealed = complete && selected.every((_, i) => revealed.includes(i));
-  const threads = getRitualThreads(selected);
   const pageCount = Math.ceil(deck.length / PAGE_SIZE);
   const shown = deck.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
@@ -215,33 +215,7 @@ export function RitualDrawPanel({ onReflect }: {
     </section>}
 
     {confirmed && <section className="panel gaia-field-loom">
-      <span className="eyebrow">FIELD LOOM / SOURCE-LINKED CONNECTIONS</span>
-      <h3>Follow the thread.</h3>
-      <p className="muted">This diagram shows the actual selected card positions. Lines denote
-        spread order, not a measured energy, supernatural connection or scientific
-        relationship. Every comparison below identifies the recorded evidence;
-        inherited Hermetic labels have not been independently audited.</p>
-      <svg viewBox="0 0 960 195" role="img" aria-label={'Diagram of ' +
-        selected.map(c => c.position + ': ' + c.card.name).join('; ')}>
-        {selected.length > 1 && selected.slice(0, -1).map((_, i) =>
-          <line key={i} x1={185 + 295 * i} y1="90"
-            x2={185 + 295 * (i + 1)} y2="90" stroke="#8fbaa7" strokeWidth="3" />)}
-        {selected.map((draw, i) => {
-          const x = selected.length === 1 ? 480 : 185 + 295 * i;
-          return <g key={draw.card.id}>
-            <circle cx={x} cy={90} r="70" fill="#173c39" stroke="#dabf82" strokeWidth="2"/>
-            <text x={x} y="49" textAnchor="middle" fill="#d9c390" fontSize="14">{draw.position}</text>
-            <text x={x} y="85" textAnchor="middle" fill="#f0edd8" fontSize="15">{draw.card.name.slice(0, 18)}</text>
-            <text x={x} y="110" textAnchor="middle" fill="#b2d6c0" fontSize="13">{draw.orientation}</text>
-            <text x={x} y="129" textAnchor="middle" fill="#a6c9c0" fontSize="12">{draw.card.hermetic.element || 'Element unlisted'}</text>
-          </g>;
-        })}
-      </svg>
-      {threads.length ? <div className="gaia-thread-list">
-        {threads.map((thread, i) => <div className="gaia-thread" key={i}>
-          <strong>{thread.from} → {thread.to}</strong><p>{thread.evidence}</p>
-        </div>)}
-      </div> : <p className="muted">A single-card reading has one focus point and no pairwise thread.</p>}
+      <FieldLoomPanel draws={selected}/>
       <label htmlFor="gaia-ritual-journal">My own interpretation (optional, private in this tab)</label>
       <textarea id="gaia-ritual-journal" rows={4} maxLength={1000} value={journal}
         onChange={e => setJournal(e.target.value)}
