@@ -136,14 +136,30 @@ function App() {
   useEffect(() => {
     localStorage.setItem(BRAIN_STORE, JSON.stringify({ consent, sessionMode, councilMode }));
   }, [consent, sessionMode, councilMode]);
+  function resetModelContext() {
+    // Revoking consent must also drop old chat turns from the NEXT Ollama call.
+    setTurns([]);
+    localStorage.removeItem(CHAT_STORE);
+    setLastBrainTurn(null);
+    setLastVerification(null);
+  }
   function toggleMemory(enabled: boolean) {
-    if (!enabled) { clearBrainMemory(); setMemoryEntries([]); }
-    else setMemoryEntries(readBrainMemory({ ...consent, memoryEnabled: true }));
+    if (!enabled) {
+      clearBrainMemory();
+      setMemoryEntries([]);
+      resetModelContext();
+      setStatus('Saved TIEKAT notes deleted and model chat context reset after memory was disabled.');
+    } else setMemoryEntries(readBrainMemory({ ...consent, memoryEnabled: true }));
     setConsent((current) => ({ ...current, memoryEnabled: enabled }));
   }
   function toggleAncestry(enabled: boolean) {
     setConsent((current) => ({ ...current, allowAncestry: enabled }));
-    if (!enabled && packet?.kind === 'ancestry') setPacket(null);
+    if (!enabled) {
+      if (packet?.kind === 'ancestry') setPacket(null);
+      if (sessionMode === 'ancestral_listening') setSessionMode('open_reflection');
+      resetModelContext();
+      setStatus('Ancestry consent disabled; pending ancestry data and previous model chat context cleared.');
+    }
   }
   function rememberNote() {
     try {
@@ -296,10 +312,10 @@ function App() {
             <p className="muted">The council is a deterministic plan from the original TIEKAT engine. Ollama still generates ONE response. No fictional agent calls or scientific verification.</p>
             <label className="switch"><input type="checkbox" checked={consent.allowAncestry} onChange={(e) => toggleAncestry(e.target.checked)} />
               Allow explicitly attached, aggregate-only ancestry context</label>
-            <p className="muted">Default OFF. Names and living-person data remain blocked. Turning consent off drops any ancestry attachment.</p>
+            <p className="muted">Default OFF. Names and living-person data remain blocked. Turning consent off drops ancestry attachments and resets model chat context.</p>
             <label className="switch"><input type="checkbox" checked={consent.memoryEnabled} onChange={(e) => toggleMemory(e.target.checked)} />
               Enable opt-in local TIEKAT note memory</label>
-            <p className="muted">Default OFF. Notes are saved only when you deliberately add them. Matching notes are sent to your selected local model when you chat. Switching OFF deletes saved notes.</p>
+            <p className="muted">Default OFF. Notes are saved only when you deliberately add them. Matching notes are sent to your selected local model when you chat. Switching OFF deletes saved notes and resets model chat context.</p>
             {consent.memoryEnabled && <>
               <label htmlFor="tiekat-note">Memory note (max 220 characters)</label>
               <textarea id="tiekat-note" rows={2} maxLength={220} value={memoryNote} onChange={(e) => setMemoryNote(e.target.value)} placeholder="A preference or concept you want the oracle to remember" />
