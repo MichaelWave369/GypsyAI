@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { RepeatLabPanel } from './RepeatLabPanel';
+import { LongLabPanel } from './LongLabPanel';
 import {
   diagnoseLocalOllama, runSingleSample, probePhiStreamResearchOnly,
   LAB_PHI_GATE_NAMES, formatBytes
@@ -17,6 +18,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
   const [busy, setBusy] = useState(false);
   const [sampleBusy, setSampleBusy] = useState(false);
   const [repeatBusy, setRepeatBusy] = useState(false);
+  const [longBusy, setLongBusy] = useState(false);
   const [model, setModel] = useState('');
   const [approved, setApproved] = useState(false);
   const [sample, setSample] = useState<LocalBenchmarkReceipt | null>(null);
@@ -26,7 +28,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
   const [phiError, setPhiError] = useState('');
 
   async function diagnose() {
-    if (repeatBusy || sampleBusy) return;
+    if (repeatBusy || longBusy || sampleBusy) return;
     setBusy(true); setError(''); setDiagnosis(null); setSample(null);
     setApproved(false);
     try {
@@ -39,7 +41,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
   }
 
   async function runSample() {
-    if (repeatBusy || !diagnosis?.ready || !approved || !model ||
+    if (repeatBusy || longBusy || !diagnosis?.ready || !approved || !model ||
       !diagnosis.installed.some((item) => item.name === model)) return;
     setSampleBusy(true); setSample(null); setSampleError('');
     try { setSample(await runSingleSample(origin, model)); }
@@ -61,7 +63,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
 
   return <section className="lab-view">
     <div className="section-header">
-      <span className="eyebrow">GYPSYAI / LOCAL INTELLIGENCE LAB v0.2.3</span>
+      <span className="eyebrow">GYPSYAI / LOCAL INTELLIGENCE LAB v0.2.4</span>
       <h2>Measure the local field.</h2>
       <p>Inspect your own Ollama process and model residency, then optionally run one tiny inference sample.
       This page makes no requests until you press a diagnostic or research button.</p>
@@ -70,7 +72,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
       <section className="panel">
         <div className="lab-heading"><h3>01 / Connection diagnostics</h3><span className="lab-pill neutral">READ ONLY</span></div>
         <p className="muted">Selected loopback endpoint: <code>{origin}</code>. The lab will refuse non-local addresses.</p>
-        <button className="primary" disabled={busy || sampleBusy || repeatBusy} onClick={() => void diagnose()}>{busy ? 'Diagnosing…' : 'Diagnose local Ollama'}</button>
+        <button className="primary" disabled={busy || sampleBusy || repeatBusy || longBusy} onClick={() => void diagnose()}>{busy ? 'Diagnosing…' : 'Diagnose local Ollama'}</button>
         {error && <p className="error" role="alert">{error}</p>}
         {diagnosis && <>
           <p className="muted">Observed {new Date(diagnosis.checkedAt).toLocaleString()} · version: {diagnosis.version || 'unavailable'}</p>
@@ -112,11 +114,11 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
       <p className="muted">A single fixed public prompt requests up to 32 generated tokens from the chosen Ollama model. It may load model weights, allocate RAM/VRAM and take substantial time. This is NOT a repeatable A/B benchmark or a PhiStream speed comparison. No personal chat or ancestry data is sent.</p>
       <div className="control-panel">
         <div className="field grow"><label htmlFor="lab-model">Local installed model</label>
-          <select id="lab-model" value={model} disabled={!diagnosis?.ready || sampleBusy || repeatBusy} onChange={(e) => { setModel(e.target.value);setSample(null);setApproved(false); }}>
+          <select id="lab-model" value={model} disabled={!diagnosis?.ready || sampleBusy || repeatBusy || longBusy} onChange={(e) => { setModel(e.target.value);setSample(null);setApproved(false); }}>
             {!model && <option value="">Diagnose and choose a model</option>}
             {diagnosis?.installed.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}
           </select></div>
-        <button className="primary" disabled={!approved || !diagnosis?.ready || !model || sampleBusy || busy || repeatBusy} onClick={() => void runSample()}>
+        <button className="primary" disabled={!approved || !diagnosis?.ready || !model || sampleBusy || busy || repeatBusy || longBusy} onClick={() => void runSample()}>
           {sampleBusy ? 'Executing one local sample…' : 'Run one local sample'}
         </button>
       </div>
@@ -153,6 +155,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
         <div className="lab-gate" key={gate}><span>GATE {i + 1}</span><p>{gate}</p><Status ok={false} label="not established" /></div>)}</div>
       <p className="muted">These are architecture acceptance gates, not progress indicators. A successful health probe cannot unlock them. Real PhiStream inference requires a separate reviewed implementation and explicit approval.</p>
     </section>
-    <RepeatLabPanel origin={origin} diagnosis={diagnosis} disabled={busy || sampleBusy} onRunningChange={setRepeatBusy} />
+    <RepeatLabPanel origin={origin} diagnosis={diagnosis} disabled={busy || sampleBusy || longBusy} onRunningChange={setRepeatBusy} />
+    <LongLabPanel origin={origin} diagnosis={diagnosis} disabled={busy || sampleBusy || repeatBusy} onRunningChange={setLongBusy} />
   </section>;
 }
