@@ -63,7 +63,7 @@ export function LocalLabPanel({ origin, modelPreference }: Props) {
 
   return <section className="lab-view">
     <div className="section-header">
-      <span className="eyebrow">GYPSYAI / LOCAL INTELLIGENCE LAB v0.2.4</span>
+      <span className="eyebrow">GAIA / LOCAL INTELLIGENCE LAB</span>
       <h2>Measure the local field.</h2>
       <p>Inspect your own Ollama process and model residency, then optionally run one tiny inference sample.
       This page makes no requests until you press a diagnostic or research button.</p>
