@@ -53,7 +53,7 @@ export function SpreadAtlasPanel({ onUseLayout }: { onUseLayout: (layout: AtlasL
     const rect=pointer.currentTarget.getBoundingClientRect();
     const x=(pointer.clientX-rect.left)/rect.width;
     const y=(pointer.clientY-rect.top)/rect.height;
-    try{setLayout(prev=>moveAtlasSlot(prev,drag,x,y));setError('');}
+    try{setLayout(moveAtlasSlot(layout,drag,x,y));setError('');}
     catch{/* A too-close or invalid move is ignored; the last valid position stays. */}
   }
 
@@ -116,7 +116,7 @@ export function SpreadAtlasPanel({ onUseLayout }: { onUseLayout: (layout: AtlasL
       <div className="gaia-atlas-board-wrap">
         <svg viewBox="0 0 800 520" role="img" aria-label="Editable tarot position map"
           onPointerMove={move}
-          onPointerUp={e=>{if(drag!==null)e.currentTarget.releasePointerCapture(e.pointerId);setDrag(null);}}
+          onPointerUp={e=>{if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);setDrag(null);}}
           onPointerCancel={()=>setDrag(null)}>
           <defs>
             <pattern id="gaia-atlas-grid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -161,13 +161,13 @@ export function SpreadAtlasPanel({ onUseLayout }: { onUseLayout: (layout: AtlasL
           <label>Horizontal placement (%)
             <input type="number" min={9} max={91} step={1}
               value={Math.round(active.x*100)}
-              onChange={e=>{try{setLayout(prev=>moveAtlasSlot(prev,selected,Number(e.target.value)/100,prev.slots[selected].y));setError('');}
+              onChange={e=>{try{setLayout(moveAtlasSlot(layout,selected,Number(e.target.value)/100,layout.slots[selected].y));setError('');}
                 catch(err){setError(err instanceof Error?err.message:String(err));}}}/>
           </label>
           <label>Vertical placement (%)
             <input type="number" min={12} max={88} step={1}
               value={Math.round(active.y*100)}
-              onChange={e=>{try{setLayout(prev=>moveAtlasSlot(prev,selected,prev.slots[selected].x,Number(e.target.value)/100));setError('');}
+              onChange={e=>{try{setLayout(moveAtlasSlot(layout,selected,layout.slots[selected].x,Number(e.target.value)/100));setError('');}
                 catch(err){setError(err instanceof Error?err.message:String(err));}}}/>
           </label>
         </div>
