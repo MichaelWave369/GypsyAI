@@ -91,7 +91,8 @@ export function SovereignBrainPanel() {
       setStatus(readyClient.getStatus());
       setProgress('Browser model initialized. Generating remains a separate user action.');
     } catch (e) {
-      if (loadedClient) await loadedClient.dispose().catch(() => undefined);
+      const failedClient = loadedClient as TinyClient | null;
+      if (failedClient) await failedClient.dispose().catch(() => undefined);
       if (!unmounted.current) setError(e instanceof Error ? e.message : String(e));
     } finally {
       loadingPromise.current = null;
