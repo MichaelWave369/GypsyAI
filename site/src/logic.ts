@@ -26,7 +26,9 @@ export const SPREADS: { name: string; value: TarotSpreadType }[] = [
 
 export function createTarotReading(spread: TarotSpreadType) {
   const cards = drawCards(spread);
-  const packet = buildGroundingPacketTarot(spread, cards);
+  // The legacy Next provider retains its mandatory section schema, but the
+  // Pages local Oracle is free to give a natural, concise interpretive reading.
+  const packet = { ...buildGroundingPacketTarot(spread, cards), requiredSections: [] };
   return { cards, packet };
 }
 
