@@ -8,7 +8,7 @@ export interface GroundingPacket {
   requiredSections: string[];
 }
 
-const tarotSections = ['Opening','Spread overview','Card-by-card','Hermetic Layer','Integration','Practical steps','Closing line'];
+const tarotSections = ['Reading focus', 'Each card in context', 'How the cards connect', 'Closing reflection'];
 const astroSections = ['Big Three summary','Element + modality balance','Strongest aspects highlights','House emphasis','Hermetic Keys synthesis','Practical reflection'];
 const gkSections = ['Short opening','Activation Sequence overview','Each sphere','Integration theme','Journal prompts'];
 
@@ -25,7 +25,7 @@ export function buildGroundingPacketTarot(spread: TarotSpreadType, cards: DrawnC
   });
   return {
     modality:'tarot',
-    facts:{spread,cards:cards.map((c)=>({position:c.position,orientation:c.orientation,name:c.card.name,hermetic:c.card.hermetic,keywords:c.orientation==='upright'?c.card.upright_keywords:c.card.reversed_keywords,doNotSay:['literal death prediction','fatalistic certainty']})),positions,dignityNotes:dignity},
+    facts:{spread,cards:cards.map((c)=>({position:c.position,orientation:c.orientation,name:c.card.name,hermetic:c.card.hermetic,keywords:c.orientation==='upright'?c.card.upright_keywords:c.card.reversed_keywords,cardSpecificMeaning:c.orientation==='upright'?c.card.short_upright_meaning:c.card.short_reversed_meaning,doNotSay:['literal death prediction','fatalistic certainty']})),positions,dignityNotes:dignity},
     allowedTerms:[...new Set(cards.flatMap((c)=>[c.card.name,...Object.values(c.card.hermetic),...c.card.upright_keywords,...c.card.reversed_keywords]).filter((x): x is string => Boolean(x)))],
     requiredSections: tarotSections
   };
