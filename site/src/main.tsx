@@ -7,6 +7,17 @@ import {
   discoverLocalModels, askLocalModel
 } from './logic';
 import type { TarotSpreadType, AncestryData, ChatTurn } from './logic';
+import {
+  DEFAULT_TIEKAT_CONSENT, normalizeBrainConsent, readBrainMemory, clearBrainMemory,
+  addBrainMemory, planLocalBrainTurn, checkLocalBrainReply, permittedPacket
+} from './tiekatBrain';
+import type {
+  TiekatConsentState, TiekatMemoryEntry, TiekatSessionModeKey,
+  TiekatCouncilMode, ApprovedPacket, PacketKind, LocalBrainTurn
+} from './tiekatBrain';
+import { getSessionModeOptions, resolveSessionMode } from '@/lib/tiekat/sessionMode';
+import { saveTiekatMemory } from '@/lib/tiekat/memory';
+import type { TiekatVerificationResult } from '@/lib/tiekat/schema';
 import './styles.css';
 
 const TABS = [
@@ -21,6 +32,22 @@ const TABS = [
 type Tab = typeof TABS[number]['id'];
 const STORE = 'gypsy-ai-pages-v1';
 const CHAT_STORE = 'gypsy-ai-pages-chat-v1';
+const BRAIN_STORE = 'gypsy-ai-pages-brain-v1';
+function loadBrainPreferences(): {
+  consent: TiekatConsentState;
+  sessionMode: TiekatSessionModeKey;
+  councilMode: TiekatCouncilMode;
+} {
+  try {
+    const raw = JSON.parse(localStorage.getItem(BRAIN_STORE) || '{}');
+    const consent = normalizeBrainConsent(raw.consent ?? {});
+    const sessionMode = resolveSessionMode(raw.sessionMode, consent);
+    const validCouncil: TiekatCouncilMode[] = ['disabled', 'oracle_council', 'deliberation_oracle', 'swarm_synthesis'];
+    return { consent, sessionMode, councilMode: validCouncil.includes(raw.councilMode) ? raw.councilMode : 'disabled' };
+  } catch {
+    return { consent: { ...DEFAULT_TIEKAT_CONSENT }, sessionMode: 'open_reflection', councilMode: 'disabled' };
+  }
+}
 const defaultModelUrl = 'http://127.0.0.1:11434';
 function initialTab(): Tab {
   const hash = window.location.hash.slice(1) as Tab;
@@ -67,8 +94,16 @@ function App() {
   const [pending, setPending] = useState(false);
   const [query, setQuery] = useState('');
   const [replyError, setReplyError] = useState('');
-  const [packet, setPacket] = useState('');
-  const [packetLabel, setPacketLabel] = useState('');
+  const [packet, setPacket] = useState<ApprovedPacket | null>(null);
+  const [brainPrefs] = useState(loadBrainPreferences);
+  const [consent, setConsent] = useState<TiekatConsentState>(brainPrefs.consent);
+  const [sessionMode, setSessionMode] = useState<TiekatSessionModeKey>(brainPrefs.sessionMode);
+  const [councilMode, setCouncilMode] = useState<TiekatCouncilMode>(brainPrefs.councilMode);
+  const [memoryEntries, setMemoryEntries] = useState<TiekatMemoryEntry[]>(() => readBrainMemory(brainPrefs.consent));
+  const [memoryNote, setMemoryNote] = useState('');
+  const [memoryTags, setMemoryTags] = useState('');
+  const [lastBrainTurn, setLastBrainTurn] = useState<LocalBrainTurn | null>(null);
+  const [lastVerification, setLastVerification] = useState<TiekatVerificationResult | null>(null);
   const [spread, setSpread] = useState<TarotSpreadType>('three-card');
   const [question, setQuestion] = useState('');
   const [tarot, setTarot] = useState<ReturnType<typeof createTarotReading> | null>(null);
@@ -98,14 +133,55 @@ function App() {
     if (keepChat) localStorage.setItem(CHAT_STORE, JSON.stringify(turns.slice(-30)));
     else localStorage.removeItem(CHAT_STORE);
   }, [turns, keepChat]);
+  useEffect(() => {
+    localStorage.setItem(BRAIN_STORE, JSON.stringify({ consent, sessionMode, councilMode }));
+  }, [consent, sessionMode, councilMode]);
+  function resetModelContext() {
+    // Revoking consent must also drop old chat turns from the NEXT Ollama call.
+    setTurns([]);
+    localStorage.removeItem(CHAT_STORE);
+    setLastBrainTurn(null);
+    setLastVerification(null);
+  }
+  function toggleMemory(enabled: boolean) {
+    if (!enabled) {
+      clearBrainMemory();
+      setMemoryEntries([]);
+      resetModelContext();
+      setStatus('Saved TIEKAT notes deleted and model chat context reset after memory was disabled.');
+    } else setMemoryEntries(readBrainMemory({ ...consent, memoryEnabled: true }));
+    setConsent((current) => ({ ...current, memoryEnabled: enabled }));
+  }
+  function toggleAncestry(enabled: boolean) {
+    setConsent((current) => ({ ...current, allowAncestry: enabled }));
+    if (!enabled) {
+      if (packet?.kind === 'ancestry') setPacket(null);
+      if (sessionMode === 'ancestral_listening') setSessionMode('open_reflection');
+      resetModelContext();
+      setStatus('Ancestry consent disabled; pending ancestry data and previous model chat context cleared.');
+    }
+  }
+  function rememberNote() {
+    try {
+      const next = addBrainMemory(consent, memoryNote, memoryTags.split(','), memoryEntries);
+      setMemoryEntries(next); setMemoryNote(''); setMemoryTags('');
+      setStatus('TIEKAT note saved in this browser. The model can use it only while memory remains enabled.');
+    } catch (e) { setStatus(e instanceof Error ? e.message : String(e)); }
+  }
+  function forgetNote(key: string) {
+    const next = memoryEntries.filter((x) => x.key !== key);
+    setMemoryEntries(next);
+    saveTiekatMemory(next, consent.memoryEnabled);
+  }
   function go(id: Tab) {
     window.location.hash = id;
     setTab(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  function reflect(context: unknown, label: string) {
-    setPacket(JSON.stringify(context).slice(0, 8000));
-    setPacketLabel(label);
+  function reflect(context: unknown, label: string, kind: PacketKind) {
+    const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
+    setPacket(approved);
+    if (!approved) setStatus('Ancestry aggregate consent is off or the packet was rejected. No ancestry context was attached.');
     go('oracle');
   }
   async function connect() {
@@ -127,7 +203,12 @@ function App() {
     const next: ChatTurn[] = [...turns, { role: 'user', content: message }];
     setTurns(next); setQuery(''); setReplyError(''); setPending(true);
     try {
-      const answer = await askLocalModel(base, selected, next, packet);
+      const brainTurn = await planLocalBrainTurn({
+        message, sessionMode, councilMode, consent, memoryEntries, packet
+      });
+      const answer = await askLocalModel(base, selected, next, brainTurn.promptFrame);
+      setLastBrainTurn(brainTurn);
+      setLastVerification(checkLocalBrainReply(answer, brainTurn));
       setTurns([...next, { role: 'assistant' as const, content: answer }].slice(-30));
     } catch (error) {
       setReplyError(error instanceof Error ? error.message : String(error));
@@ -183,7 +264,7 @@ function App() {
     <main>
       {tab === 'home' && <>
         <section className="hero">
-          <div className="hero-copy"><span className="eyebrow">GYPSYAI · SOVEREIGN PORTAL v0.2 PREVIEW</span>
+          <div className="hero-copy"><span className="eyebrow">GYPSYAI · TIEKAT LOCAL BRAIN v0.2.1</span>
             <h2>Wisdom without<br/><em>the leash.</em></h2>
             <p>Explore symbolic systems with deterministic, source-declared tools. Speak with an optional model on your own computer. Your ancestry, history, and context stay under your control.</p>
             <div className="actions"><button className="primary" onClick={() => go('oracle')}>Open the Oracle <span>↗</span></button><button className="secondary" onClick={() => go('tarot')}>Explore the readings</button></div>
@@ -213,7 +294,45 @@ function App() {
             <p className="muted">For a GitHub Pages HTTPS site, local browser access may need an explicit Ollama origin allowlist and compatible browser permissions. The app will never expose Ollama to the public internet.</p>
             <div className="thin-rule"/>
             <h3>02 / Approved context</h3>
-            {packetLabel ? <><p className="context-name">{packetLabel}</p><p className="muted">A deterministic reading packet is attached to your next messages. It will be sent only to the local Ollama endpoint when you submit.</p><button className="text-button" onClick={() => { setPacket(''); setPacketLabel(''); }}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Reflect with Oracle” on a reading to attach its factual packet.</p>}
+            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">A deterministic reading packet is attached to your next messages. It will be sent only to the local Ollama endpoint when you submit.</p><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Reflect with Oracle” on a reading to attach its factual packet.</p>}
+
+            <div className="thin-rule"/>
+            <h3>03 / TIEKAT Local Brain</h3>
+            <label htmlFor="tiekat-mode">Reflection mode</label>
+            <select id="tiekat-mode" value={sessionMode} onChange={(e) => setSessionMode(e.target.value as TiekatSessionModeKey)}>
+              {getSessionModeOptions().filter((x) => x.key !== 'ancestral_listening' || consent.allowAncestry).map((x) => <option key={x.key} value={x.key}>{x.label}</option>)}
+            </select>
+            <label htmlFor="tiekat-council">Oracle Council planning</label>
+            <select id="tiekat-council" value={councilMode} onChange={(e) => setCouncilMode(e.target.value as TiekatCouncilMode)}>
+              <option value="disabled">Off (one-model chat)</option>
+              <option value="oracle_council">Oracle Council</option>
+              <option value="deliberation_oracle">Deliberation Oracle</option>
+              <option value="swarm_synthesis">Swarm Synthesis</option>
+            </select>
+            <p className="muted">The council is a deterministic plan from the original TIEKAT engine. Ollama still generates ONE response. No fictional agent calls or scientific verification.</p>
+            <label className="switch"><input type="checkbox" checked={consent.allowAncestry} onChange={(e) => toggleAncestry(e.target.checked)} />
+              Allow explicitly attached, aggregate-only ancestry context</label>
+            <p className="muted">Default OFF. Names and living-person data remain blocked. Turning consent off drops ancestry attachments and resets model chat context.</p>
+            <label className="switch"><input type="checkbox" checked={consent.memoryEnabled} onChange={(e) => toggleMemory(e.target.checked)} />
+              Enable opt-in local TIEKAT note memory</label>
+            <p className="muted">Default OFF. Notes are saved only when you deliberately add them. Matching notes are sent to your selected local model when you chat. Switching OFF deletes saved notes and resets model chat context.</p>
+            {consent.memoryEnabled && <>
+              <label htmlFor="tiekat-note">Memory note (max 220 characters)</label>
+              <textarea id="tiekat-note" rows={2} maxLength={220} value={memoryNote} onChange={(e) => setMemoryNote(e.target.value)} placeholder="A preference or concept you want the oracle to remember" />
+              <label htmlFor="tiekat-tags">Recall keywords (comma separated)</label>
+              <input id="tiekat-tags" maxLength={240} value={memoryTags} onChange={(e) => setMemoryTags(e.target.value)} placeholder="art, music, research" />
+              <button className="secondary" onClick={rememberNote}>Save local memory note</button>
+              <div className="memory-list">
+                {memoryEntries.length === 0 ? <p className="muted">No saved notes.</p> :
+                  memoryEntries.map((item) => <div className="memory-item" key={item.key}>
+                    <p>{item.summary}</p><small>Recall: {item.anchors.join(', ')}</small>
+                    <button className="text-button" onClick={() => forgetNote(item.key)} aria-label="Forget this memory note">Forget note</button>
+                  </div>)}
+              </div>
+              {memoryEntries.length > 0 && <button className="danger" onClick={() => {
+                if (window.confirm('Permanently delete all local TIEKAT notes?')) { clearBrainMemory(); setMemoryEntries([]); }
+              }}>Forget all TIEKAT notes</button>}
+            </>}
             <div className="thin-rule"/>
             <div className="research-note"><strong>ΦStream research lane</strong><p>Our real-weight inference experiments are not yet a compatible interactive chat server. No PhiStream model or weights are falsely advertised as connected here.</p></div>
           </div>
@@ -225,6 +344,13 @@ function App() {
               {pending && <p className="muted">Local model is generating…</p>}
             </div>
             {replyError && <p className="error" role="alert">{replyError}</p>}
+            {lastBrainTurn && <details className="brain-details">
+              <summary>TIEKAT execution receipt · {lastBrainTurn.mode}</summary>
+              <p>Route: {lastBrainTurn.route}. Selected memory notes: {lastBrainTurn.memoryCount}. Approved reading packet: {lastBrainTurn.packetAttached ? 'attached' : 'none'}.</p>
+              <p>Council: {lastBrainTurn.council ? lastBrainTurn.council.roles.join(', ') + ' (modeled planning, not independent inference)' : 'off'}.</p>
+              <p>Output heuristic: {lastVerification?.passed ? 'no flags' : (lastVerification?.issues.join(' | ') || 'not checked')}.</p>
+              <p className="muted">TIEKAT checks scope keywords and response length; they do not certify factual truth.</p>
+            </details>}
             <form className="send-form" onSubmit={(e) => { e.preventDefault(); void send(); }}>
               <label htmlFor="oracle-message">Your message</label>
               <textarea id="oracle-message" rows={3} maxLength={5000} placeholder="What's on your mind?" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -243,7 +369,7 @@ function App() {
           <span className="eyebrow">{draw.position}</span><div className="card-symbol">✦</div><h3>{draw.card.name}</h3><p className="orientation">{draw.orientation}</p>
           <p>{(draw.orientation === 'upright' ? draw.card.upright_keywords : draw.card.reversed_keywords).join(' · ')}</p>
           <p className="muted">Hermetic: {Object.entries(draw.card.hermetic).filter(([,v]) => typeof v === 'string').map(([k,v]) => k + ': ' + v).join(' · ')}</p>
-        </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''))}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
+        </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''), 'tarot')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
       </>}
       {tab === 'astrology' && <>
         <SectionHeader kicker="SYMBOLIC STUDIO / II" title="The Celestial Map" description="Compute positions, aspects, equal houses and mapped Hermetic associations using the existing GypsyAI astronomy engine." />
@@ -259,7 +385,7 @@ function App() {
         {chart && <><div className="two-columns">
           <section className="panel"><h3>Planetary placements</h3><div className="data-list">{chart.chart.placements.map((p) => <div key={p.body} className="data-row"><strong>{p.body}</strong><span>{p.sign} {p.degreeInSign.toFixed(2)}°</span></div>)}</div></section>
           <section className="panel"><h3>Angles &amp; aspects</h3><p className="highlight">ASC {chart.chart.ascendantSign.sign} · MC {chart.chart.mcSign.sign}</p><div className="data-list">{chart.chart.aspects.slice(0, 12).map((a, index) => <div key={index} className="data-row"><strong>{a.bodyA} {a.type} {a.bodyB}</strong><span>{a.orb.toFixed(2)}° orb</span></div>)}</div></section></div>
-          <div className="actions"><button className="primary" onClick={() => reflect(chart.packet, 'Astrology computation')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-astrology.json', chart)}>Export chart JSON</button></div></>}
+          <div className="actions"><button className="primary" onClick={() => reflect(chart.packet, 'Astrology computation', 'astrology')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-astrology.json', chart)}>Export chart JSON</button></div></>}
       </>}
       {tab === 'genekeys' && <>
         <SectionHeader kicker="SYMBOLIC STUDIO / III" title="The Gene Keys Atlas" description="Explore activation-sequence associations using GypsyAI's local symbolic mapping data. These correspondences are interpretive, not genetic testing." />
@@ -269,7 +395,7 @@ function App() {
           <button className="primary" onClick={generateGene}>Explore Profile</button></section>
         {gene && <><div className="reading-grid four">{gene.spheres.map((s) => <article className="reading-card" key={s.sphere}>
           <span className="eyebrow">{s.sphere.replace(/([A-Z])/g, ' $1').trim()}</span><div className="key-number">{String(s.key).padStart(2, '0')}</div><h3>Key {s.key} · Line {s.line}</h3><p>{s.summary?.short_gift ?? 'Contemplate this key as a symbolic theme.'}</p></article>)}</div>
-          <div className="actions"><button className="primary" onClick={() => reflect(gene.packet, 'Gene Keys activation sequence')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-genekeys.json', gene.profile)}>Export profile JSON</button></div></>}
+          <div className="actions"><button className="primary" onClick={() => reflect(gene.packet, 'Gene Keys activation sequence', 'genekeys')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-genekeys.json', gene.profile)}>Export profile JSON</button></div></>}
       </>}
       {tab === 'ancestry' && <>
         <SectionHeader kicker="PRIVATE ARCHIVE" title="The Ancestral Field" description="Import GEDCOM into your browser's IndexedDB. Living people stay hidden by default, and ancestry is never attached to model prompts automatically." />
@@ -282,7 +408,7 @@ function App() {
           <div className="two-columns">
             <section className="panel"><h3>Local pattern summary</h3><p className="muted">Most common birthplaces</p><div className="data-list">{patterns.topBirthPlaces.map(([place, count]) => <div key={place} className="data-row"><strong>{place}</strong><span>{count}</span></div>)}</div>
               <p className="muted">Age-at-death average (recorded dates only): {patterns.longevity.avg ?? 'not available'}</p>
-              <button className="secondary" onClick={() => reflect({ counts: { people: ancestryCount, families: Object.keys(ancestry.families).length }, longevity: patterns.longevity }, 'Ancestry: aggregate counts only')}>Reflect on anonymized aggregate counts ↗</button>
+              <button className="secondary" onClick={() => reflect({ counts: { people: ancestryCount, families: Object.keys(ancestry.families).length }, longevity: patterns.longevity }, 'Ancestry: aggregate counts only', 'ancestry')}>Reflect on anonymized aggregate counts ↗</button>
             </section>
             <section className="panel"><h3>People (living persons redacted)</h3><div className="data-list scroll-list">{getAncestryPreview(ancestry).map((person) => <div className="data-row" key={person.id}><strong>{person.names[0] || 'Unknown'}</strong><span>{person.death?.date || 'private / unknown'}</span></div>)}</div></section>
           </div>
@@ -301,15 +427,15 @@ function App() {
             <div className="actions"><button className="secondary" onClick={() => exportJson('gypsyai-local-chat.json', turns)}>Export chat JSON</button><button className="danger" onClick={() => { if (window.confirm('Clear the local chat and stored history?')) { setTurns([]); localStorage.removeItem(CHAT_STORE); } }}>Clear chat history</button></div>
           </section>
           <section className="panel"><h3>What's local, what's not</h3>
-            <div className="data-list"><div className="data-row"><strong>Tarot / Astronomy / Gene Keys</strong><span>Browser computations</span></div><div className="data-row"><strong>Ancestry GEDCOM</strong><span>IndexedDB only</span></div><div className="data-row"><strong>Model</strong><span>Ollama on localhost</span></div><div className="data-row"><strong>PhiStream</strong><span>Research, not live chat</span></div><div className="data-row"><strong>Original TIEKAT interface</strong><span>Pending migration parity</span></div></div>
-            <div className="thin-rule"/><h3>License &amp; provenance</h3><p>GypsyAI project-owned code: MIT. Third-party engines and dataset licenses remain their own. Symbolic interpretation is never presented as a measurement of physical phenomena.</p>
+            <div className="data-list"><div className="data-row"><strong>Tarot / Astronomy / Gene Keys</strong><span>Browser computations</span></div><div className="data-row"><strong>Ancestry GEDCOM</strong><span>IndexedDB only</span></div><div className="data-row"><strong>Model</strong><span>Ollama on localhost</span></div><div className="data-row"><strong>PhiStream</strong><span>Research, not live chat</span></div><div className="data-row"><strong>TIEKAT local brain</strong><span>Modes / consent / council plan / note memory</span></div></div>
+            <div className="thin-rule"/><h3>Local brain &amp; consent</h3><p>Memory is {consent.memoryEnabled ? 'ON' : 'OFF'}; ancestry aggregate context is {consent.allowAncestry ? 'ON (explicit attachment only)' : 'OFF'}; names remain OFF. Advanced legacy TIEKAT habitat, rituals and archives still await migration.</p><button className="secondary" onClick={() => go('oracle')}>Manage TIEKAT settings ↗</button><div className="thin-rule"/><h3>License &amp; provenance</h3><p>GypsyAI project-owned code: MIT. Third-party engines and dataset licenses remain their own. Symbolic interpretation is never presented as a measurement of physical phenomena.</p>
             <a href="https://github.com/MichaelWave369/GypsyAI" target="_blank" rel="noreferrer" className="text-link">Inspect source and development status ↗</a>
           </section>
         </div>
       </>}
       {status && <p className="status-message" role="status">{status}</p>}
     </main>
-    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2 PREVIEW · MIT</span></footer>
+    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.1 · MIT</span></footer>
   </div>;
 }
 createRoot(document.getElementById('root')!).render(<App />);
