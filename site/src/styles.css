@@ -217,3 +217,31 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 @media(max-width:950px){.gaia-card-fan{grid-template-columns:repeat(4,minmax(0,1fr))}.gaia-reveal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.gaia-card-fan{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.gaia-card-back{padding:10px 3px}.gaia-reveal-grid{grid-template-columns:1fr}.gaia-fan-pagination .secondary{min-height:38px;padding:8px 12px}.gaia-field-loom svg{min-height:100px}}
 @media(prefers-reduced-motion:reduce){.gaia-card-back{transition:none}.gaia-card-back:hover{transform:none}}
+
+
+/* GAIA Field Loom v2: interactive, keyboard-accessible evidence atlas. */
+.gaia-loom-v2{padding:10px 0 24px}
+.gaia-loom-v2>h3{font:clamp(25px,3vw,37px) Georgia,serif;color:#f0e5c8;margin:10px 0 14px}
+.gaia-loom-lenses{display:flex;gap:10px;flex-wrap:wrap;margin:23px 0 17px}
+.gaia-loom-lenses button,.gaia-loom-link-selectors button{padding:12px 15px;min-height:44px;border-radius:8px;border:1px solid #50746b;background:#122e31;color:#d3ddd2;font-size:13px;transition:border-color .15s,background .15s}
+.gaia-loom-lenses button:hover,.gaia-loom-link-selectors button:hover{border-color:#e4ce9d}
+.gaia-loom-lenses button.active,.gaia-loom-link-selectors button.active{color:#092827;background:#e0c995;border-color:#ecdaae}
+.gaia-loom-selectors{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:9px 0 17px}
+.gaia-loom-selectors button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:7px;min-height:95px;padding:15px;background:#122e33;border:1px solid #456e66;border-radius:10px;color:#f4e8ce;transition:background .15s,border-color .15s}
+.gaia-loom-selectors button.active{border-color:#ead098;background:#244b41;box-shadow:0 0 0 1px #c4b47c88}
+.gaia-loom-selectors button:hover{border-color:#e4ce9d}
+.gaia-loom-selectors strong{font:19px Georgia,serif}
+.gaia-loom-selectors small{color:#d2dccc;text-transform:uppercase;letter-spacing:.12em}
+.gaia-loom-detail{background:#0b252ba6;border:1px solid #476f64;border-radius:11px;padding:20px;margin:10px 0 23px}
+.gaia-loom-detail h4{font:25px Georgia,serif;font-weight:400;color:#f0e4c4;margin:8px 0 14px}
+.gaia-loom-reading{font-size:15px;line-height:1.7;color:#dbe8d8;padding:10px 14px;border-left:2px solid #e0c98e;background:#193a35}
+.gaia-loom-evidence-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:17px}
+.gaia-loom-evidence{background:#15353a;border-radius:8px;border:1px solid #375b57;padding:13px 14px;overflow-wrap:anywhere}
+.gaia-loom-evidence p{font-size:12px;color:#c7ddce;line-height:1.6;margin:9px 0 0}
+.gaia-loom-source{display:inline-block;font-size:10px;color:#eed9a7;text-transform:uppercase;letter-spacing:.11em;font-weight:700}
+.gaia-loom-source.question{color:#a0dbca}
+.gaia-loom-subtitle{font:23px Georgia,serif;color:#e8d7b3;font-weight:400;margin:22px 0 15px}
+.gaia-loom-link-selectors{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 12px}
+.gaia-loom-v2 button:focus-visible{outline:3px solid #f1d999;outline-offset:3px}
+@media(max-width:590px){.gaia-loom-selectors{grid-template-columns:1fr}.gaia-loom-evidence-list{grid-template-columns:1fr}.gaia-loom-detail{padding:15px}.gaia-loom-lenses{display:grid;grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.gaia-loom-lenses button,.gaia-loom-link-selectors button,.gaia-loom-selectors button{transition:none}}
