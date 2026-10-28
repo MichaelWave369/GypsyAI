@@ -4,6 +4,7 @@ import {
   searchSymbolicEntries, symbolicCoverage
 } from './symbolicLibrary';
 import type { SymbolicFilter } from './symbolicLibrary';
+import { getHermeticAuditForCard, hermeticAuditCoverage, HERMETIC_AUDIT_REFERENCES } from './hermeticAudit';
 
 type Orientation = 'upright' | 'reversed';
 
@@ -13,8 +14,10 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
   const [chosenId, setChosenId] = useState(initialCardId || 'major-7');
   const [orientation, setOrientation] = useState<Orientation>('upright');
   const coverage = symbolicCoverage();
+  const hermeticCoverage = hermeticAuditCoverage();
   const matches = searchSymbolicEntries(search, filter);
   const entry = findSymbolicEntry(chosenId);
+  const audit = getHermeticAuditForCard(chosenId);
   const note = entry?.annotation;
   const source = note ? getSourceForAnnotation(note) : null;
 
@@ -37,6 +40,11 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
       <div><strong>{coverage.historicalReviewed}</strong><span>Historical notes reviewed</span></div>
       <div><strong>{coverage.historicalNotReviewed}</strong><span>Historical notes pending</span></div>
     </div>
+    <p className="muted gaia-audit-coverage">Hermetic correspondence audit:
+      <strong> {hermeticCoverage.traditionChecked} of {hermeticCoverage.total}</strong>
+      {' '}cards have checked Golden Dawn fields; <strong>{hermeticCoverage.specialistPending}</strong>
+      {' '}court/ace records still require specialist review. This is historical attribution,
+      not empirical proof of divination.</p>
     <div className="gaia-library-workspace">
       <aside className="gaia-library-index panel" aria-label="Browse tarot cards">
         <label htmlFor="gaia-library-search">Search by card name or GAIA keyword</label>
@@ -106,7 +114,26 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
             </>}
           </div>
           <details className="gaia-library-hermetic">
-            <summary>Recorded Hermetic fields · not independently audited</summary>
+            <summary>Hermetic correspondences · audited fields and pending research</summary>
+            {audit && <div className="gaia-hermetic-audit">
+              <p><strong>Status:</strong> {audit.status==='checked-in-golden-dawn-tradition'
+                ? 'Checked against the historical Golden Dawn attribution system, field by field.'
+                : 'Specialist historical review still pending.'}</p>
+              {audit.fields.map(field=><p key={field.field}>
+                <strong>{field.field.replaceAll('_',' ')}:</strong> {field.value}
+                <span className="muted"> · Source: {field.evidence}</span>
+              </p>)}
+              {audit.pendingFields.length>0 && <p><strong>Still pending:</strong>
+                {' '}{audit.pendingFields.join(' · ')}</p>}
+              {audit.notes.map((note,i)=><p key={i}>{note}</p>)}
+              {audit.sources.map(id=>{
+                const ref=HERMETIC_AUDIT_REFERENCES.find(r=>r.id===id);
+                return ref?<p key={id}><a href={ref.url} target="_blank" rel="noopener noreferrer">
+                  {ref.title} ↗</a></p>:null;
+              })}
+              <p className="muted">Legacy fields below are shown as stored. A checked decan,
+                path or planetary label does not authenticate unrelated fields.</p>
+            </div>}
             {Object.entries(entry.recordedHermetic).map(([key,value])=><p key={key}>
               <strong>{key.replaceAll('_',' ')}:</strong> {typeof value==='string'||typeof value==='number'
                 ? String(value).trim() || 'Not recorded' : 'Not recorded'}
