@@ -22,6 +22,7 @@ import { LocalLabPanel } from './LocalLabPanel';
 import { SovereignBrainPanel } from './SovereignBrainPanel';
 import { PilotSessionPanel } from './PilotSessionPanel';
 import { ReadingRoomPanel } from './ReadingRoomPanel';
+import { RitualDrawPanel } from './RitualDrawPanel';
 import { READING_MODES, readingInvitation, tarotReflectionCues } from './readingExperience';
 import type { ReadingKind } from './readingExperience';
 import './styles.css';
@@ -29,6 +30,7 @@ import './styles.css';
 const TABS = [
   { id: 'home', name: 'Sanctuary', glyph: '✧' },
   { id: 'readings', name: 'Reading Room', glyph: '✦' },
+  { id: 'ritual', name: 'Ritual Draw', glyph: '✺' },
   { id: 'oracle', name: 'GAIA Oracle', glyph: '◉' },
   { id: 'pilot', name: 'Ally Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
@@ -382,6 +384,7 @@ function App() {
         </div>
       </>}
       {tab === 'readings' && <ReadingRoomPanel onNavigate={go} onReflect={reflect} />}
+      {tab === 'ritual' && <RitualDrawPanel onReflect={reflect} />}
       {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
