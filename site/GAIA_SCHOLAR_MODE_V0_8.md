@@ -24,7 +24,11 @@ claim to demonstrate supernatural divination.
    existing GAIA Oracle packet staging, then separately presses **Send** to
    local Ollama. No source is fetched from the Internet and no model is
    contacted merely by viewing a note or turning on Scholar Mode.
-5. The model's editable prompt tells it to distinguish editorial content from
+5. The Oracle's **Inspect exact approved context** disclosure now shows the
+   full JSON string that passed GAIA's existing consent gate. You can check
+   each chosen card, annotation, absent source, and any other context locally
+   before pressing Send or removing the attachment.
+6. The model's editable prompt tells it to distinguish editorial content from
    the named historical author's work, cite only the included reviewed notes,
    and avoid supplying non-existent references. The final interpretation is
    still a model output: users can open the cited chapter and check it.
