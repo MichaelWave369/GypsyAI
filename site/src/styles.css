@@ -328,3 +328,11 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-context-preview summary{cursor:pointer;color:#eed7a9;padding:12px 14px;font-size:13px;font-weight:600}
 .gaia-context-preview summary:focus-visible{outline:3px solid #ecd6a4;outline-offset:-3px}
 .gaia-context-preview pre{color:#cde2d1;background:#08212a;max-height:290px;overflow:auto;padding:14px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;line-height:1.6}
+
+
+/* GAIA v0.9 historical correspondence audit, scoped to Symbolic Library. */
+.gaia-audit-coverage{padding:12px 16px;border-left:3px solid #c1b47e;background:#12352e;margin:5px 0 18px;line-height:1.7}
+.gaia-hermetic-audit{border-left:3px solid #74a995;background:#153831;margin:14px 0;padding:10px 16px}
+.gaia-hermetic-audit p{line-height:1.7;overflow-wrap:anywhere}
+.gaia-hermetic-audit a{color:#b5e5d5;text-decoration:underline;text-underline-offset:3px}
+.gaia-hermetic-audit a:focus-visible{outline:3px solid #e7d3a2;outline-offset:3px}
