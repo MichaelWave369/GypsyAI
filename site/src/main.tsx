@@ -206,7 +206,7 @@ function App() {
     setLibraryCardId(id);
     go('library');
   }
-  function reflect(context: unknown, label: string, kind: ReadingKind, focus = '') {
+  function reflect(context: unknown, label: string, kind: ReadingKind, focus = '', scholar = false) {
     const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
     if (!approved) {
       setStatus('Ancestry consent is off or the reading packet was rejected. Nothing was attached.');
@@ -218,7 +218,7 @@ function App() {
     resetModelContext();
     setPacket(approved);
     setSessionMode(READING_MODES[kind] as TiekatSessionModeKey);
-    setQuery(readingInvitation(kind, focus));
+    setQuery(readingInvitation(kind, focus, scholar));
     setStatus('Reading packet staged for review. No model was contacted. Check the suggested prompt and press Send in the Local Oracle.');
     go('oracle');
   }
