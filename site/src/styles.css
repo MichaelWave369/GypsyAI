@@ -322,3 +322,9 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-scholar-source a{color:#b5e5d5;text-decoration:underline;text-underline-offset:3px}
 .gaia-scholar-box a:focus-visible,.gaia-scholar-box input:focus-visible{outline:3px solid #ebd19f;outline-offset:3px}
 @media(max-width:600px){.gaia-scholar-box{padding:14px}.gaia-scholar-toggle{align-items:flex-start}}
+
+/* An explicit preview of the exact source packet accepted by the Oracle gate. */
+.gaia-context-preview{margin:13px 0 18px;border:1px solid #61866c;background:#0e2b30;border-radius:9px;overflow:hidden}
+.gaia-context-preview summary{cursor:pointer;color:#eed7a9;padding:12px 14px;font-size:13px;font-weight:600}
+.gaia-context-preview summary:focus-visible{outline:3px solid #ecd6a4;outline-offset:-3px}
+.gaia-context-preview pre{color:#cde2d1;background:#08212a;max-height:290px;overflow:auto;padding:14px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;line-height:1.6}
