@@ -333,7 +333,7 @@ function App() {
             <p className="muted">For a GitHub Pages HTTPS site, local browser access may need an explicit Ollama origin allowlist and compatible browser permissions. The app will never expose Ollama to the public internet.</p>
             <div className="thin-rule"/>
             <h3>02 / Approved context</h3>
-            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send.</p><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
+            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send. Review the exact attached JSON below, including any historical annotations.</p><details className="gaia-context-preview"><summary>Inspect exact approved context · {packet.text.length} characters</summary><pre>{packet.text}</pre></details><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
 
             <div className="thin-rule"/>
             <h3>03 / TIEKAT Local Brain</h3>
