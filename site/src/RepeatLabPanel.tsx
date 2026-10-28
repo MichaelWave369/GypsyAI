@@ -98,13 +98,13 @@ export function RepeatLabPanel({ origin, diagnosis, disabled, onRunningChange }:
     } finally { setRunning(false); onRunningChange(false); }
   }
 
-  async function importFiles(files: FileList | null) {
-    if (!files?.length) return;
+  async function importFiles(files: File[]) {
+    if (!files.length) return;
     setImportError('');
     try {
       if (files.length > 12) throw new Error('Import at most 12 historical receipt files per selection.');
       const read: LocalBenchmarkReceipt[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of files) {
         if (file.size > 16384) throw new Error('Sample JSON must be 16 KiB or smaller.');
         read.push(parseLegacySampleJson(await file.text()));
       }
@@ -181,7 +181,9 @@ export function RepeatLabPanel({ origin, diagnosis, disabled, onRunningChange }:
     <h4>Historic sample receipts · local comparison</h4>
     <p className="muted">Import your existing v0.2.2 JSON exports, such as the two Granite 4.2 observations. Imported receipts are treated as user-provided local observations, not authenticated benchmarks. They are kept only in this open browser tab and are NOT merged into new measured cohorts.</p>
     <label className="file-picker">Import GypsyAI V1 sample JSON<input type="file" multiple accept=".json,application/json" onChange={(e) => {
-      void importFiles(e.target.files); e.target.value = '';
+      const chosen = Array.from(e.target.files ?? []);
+      e.target.value = '';
+      void importFiles(chosen);
     }} /></label>
     {importError && <p className="error" role="alert">{importError}</p>}
     {importedSorted.length > 0 && <>
