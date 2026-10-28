@@ -43,8 +43,10 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
     <p className="muted gaia-audit-coverage">Hermetic correspondence audit:
       <strong> {hermeticCoverage.traditionChecked} of {hermeticCoverage.total}</strong>
       {' '}cards have checked Golden Dawn fields; <strong>{hermeticCoverage.specialistPending}</strong>
-      {' '}court/ace records still require specialist review. This is historical attribution,
-      not empirical proof of divination.</p>
+      {' '}court/ace records still require specialist review. Book T headings and
+      basic roles are now source-indexed for <strong>{hermeticCoverage.bookTAceCourtTitlesIndexed}</strong>
+      {' '}additional Ace/court records, but their full imagery and zodiac regions
+      remain under review. Historical attribution is not empirical proof of divination.</p>
     <div className="gaia-library-workspace">
       <aside className="gaia-library-index panel" aria-label="Browse tarot cards">
         <label htmlFor="gaia-library-search">Search by card name or GAIA keyword</label>
@@ -132,7 +134,8 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
                   {ref.title} ↗</a></p>:null;
               })}
               <p className="muted">Legacy fields below are shown as stored. A checked decan,
-                path or planetary label does not authenticate unrelated fields.</p>
+                path, court title or Book T rank does not authenticate unrelated
+                fields or imply complete pictorial equivalence with a modern deck.</p>
             </div>}
             {Object.entries(entry.recordedHermetic).map(([key,value])=><p key={key}>
               <strong>{key.replaceAll('_',' ')}:</strong> {typeof value==='string'||typeof value==='number'
@@ -154,8 +157,9 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
           </div>)}
           <p className="muted">Historical tarot texts describe traditions and beliefs; they do not
             demonstrate supernatural effects or forecast outcomes. GAIA's authored meanings
-            remain separately attributed. Older Hermetic paths, decans and correspondences
-            in the existing deck are not yet independently validated.</p>
+            remain separately attributed. Golden Dawn path, numbered-pip decan, Ace and court
+            title checks cover specific fields, not every inherited attribution, deck
+            illustration, court sign region or historically reviewed interpretation.</p>
         </section>
       </div>
     </div>
