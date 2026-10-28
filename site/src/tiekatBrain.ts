@@ -26,7 +26,7 @@ import type {
 export type { TiekatSessionModeKey, TiekatCouncilMode };
 export type { TiekatConsentState, TiekatMemoryEntry };
 
-export type PacketKind = 'tarot' | 'astrology' | 'genekeys' | 'ancestry';
+export type PacketKind = 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'synthesis';
 export type ApprovedPacket = { kind: PacketKind; label: string; text: string };
 
 export const DEFAULT_TIEKAT_CONSENT: TiekatConsentState = Object.freeze({
@@ -49,7 +49,7 @@ export function normalizeBrainConsent(input: Partial<TiekatConsentState>): Tieka
 /** Conservative, reviewed data boundary. Do not concatenate unapproved GEDCOM data. */
 export function permittedPacket(packet: ApprovedPacket | null, consent: TiekatConsentState): ApprovedPacket | null {
   if (!packet || (packet.kind === 'ancestry' && !consent.allowAncestry)) return null;
-  if (!['tarot', 'astrology', 'genekeys', 'ancestry'].includes(packet.kind)) return null;
+  if (!['tarot', 'astrology', 'genekeys', 'ancestry', 'synthesis'].includes(packet.kind)) return null;
   if (packet.kind === 'ancestry') {
     // This lane accepts a constrained aggregate schema ONLY, not arbitrary JSON.
     try {
