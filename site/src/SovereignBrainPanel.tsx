@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { PocketBrainComparison } from './PocketBrainComparison';
 import {
   POCKETBRAIN_SOURCE, BRAINC_HEALTH_URL, importPocketBrainSdk,
   normalizeTinyReceipt, probeBrainCHealth, validateTinyPrompt
@@ -27,6 +28,7 @@ export function SovereignBrainPanel() {
   const [acknowledged, setAcknowledged] = useState(false);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [comparisonBusy, setComparisonBusy] = useState(false);
   const [disposing, setDisposing] = useState(false);
   const [progress, setProgress] = useState('');
   const [error, setError] = useState('');
@@ -60,7 +62,7 @@ export function SovereignBrainPanel() {
   }, []);
 
   async function loadTiny() {
-    if (loading || generating || disposing || client.current || !acknowledged) return;
+    if (loading || generating || comparisonBusy || disposing || client.current || !acknowledged) return;
     setLoading(true); setError(''); setProgress('Importing source-pinned SDK snapshot…');
     let loadedClient: TinyClient | null = null;
     try {
@@ -100,7 +102,7 @@ export function SovereignBrainPanel() {
     }
   }
   async function generateTiny() {
-    if (generating || loading || disposing || !client.current || !status.ready) return;
+    if (generating || comparisonBusy || generation.current || loading || disposing || !client.current || !status.ready) return;
     try { validateTinyPrompt(prompt, cap); } catch (e) {
       setError(e instanceof Error ? e.message : String(e)); return;
     }
@@ -127,7 +129,7 @@ export function SovereignBrainPanel() {
     }
   }
   async function unloadTiny() {
-    if (!client.current || loading || generating || disposing) return;
+    if (!client.current || loading || generating || comparisonBusy || generation.current || disposing) return;
     setDisposing(true); setError('');
     try {
       await client.current.dispose();
@@ -147,7 +149,7 @@ export function SovereignBrainPanel() {
 
   return <section className="brain-bridge">
     <div className="section-header">
-      <span className="eyebrow">SOVEREIGN BRAIN BRIDGE · v0.2.5</span>
+      <span className="eyebrow">SOVEREIGN BRAIN BRIDGE · v0.2.6</span>
       <h2>One sanctuary. Distinct intelligences.</h2>
       <p>Research-stage connections to existing Phi Commons brains, with separate permissions and truthful execution receipts.
         Neither PocketBrain nor BrainC silently replaces GypsyAI's local Ollama Oracle.</p>
@@ -170,7 +172,7 @@ export function SovereignBrainPanel() {
         Those upstream model artifacts are <strong>not revision/hash pinned</strong>; this is a research path, not a supply-chain-verified production provider. Network metadata is visible to those hosts.</p>
       <p className="muted">Browser inference uses WebGPU if available (q4f16) or WASM (q8) as selected. This may consume device RAM/VRAM. Model cache behavior and output parity are not independently established.</p>
       <div className="repeat-config">
-        <div className="field"><label htmlFor="tiny-device">Requested backend</label><select id="tiny-device" value={device} disabled={loading || status.ready || generating || disposing}
+        <div className="field"><label htmlFor="tiny-device">Requested backend</label><select id="tiny-device" value={device} disabled={loading || status.ready || generating || comparisonBusy || disposing}
           onChange={(e) => { setDevice(e.target.value as TinyDevice); setAcknowledged(false); }}>
           <option value="auto">Auto (WebGPU or WASM)</option><option value="webgpu">WebGPU only</option><option value="wasm">WASM only</option></select></div>
         <div className="field"><label>Source and model</label>
@@ -178,13 +180,13 @@ export function SovereignBrainPanel() {
           <small>SDK {POCKETBRAIN_SOURCE.sdkVersion} · checkpoint revision UNPINNED</small></div>
       </div>
       <label className="switch"><input type="checkbox" checked={acknowledged}
-        disabled={loading || status.ready || generating || disposing}
+        disabled={loading || status.ready || generating || comparisonBusy || disposing}
         onChange={(e) => setAcknowledged(e.target.checked)}/>
         I approve the external runtime/model downloads and local RAM/GPU usage for this experimental brain.</label>
       <div className="actions">
-        <button className="primary" disabled={!acknowledged || loading || status.ready || generating || disposing}
+        <button className="primary" disabled={!acknowledged || loading || status.ready || generating || comparisonBusy || disposing}
           onClick={() => void loadTiny()}>{loading ? 'Loading model…' : 'Load PocketBrain Tiny explicitly'}</button>
-        <button className="secondary" disabled={!status.ready || loading || generating || disposing}
+        <button className="secondary" disabled={!status.ready || loading || generating || comparisonBusy || disposing}
           onClick={() => void unloadTiny()}>{disposing ? 'Disposing…' : 'Dispose browser model'}</button>
       </div>
       {progress && <p className="muted" role="status">{progress}</p>}
@@ -197,10 +199,10 @@ export function SovereignBrainPanel() {
       <p className="muted">Enter a non-sensitive test prompt. This field is never populated from GypsyAI chat, GEDCOM, approved reading packets or TIEKAT memory. The model does not receive those contexts. No automatic fallback to Ollama occurs.</p>
       <label htmlFor="tiny-prompt">Experimental prompt (max 1000 characters)</label>
       <textarea id="tiny-prompt" value={prompt} maxLength={1000} rows={3}
-        disabled={generating} onChange={(e) => setPrompt(e.target.value)}/>
+        disabled={generating || comparisonBusy} onChange={(e) => setPrompt(e.target.value)}/>
       <div className="repeat-config">
         <div className="field"><label htmlFor="tiny-mode">Generation mode</label>
-          <select id="tiny-mode" value={mode} disabled={generating}
+          <select id="tiny-mode" value={mode} disabled={generating || comparisonBusy}
             onChange={(e) => setMode(e.target.value as TinyMode)}>
             <option value="baseline">Baseline greedy</option>
             <option value="guarded">Repetition-guarded greedy</option>
@@ -211,7 +213,7 @@ export function SovereignBrainPanel() {
             <option value={32}>32 maximum</option><option value={64}>64 maximum</option>
           </select></div>
       </div>
-      <button className="primary" disabled={!status.ready || generating || loading || disposing || !prompt.trim()}
+      <button className="primary" disabled={!status.ready || generating || comparisonBusy || loading || disposing || !prompt.trim()}
         onClick={() => void generateTiny()}>{generating ? 'Generating inside browser…' : 'Generate once with PocketBrain Tiny'}</button>
       {error && <p className="error" role="alert">{error}</p>}
       {preview && <div className="brain-output"><strong>Actual model output</strong><p>{preview}</p></div>}
@@ -225,6 +227,15 @@ export function SovereignBrainPanel() {
           Cache status and reference parity remain untested. The receipt omits your prompt and generated answer.</p>
         <button className="secondary" onClick={() => exportEvidence(evidence)}>Export PocketBrain evidence JSON</button>
       </>}
+      <PocketBrainComparison
+        client={client.current} status={status}
+        blocked={generating || loading || disposing}
+        onBusyChange={(value) => {
+          generation.current = value;
+          if (!unmounted.current) setComparisonBusy(value);
+        }}
+        onStatusChange={(next) => { if (!unmounted.current) setStatus(next); }}
+      />
     </section>
     <section className="panel">
       <div className="lab-heading"><h3>03 / BrainC · Read-only local health</h3><span className="lab-pill neutral">NO AUTH · NO TOOLS</span></div>
