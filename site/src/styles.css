@@ -51,3 +51,20 @@
 .repeat-rows summary{color:#dec58f;font-size:12px;cursor:pointer;font-weight:700}
 .repeat-rows .lab-models{margin-top:10px}
 @media(max-width:720px){.repeat-config{grid-template-columns:1fr}.repeat-row span{text-align:left}}
+
+/* v0.2.4: long-workload and independent-session observability */
+.long-lab .actions{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
+.long-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin:20px 0}
+.long-summary{border:1px solid #4c405a;background:#191927;border-radius:8px;padding:14px;min-width:0}
+.long-summary h4{color:#e5cfac;margin:4px 0 15px}
+.long-summary .data-row{align-items:flex-start;flex-wrap:wrap;gap:10px}
+.long-summary .data-row span{overflow-wrap:anywhere;text-align:right;font-variant-numeric:tabular-nums;flex:1}
+.long-observation{padding:12px 6px;border-bottom:1px solid #453b52}
+.long-observation strong{color:#e2ce9e}
+.long-observation p{font-size:12px;color:#bab0cb;margin:7px 0;line-height:1.55;overflow-wrap:anywhere}
+.long-session-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.long-compare-card{padding:14px;border:1px solid #453b55;border-radius:8px;background:#191a27;min-width:0}
+.long-compare-card strong{overflow-wrap:anywhere;font-size:12px;color:#e7d0a6}
+.long-compare-card p{font-size:12px;color:#c6bccc}
+.long-sessions{margin:10px 0;max-height:240px;overflow-y:auto}
+@media(max-width:640px){.long-summary .data-row span{text-align:left}}
