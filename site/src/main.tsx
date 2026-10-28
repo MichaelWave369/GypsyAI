@@ -23,6 +23,8 @@ import { SovereignBrainPanel } from './SovereignBrainPanel';
 import { PilotSessionPanel } from './PilotSessionPanel';
 import { ReadingRoomPanel } from './ReadingRoomPanel';
 import { RitualDrawPanel } from './RitualDrawPanel';
+import { SpreadAtlasPanel } from './SpreadAtlasPanel';
+import type { AtlasLayout } from './spreadAtlas';
 import { READING_MODES, readingInvitation, tarotReflectionCues } from './readingExperience';
 import type { ReadingKind } from './readingExperience';
 import './styles.css';
@@ -31,6 +33,7 @@ const TABS = [
   { id: 'home', name: 'Sanctuary', glyph: '✧' },
   { id: 'readings', name: 'Reading Room', glyph: '✦' },
   { id: 'ritual', name: 'Ritual Draw', glyph: '✺' },
+  { id: 'atlas', name: 'Spread Atlas', glyph: '◇' },
   { id: 'oracle', name: 'GAIA Oracle', glyph: '◉' },
   { id: 'pilot', name: 'Ally Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
@@ -119,6 +122,8 @@ function App() {
   const [spread, setSpread] = useState<TarotSpreadType>('three-card');
   const [question, setQuestion] = useState('');
   const [tarot, setTarot] = useState<ReturnType<typeof createTarotReading> | null>(null);
+  // Transient handoff only; custom positions never go to localStorage.
+  const [atlasLayout, setAtlasLayout] = useState<AtlasLayout | null>(null);
   const [chartDate, setChartDate] = useState('');
   const [chartTime, setChartTime] = useState('12:00');
   const [lat, setLat] = useState('');
@@ -189,6 +194,10 @@ function App() {
     window.location.hash = id;
     setTab(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function useAtlasLayout(layout: AtlasLayout) {
+    setAtlasLayout(layout);
+    go('ritual');
   }
   function reflect(context: unknown, label: string, kind: ReadingKind, focus = '') {
     const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
@@ -384,7 +393,8 @@ function App() {
         </div>
       </>}
       {tab === 'readings' && <ReadingRoomPanel onNavigate={go} onReflect={reflect} />}
-      {tab === 'ritual' && <RitualDrawPanel onReflect={reflect} />}
+      {tab === 'ritual' && <RitualDrawPanel onReflect={reflect} atlasLayout={atlasLayout} />}
+      {tab === 'atlas' && <SpreadAtlasPanel onUseLayout={useAtlasLayout} />}
       {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
