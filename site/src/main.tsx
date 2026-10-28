@@ -128,7 +128,7 @@ function App() {
     setTurns(next); setQuery(''); setReplyError(''); setPending(true);
     try {
       const answer = await askLocalModel(base, selected, next, packet);
-      setTurns([...next, { role: 'assistant', content: answer }].slice(-30));
+      setTurns([...next, { role: 'assistant' as const, content: answer }].slice(-30));
     } catch (error) {
       setReplyError(error instanceof Error ? error.message : String(error));
       setTurns(next); // Preserve user input so it can be retried or copied.
