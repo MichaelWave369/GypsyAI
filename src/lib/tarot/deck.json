@@ -128,7 +128,7 @@
     "short_reversed_meaning": "Consider whether control has displaced the purpose it was meant to serve.",
     "hermetic": {
       "hebrew_letter": "Heh",
-      "path": "2->4",
+      "path": "2->6",
       "attribution": "Aries",
       "magical_title": "Key of Aries",
       "sephirothic_context": "Bridges inner vision with daily action."
@@ -155,7 +155,7 @@
     "short_reversed_meaning": "Question rules that no longer fit, without dismissing everything they once taught.",
     "hermetic": {
       "hebrew_letter": "Vav",
-      "path": "2->6",
+      "path": "2->4",
       "attribution": "Taurus",
       "magical_title": "Key of Taurus",
       "sephirothic_context": "Bridges inner vision with daily action."
@@ -182,7 +182,7 @@
     "short_reversed_meaning": "Bring a divided priority into view before asking it to carry a commitment.",
     "hermetic": {
       "hebrew_letter": "Zayin",
-      "path": "3->5",
+      "path": "3->6",
       "attribution": "Gemini",
       "magical_title": "Key of Gemini",
       "sephirothic_context": "Bridges inner vision with daily action."
@@ -209,7 +209,7 @@
     "short_reversed_meaning": "Check whether the drive to advance is overruling the need to steer.",
     "hermetic": {
       "hebrew_letter": "Cheth",
-      "path": "3->6",
+      "path": "3->5",
       "attribution": "Cancer",
       "magical_title": "Key of Cancer",
       "sephirothic_context": "Bridges inner vision with daily action."
@@ -642,9 +642,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Chokmah",
-      "decan": "Sagittarius 0-9°",
-      "planet_ruler": "Mercury",
-      "hermetic_title": "Chokmah of Fire"
+      "decan": "Aries 0-9°",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Lord of Dominion"
     }
   },
   {
@@ -669,9 +669,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Binah",
-      "decan": "Sagittarius 10-19°",
-      "planet_ruler": "Moon",
-      "hermetic_title": "Binah of Fire"
+      "decan": "Aries 10-19°",
+      "planet_ruler": "Sun",
+      "hermetic_title": "Lord of Established Strength"
     }
   },
   {
@@ -696,9 +696,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Chesed",
-      "decan": "Sagittarius 20-29°",
-      "planet_ruler": "Saturn",
-      "hermetic_title": "Chesed of Fire"
+      "decan": "Aries 20-29°",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Lord of Perfected Work"
     }
   },
   {
@@ -723,9 +723,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Geburah",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Geburah of Fire"
+      "decan": "Leo 0-9°",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Lord of Strife"
     }
   },
   {
@@ -750,9 +750,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Tiphareth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Tiphareth of Fire"
+      "decan": "Leo 10-19°",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Lord of Victory"
     }
   },
   {
@@ -777,9 +777,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Netzach",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Netzach of Fire"
+      "decan": "Leo 20-29°",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Lord of Valour"
     }
   },
   {
@@ -804,9 +804,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Hod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Hod of Fire"
+      "decan": "Sagittarius 0-9°",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Lord of Swiftness"
     }
   },
   {
@@ -831,9 +831,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Yesod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Yesod of Fire"
+      "decan": "Sagittarius 10-19°",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Lord of Great Strength"
     }
   },
   {
@@ -858,9 +858,9 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Malkuth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Malkuth of Fire"
+      "decan": "Sagittarius 20-29°",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Lord of Oppression"
     }
   },
   {
@@ -1020,9 +1020,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Chokmah",
-      "decan": "Pisces 0-9°",
-      "planet_ruler": "Saturn",
-      "hermetic_title": "Chokmah of Water"
+      "decan": "Cancer 0-9°",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Lord of Love"
     }
   },
   {
@@ -1047,9 +1047,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Binah",
-      "decan": "Pisces 10-19°",
-      "planet_ruler": "Jupiter",
-      "hermetic_title": "Binah of Water"
+      "decan": "Cancer 10-19°",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Lord of Abundance"
     }
   },
   {
@@ -1074,9 +1074,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Chesed",
-      "decan": "Pisces 20-29°",
-      "planet_ruler": "Mars",
-      "hermetic_title": "Chesed of Water"
+      "decan": "Cancer 20-29°",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Lord of Blended Pleasure"
     }
   },
   {
@@ -1101,9 +1101,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Geburah",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Geburah of Water"
+      "decan": "Scorpio 0-9°",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Lord of Loss in Pleasure"
     }
   },
   {
@@ -1128,9 +1128,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Tiphareth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Tiphareth of Water"
+      "decan": "Scorpio 10-19°",
+      "planet_ruler": "Sun",
+      "hermetic_title": "Lord of Pleasure"
     }
   },
   {
@@ -1155,9 +1155,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Netzach",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Netzach of Water"
+      "decan": "Scorpio 20-29°",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Lord of Illusionary Success"
     }
   },
   {
@@ -1182,9 +1182,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Hod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Hod of Water"
+      "decan": "Pisces 0-9°",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Lord of Abandoned Success"
     }
   },
   {
@@ -1209,9 +1209,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Yesod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Yesod of Water"
+      "decan": "Pisces 10-19°",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Lord of Material Happiness"
     }
   },
   {
@@ -1236,9 +1236,9 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Malkuth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Malkuth of Water"
+      "decan": "Pisces 20-29°",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Lord of Perfected Success"
     }
   },
   {
@@ -1398,9 +1398,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Chokmah",
-      "decan": "Aquarius 0-9°",
-      "planet_ruler": "Venus",
-      "hermetic_title": "Chokmah of Air"
+      "decan": "Libra 0-9°",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Lord of Peace Restored"
     }
   },
   {
@@ -1425,9 +1425,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Binah",
-      "decan": "Aquarius 10-19°",
-      "planet_ruler": "Mercury",
-      "hermetic_title": "Binah of Air"
+      "decan": "Libra 10-19°",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Lord of Sorrow"
     }
   },
   {
@@ -1452,9 +1452,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Chesed",
-      "decan": "Aquarius 20-29°",
-      "planet_ruler": "Moon",
-      "hermetic_title": "Chesed of Air"
+      "decan": "Libra 20-29°",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Lord of Rest from Strife"
     }
   },
   {
@@ -1479,9 +1479,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Geburah",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Geburah of Air"
+      "decan": "Aquarius 0-9°",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Lord of Defeat"
     }
   },
   {
@@ -1506,9 +1506,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Tiphareth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Tiphareth of Air"
+      "decan": "Aquarius 10-19°",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Lord of Earned Success"
     }
   },
   {
@@ -1533,9 +1533,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Netzach",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Netzach of Air"
+      "decan": "Aquarius 20-29°",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Lord of Unstable Effort"
     }
   },
   {
@@ -1560,9 +1560,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Hod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Hod of Air"
+      "decan": "Gemini 0-9°",
+      "planet_ruler": "Jupiter",
+      "hermetic_title": "Lord of Shortened Force"
     }
   },
   {
@@ -1587,9 +1587,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Yesod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Yesod of Air"
+      "decan": "Gemini 10-19°",
+      "planet_ruler": "Mars",
+      "hermetic_title": "Lord of Despair and Cruelty"
     }
   },
   {
@@ -1614,9 +1614,9 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Malkuth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Malkuth of Air"
+      "decan": "Gemini 20-29°",
+      "planet_ruler": "Sun",
+      "hermetic_title": "Lord of Ruin"
     }
   },
   {
@@ -1778,7 +1778,7 @@
       "sephirah": "Chokmah",
       "decan": "Capricorn 0-9°",
       "planet_ruler": "Jupiter",
-      "hermetic_title": "Chokmah of Earth"
+      "hermetic_title": "Lord of Harmonious Change"
     }
   },
   {
@@ -1805,7 +1805,7 @@
       "sephirah": "Binah",
       "decan": "Capricorn 10-19°",
       "planet_ruler": "Mars",
-      "hermetic_title": "Binah of Earth"
+      "hermetic_title": "Lord of Material Works"
     }
   },
   {
@@ -1832,7 +1832,7 @@
       "sephirah": "Chesed",
       "decan": "Capricorn 20-29°",
       "planet_ruler": "Sun",
-      "hermetic_title": "Chesed of Earth"
+      "hermetic_title": "Lord of Earthly Power"
     }
   },
   {
@@ -1857,9 +1857,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Geburah",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Geburah of Earth"
+      "decan": "Taurus 0-9°",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Lord of Material Trouble"
     }
   },
   {
@@ -1884,9 +1884,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Tiphareth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Tiphareth of Earth"
+      "decan": "Taurus 10-19°",
+      "planet_ruler": "Moon",
+      "hermetic_title": "Lord of Material Success"
     }
   },
   {
@@ -1911,9 +1911,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Netzach",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Netzach of Earth"
+      "decan": "Taurus 20-29°",
+      "planet_ruler": "Saturn",
+      "hermetic_title": "Lord of Success Unfulfilled"
     }
   },
   {
@@ -1938,9 +1938,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Hod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Hod of Earth"
+      "decan": "Virgo 0-9°",
+      "planet_ruler": "Sun",
+      "hermetic_title": "Lord of Prudence"
     }
   },
   {
@@ -1965,9 +1965,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Yesod",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Yesod of Earth"
+      "decan": "Virgo 10-19°",
+      "planet_ruler": "Venus",
+      "hermetic_title": "Lord of Material Gain"
     }
   },
   {
@@ -1992,9 +1992,9 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Malkuth",
-      "decan": " ",
-      "planet_ruler": "",
-      "hermetic_title": "Malkuth of Earth"
+      "decan": "Virgo 20-29°",
+      "planet_ruler": "Mercury",
+      "hermetic_title": "Lord of Wealth"
     }
   },
   {
