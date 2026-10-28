@@ -15,7 +15,7 @@ export const READING_MODES: Record<ReadingKind, string> = {
   synthesis: 'synthesis_oracle'
 };
 
-export function readingInvitation(kind: ReadingKind, focus = ''): string {
+export function readingInvitation(kind: ReadingKind, focus = '', scholar = false): string {
   const prompts: Record<ReadingKind, string> = {
     tarot: 'Give me a real, evocative tarot reading grounded in the attached named cards, positions, orientations and card-specific meanings. Let each card sound different. Connect the cards to my chosen focus without pretending to know my private circumstances. One brief note that this is symbolic reflection is enough. Do not narrate the rules, cite internal packet fields or list repetitive fact notes.',
     astrology: 'Interpret the attached calculated astrological placements and aspects as symbolic reflection, not scientific prediction. Do not invent additional placements, houses or birth details.',
@@ -25,6 +25,9 @@ export function readingInvitation(kind: ReadingKind, focus = ''): string {
   };
   const specific = focus.trim().slice(0, 300);
   return prompts[kind] +
+    (kind === 'tarot' && scholar
+      ? '\nScholar Mode is ON for this specific reading. Compare GAIA editorial symbolism with ONLY the explicitly reviewed historical notes in the approved scholarMode reference packet. Attribute historical observations to the named author and section, including a source URL where a reviewed match exists. When no reviewed match exists, state that its historical comparison is pending, and do not invent references. Do not attribute GAIA modern keywords to Waite. If a historical note covers card imagery only, do not fabricate reversed historical meanings. Keep the reading accessible and engaging, not a citation dump. All such interpretations remain symbolic, never factual predictions.'
+      : '') +
     (specific ? '\nMy chosen reflection focus: ' + specific : '') +
     '\nWrite as a thoughtful human-facing reader, not a questionnaire and not a compliance report: open with the pattern, give each card or symbol its own distinctive voice, connect the themes, and offer one meaningful practical insight. A brief uncertainty note is sufficient. Avoid headings named Fact note, Approximation noted or HermeticFrame; do not simply restate the source packet. Finish with at most one optional reflective question.';
 }
