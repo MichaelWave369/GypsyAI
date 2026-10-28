@@ -20,11 +20,13 @@ import { saveTiekatMemory } from '@/lib/tiekat/memory';
 import type { TiekatVerificationResult } from '@/lib/tiekat/schema';
 import { LocalLabPanel } from './LocalLabPanel';
 import { SovereignBrainPanel } from './SovereignBrainPanel';
+import { PilotSessionPanel } from './PilotSessionPanel';
 import './styles.css';
 
 const TABS = [
   { id: 'home', name: 'Sanctuary', glyph: '✧' },
   { id: 'oracle', name: 'Local Oracle', glyph: '◉' },
+  { id: 'pilot', name: 'Pilot Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
   { id: 'brains', name: 'Brain Bridge', glyph: '◇' },
   { id: 'tarot', name: 'Tarot', glyph: '✦' },
@@ -364,6 +366,7 @@ function App() {
           </div>
         </div>
       </>}
+      {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
       {tab === 'tarot' && <>
@@ -441,7 +444,7 @@ function App() {
       </>}
       {status && <p className="status-message" role="status">{status}</p>}
     </main>
-    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.6 · MIT</span></footer>
+    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.7 · MIT</span></footer>
   </div>;
 }
 createRoot(document.getElementById('root')!).render(<App />);
