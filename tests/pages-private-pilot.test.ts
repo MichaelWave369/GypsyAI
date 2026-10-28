@@ -38,7 +38,7 @@ describe('GypsyAI v0.2.7 voluntary first pilot', () => {
     expect(args[0]).toBe('http://127.0.0.1:11434');
     expect(args[1]).toBe('granite4.2:8b');
     expect(args[3]).not.toContain('Call me Wave.');
-    expect(plan.mock.calls[0][0]).toMatchObject({
+    expect((plan.mock.calls[0] as unknown[])[0]).toMatchObject({
       councilMode: 'disabled',
       consent: { allowAncestry: false, memoryEnabled: false, includeNames: false },
       memoryEntries: [],
