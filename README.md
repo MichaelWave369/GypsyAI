@@ -1,3 +1,5 @@
+> **GypsyAI Sovereign Portal (GitHub Pages migration):** A new static React frontend lives in [site/](site/README.md). After the Pages PR is merged, it is intended to publish at https://michaelwave369.github.io/GypsyAI/. The original Next.js application below is preserved for feature-parity and legacy-data migration; the new public Pages preview does **not** yet include the full TIEKAT experience. No Vercel runtime, cloud provider keys or hosted inference are needed for the new static frontend. Optional Ollama access is local and browser-permission-dependent.
+
 # GypsyAI
 
 **GypsyAI** is a local-first symbolic reflection environment built with Next.js and TypeScript. It combines deterministic and source-declared readers for Astrology, Hermetic correspondences, Gene Keys, Tarot, ancestry context, and a governed conversational/oracle layer.
