@@ -40,3 +40,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Build GitHub Pages React portal
+        run: pnpm pages:build
