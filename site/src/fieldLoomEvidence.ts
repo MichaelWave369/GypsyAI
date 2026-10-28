@@ -4,6 +4,7 @@
  * "Element" refers only to existing, not independently audited deck metadata.
  */
 import { getSpreadPositions } from '@/lib/tarot/engine';
+import { getPositionMeanings } from '@/lib/tarot/positions';
 import type { DrawnCard } from '@/types';
 import { selectedCardMeaning } from './ritualDraw';
 
@@ -106,10 +107,7 @@ export function buildFieldLoom(draws: readonly DrawnCard[], lens: LoomLens): Loo
     throw new Error('Card positions must match the selected spread.');
   }
   const nodes: LoomNode[] = draws.map((draw, i) => {
-    const positionMeaning = spread === 'single'
-      ? 'Core signal for now.'
-      : (draw.position === 'Past' ? 'Context still echoing.'
-        : draw.position === 'Present' ? 'Active pattern now.' : 'Near trajectory if unchanged.');
+    const positionMeaning = getPositionMeanings(spread)[i].meaning;
     const keywords = selectedKeywords(draw);
     const element = label(draw.card.hermetic?.element, 50) || null;
     return {
