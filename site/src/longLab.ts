@@ -302,7 +302,7 @@ export function parseLongLedger(text: string): LongLedger {
     if (![128, 256].includes(x.cap as number) ||
         !['priming', 'measured'].includes(String(x.phase)) ||
         x.ordinal !== i + 1 || !num(x.browserElapsedMs) ||
-        x.browserElapsedMs > 120001 ||
+        (x.browserElapsedMs as number) > 120001 ||
         (x.outputTokens !== null && (num(x.outputTokens) === null || (x.outputTokens as number) > (x.cap as number))) ||
         (x.promptTokens !== null && (num(x.promptTokens) === null || (x.promptTokens as number) > 10000))) {
       throw new Error('Invalid V3 observation at row ' + (i + 1));
