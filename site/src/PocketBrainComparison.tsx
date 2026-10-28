@@ -187,7 +187,7 @@ export function PocketBrainComparison({ client, status, blocked, onBusyChange, o
         We never auto-score which answer is scientifically better.</p>
       <button className="secondary" onClick={() => saveLedger(ledger)}>Export numeric-only paired ledger JSON</button>
       <p className="muted">The downloaded file contains no generated text, prompt body, subjective quality ratings,
-        other GypsyAI memories, or other chat data. The model/runtime checkpoint hash remains unverified.</p>
+        other GAIA memories, or other chat data. The model/runtime checkpoint hash remains unverified.</p>
       <button className="secondary" onClick={() => {
         setLedger(null); setObservations([]); setAnswers([]); setRatings({}); setError('');
       }}>Clear comparison from this tab</button>

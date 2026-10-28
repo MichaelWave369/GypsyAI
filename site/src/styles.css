@@ -126,3 +126,62 @@
 .pilot-sanctuary .switch{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;margin:16px 0}
 .pilot-sanctuary .switch input{margin-top:3px}
 .pilot-sanctuary .small-status{margin-left:10px}
+
+
+/* GAIA v0.3.0: Earth's luminous orbit meets the sovereign reading room. */
+:root{color:#eaf4ec;background:#08161c}
+body{background:radial-gradient(ellipse at 72% -10%,#24574c7a 0%,transparent 44%),radial-gradient(ellipse at 10% 24%,#27435d66 0%,transparent 46%),#08161c}
+.ambient-one{background:#4ab39e;opacity:.19}.ambient-two{background:#e0bf79;opacity:.11}
+.masthead{border-bottom-color:#3a695e;padding-top:28px}
+.logo{border-color:#5eb6a1;background:radial-gradient(circle at 40% 35%,#2d806c,#0e2731 70%);color:#f5d796;box-shadow:inset 0 0 24px #3ab89933,0 0 30px #24b89833}
+.brand h1{font-family:Georgia,serif;font-size:36px;letter-spacing:.15em}
+.brand h1 span{color:#f2ce91}
+.brand p{color:#a5d3c6;letter-spacing:.19em;font-size:10px}
+.nav{border-bottom-color:#355349;gap:7px}
+.nav-item{color:#bed0c9;border:1px solid transparent;border-radius:22px;padding:10px 15px}
+.nav-item:hover,.nav-item.current{background:#1d403d;color:#f5f7f2;border-color:#4d8173}
+.nav-item span{color:#85bfad}.nav-item.current span{color:#f4cf8b}
+.hero{padding-top:52px;padding-bottom:44px}
+.hero h2{font-size:clamp(44px,5vw,74px);line-height:1.08}
+.hero h2 em{color:#d9c487}.hero p{color:#c0d5cb}
+.orb-core{background:radial-gradient(circle at 36% 34%,#d4dca8 0%,#2d9781 24%,#164b55 55%,#091c2a 75%);color:#f7d893;box-shadow:0 0 65px #63bd9975,inset 0 0 45px #ffe5b755}
+.orb-ring{border-color:#79d8b6a5}.orb-ring.r2{border-color:#bfaf7f92}
+.orb-caption{color:#b6d7cb}
+.panel{background:linear-gradient(140deg,#132a30e8,#111e29f2);border-color:#376354}
+.panel h3{color:#eaf2e6}.feature{background:linear-gradient(145deg,#183936,#122731);border-color:#456c61}
+.feature:hover{border-color:#b6d6a8;transform:translateY(-3px)}
+.feature p,.muted{color:#bed0c7}
+.feature-action,.eyebrow{color:#dcca95}
+.primary{background:linear-gradient(115deg,#f3d695,#cbb67f);border-color:#f0dda8;color:#132c2a}
+.secondary,.file-picker{background:#18382f;border-color:#6b907a;color:#ecdfbb}
+.secondary:hover,.file-picker:hover{background:#23483d}
+input,select,textarea{background:#0b2229;border-color:#486d65;color:#f0f6ee}
+input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
+.notice{background:#132d31;border-left-color:#bdbb88;color:#d2dad1}
+.reading-card{background:radial-gradient(circle at top,#244d49,#13232d 75%);border-color:#4d7469}
+.reading-card h3{color:#faf0d6}
+.gaia-cue{margin:16px 0 0;padding:12px 13px;border-left:2px solid #83b9a4;background:#0b252aa6;color:#d8e8dd!important;font-size:12px!important}
+.footer{border-top-color:#376456;color:#c1d1c6}
+.gaia-path-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:8px 0 34px}
+.gaia-path{display:flex;text-align:left;flex-direction:column;align-items:flex-start;min-width:0;min-height:255px;padding:25px;gap:11px;color:#e7f2e9;border:1px solid #426c5e;border-radius:12px;background:linear-gradient(146deg,#173c39,#132530 79%);transition:transform .2s,border-color .2s,background .2s}
+.gaia-path:hover,.gaia-path:focus-visible{transform:translateY(-3px);border-color:#e3ca91;background:linear-gradient(146deg,#205247,#182f39 85%)}
+.gaia-path-icon{font-size:35px;line-height:1;color:#e0c88e;text-shadow:0 0 22px #8acdad44}
+.gaia-path-title{font:25px Georgia,serif;color:#f0eee2}
+.gaia-path-subtitle{font-size:12px;letter-spacing:.08em;color:#d3ceab}
+.gaia-path-truth{font-size:12px;line-height:1.6;color:#acc9bc;flex:1}
+.gaia-path-enter{color:#e3ce9a;font-size:10px;font-weight:700;letter-spacing:.14em}
+.gaia-constellation{padding:clamp(18px,3vw,35px)}
+.gaia-constellation h3{font:36px Georgia,serif;margin:10px 0 14px}
+.gaia-reading-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 18px;margin:23px 0 18px}
+.gaia-reading-fields label{display:flex;flex-direction:column;gap:8px;font-size:12px;color:#d8ddca;letter-spacing:.03em}
+.gaia-reading-fields input,.gaia-reading-fields select{width:100%}
+.gaia-result-group{padding:23px 0;border-top:1px solid #427067}
+.gaia-result-group h4,.gaia-reading-handoff h4{color:#f0dcad;font:23px Georgia,serif;margin:0 0 15px;font-weight:400}
+.gaia-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.gaia-mini-card{display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px;background:#0c272c;border:1px solid #3f6158;border-radius:9px}
+.gaia-mini-card strong{font:19px Georgia,serif;color:#f1ebd6}
+.gaia-mini-card small{font-size:12px;color:#bed2c4;line-height:1.5;overflow-wrap:anywhere}
+.gaia-reading-handoff{margin-top:17px;background:#1a3d36;border:1px solid #739a7d;border-radius:11px;padding:23px}
+@media(max-width:950px){.gaia-path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-reading-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.gaia-path-grid,.gaia-reading-fields,.gaia-mini-grid{grid-template-columns:1fr}.gaia-path{min-height:205px}.brand h1{font-size:29px}.brand p{font-size:8px;letter-spacing:.06em}.hero h2{font-size:42px}}
+@media(prefers-reduced-motion:reduce){.gaia-path{transition:none}}

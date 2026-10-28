@@ -152,7 +152,7 @@ export function SovereignBrainPanel() {
       <span className="eyebrow">SOVEREIGN BRAIN BRIDGE · v0.2.6</span>
       <h2>One sanctuary. Distinct intelligences.</h2>
       <p>Research-stage connections to existing Phi Commons brains, with separate permissions and truthful execution receipts.
-        Neither PocketBrain nor BrainC silently replaces GypsyAI's local Ollama Oracle.</p>
+        Neither PocketBrain nor BrainC silently replaces GAIA's local Ollama Oracle.</p>
     </div>
     <div className="brain-tiles">
       <div className="panel"><h3>PocketBrain Tiny</h3><span className="lab-pill neutral">OPTIONAL BROWSER INFERENCE</span>

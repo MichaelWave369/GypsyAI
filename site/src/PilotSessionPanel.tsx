@@ -91,9 +91,9 @@ export function PilotSessionPanel() {
   }
   return <section className="pilot-sanctuary">
     <div className="section-header">
-      <span className="eyebrow">GYPSYAI / FIRST HUMAN PILOT v0.2.7</span>
-      <h2>Meet your local Oracle.</h2>
-      <p>Try a real conversation with GypsyAI's TIEKAT reflection planner and a model on your own Ollama installation.
+      <span className="eyebrow">GAIA / PRIVATE ALLY SANCTUARY v0.3.0</span>
+      <h2>Get to know your Ally.</h2>
+      <p>Try a real conversation with GAIA's TIEKAT reflection planner and a model on your own Ollama installation.
         Your personal pilot profile is optional, temporary, and shared only when you approve it for that individual request.</p>
     </div>
     <div className="two-columns">
@@ -126,12 +126,12 @@ export function PilotSessionPanel() {
         <button className="secondary" disabled={pending} onClick={clearPilot}>Clear pilot profile and entire conversation</button>
       </section>
       <section className="panel">
-        <div className="lab-heading"><h3>03 / Talk with GypsyAI</h3><span className="lab-pill neutral">VOLATILE SESSION</span></div>
+        <div className="lab-heading"><h3>03 / Talk with GAIA</h3><span className="lab-pill neutral">VOLATILE SESSION</span></div>
         <p className="muted">Chat is in this open tab only, with no automatic memory, genealogy, profile imports or tool access. Switching tabs closes this pilot session.</p>
         <div className="pilot-dialog" aria-live="polite">
-          {!turns.length && <div className="pilot-intro"><strong>GypsyAI is ready when you are.</strong><p>Try asking her to reflect on a creative project or help you think through a decision. This is an actual local model conversation, not a scripted demo.</p></div>}
+          {!turns.length && <div className="pilot-intro"><strong>GAIA is ready when you are.</strong><p>Try asking her to reflect on a creative project or help you think through a decision. This is an actual local model conversation, not a scripted demo.</p></div>}
           {turns.map((turn, i) => <div key={i} className={'pilot-bubble ' + turn.role}>
-            <strong>{turn.role === 'user' ? 'You' : 'GypsyAI · local model'}</strong>
+            <strong>{turn.role === 'user' ? 'You' : 'GAIA · local model'}</strong>
             <p>{turn.content}</p>
           </div>)}
         </div>
@@ -139,9 +139,9 @@ export function PilotSessionPanel() {
           <label htmlFor="pilot-question">Your next message</label>
           <textarea id="pilot-question" rows={4} value={message} maxLength={PILOT_MAX_MESSAGE}
             disabled={pending} onChange={(e) => setMessage(e.target.value)}
-            placeholder="GypsyAI, I'm piloting your first conversation. What would you like to explore together?"/>
+            placeholder="GAIA, I'm here to explore with you. What would you like to explore together?"/>
           <button className="primary" type="submit" disabled={!connected || pending || !message.trim() || !models.includes(model)}>
-            {pending ? 'GypsyAI is responding…' : 'Send to GypsyAI on my local model'}</button>
+            {pending ? 'GAIA is responding…' : 'Send to GAIA on my local model'}</button>
         </form>
         {pending && <p className="muted" role="status">Your browser is waiting for Ollama. The current request cannot be cancelled from this pilot interface.</p>}
         {error && <p className="error" role="alert">{error}</p>}
