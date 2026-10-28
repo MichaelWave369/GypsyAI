@@ -65,7 +65,9 @@ describe('GAIA v0.9 Golden Dawn correspondence evidence audit',()=>{
     });
   });
   it('keeps the Golden Dawn reference explicit and separated from empirical proof',()=>{
-    expect(HERMETIC_AUDIT_REFERENCES.map(r=>r.id)).toEqual(['book-t-1912','golden-dawn-tree']);
+    expect(HERMETIC_AUDIT_REFERENCES.map(r=>r.id)).toEqual([
+      'book-t-1912','book-t-1912-court-mirror','golden-dawn-tree'
+    ]);
     expect(HERMETIC_AUDIT_REFERENCES[0].url).toContain('/crowley/equinox/i/viii/');
     const c=getHermeticAuditForCard('wands-8')!;
     expect(c.sources).toContain('book-t-1912');
