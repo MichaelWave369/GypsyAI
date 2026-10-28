@@ -5,13 +5,20 @@
  */
 import type { TarotCard } from '@/types';
 import deck from '@/lib/tarot/deck.json';
+import { expectedBookTAceCourt } from './bookTCourtCatalog';
 
 export const HERMETIC_AUDIT_REFERENCES = [
   {
     id:'book-t-1912', type:'historical-primary-text',
     title:'A Description of the Cards of the Tarot (Book T), The Equinox I:8 (1912), pp. 143–210',
     url:'https://hermetic.com/crowley/equinox/i/viii/eqi08016',
-    scope:'Historical Golden Dawn pip-card decans, planetary rulers, titles and trump letter/astrological attributions. Strength/Justice numbering varies across editions.'
+    scope:'Historical Golden Dawn pip-card decans, planetary rulers, titles, Ace and court headings, and trump letter/astrological attributions. Strength/Justice numbering varies across editions.'
+  },
+  {
+    id:'book-t-1912-court-mirror', type:'historical-primary-text',
+    title:'Liber LXXVIII, Book T (The Equinox I:8), accessible source mirror, titles and court descriptions',
+    url:'https://hermeticcloud.com/library/liber-lxxviii/',
+    scope:'Section headings I–XX, Ace Kether/root symbolism, and the Knight/King/Prince/Knave court-rank distinctions. Published Book T labels, not automatic equivalence of all Ryder–Waite–Smith imagery.'
   },
   {
     id:'golden-dawn-tree', type:'comparative-reconstruction',
@@ -108,11 +115,25 @@ export function auditHermeticCard(card: TarotCard): HermeticAuditRecord {
     pendingFields.push('Extended astrological interpretation','Any historical reverse-only meaning');
     notes.push('One of Book T’s 36 zodiac decan pips (2–10), not a prediction or physical influence.');
   }else{
-    pendingFields.push('Full court/ace attribution and rank mapping');
-    notes.push('Aces and court cards do not share the 36-card pip decan table; court titles and sign spans require a separate, edition-aware audit.');
+    const expected=expectedBookTAceCourt(card);
+    for(const [key,value] of Object.entries(expected)){
+      if (typeof value==='string')record(key,value,'book-t-1912-court-mirror',card.hermetic[key]);
+    }
+    if(card.number===1){
+      record('sephirah','Kether','book-t-1912-court-mirror',card.hermetic.sephirah);
+      pendingFields.push('Full Ace imagery and meaning comparison across deck editions');
+      notes.push('Book T explicitly calls each Ace an elemental Root in Kether, not one of the 36 ten-degree zodiac decans.');
+    }else{
+      pendingFields.push('Court sign boundary, zodiac region and deck-specific pictorial equivalence');
+      pendingFields.push('Historical rank/person associations outside the Book T headings');
+      notes.push('Book T uses King for the charioted Prince and Knave for the Princess; GAIA retains familiar Page/Knight/Queen/King names. Courts cover sign regions or polar quadrants, not a single pip decan.');
+    }
+    sources.push('book-t-1912-court-mirror');
   }
+  const partialCourtOrAce=card.arcana==='minor'&&(card.number===1||card.court!==null);
   return {
-    status:fields.length?'checked-in-golden-dawn-tradition':'pending-specialist-review',
+    status:partialCourtOrAce?'pending-specialist-review'
+      :fields.length?'checked-in-golden-dawn-tradition':'pending-specialist-review',
     cardId:card.id,fields,pendingFields,notes,sources
   };
 }
@@ -128,6 +149,9 @@ export function hermeticAuditCoverage(){
     total:audits.length,
     traditionChecked:audits.filter(a=>a.status==='checked-in-golden-dawn-tradition').length,
     specialistPending:audits.filter(a=>a.status==='pending-specialist-review').length,
+    bookTAceCourtTitlesIndexed:audits.filter(a=>a.sources.includes('book-t-1912-court-mirror')).length,
+    courtRegionsStillPending:audits.filter(a=>a.cardId.endsWith('-page')||
+      a.cardId.endsWith('-knight')||a.cardId.endsWith('-queen')||a.cardId.endsWith('-king')).length,
     note:'Reviewed mappings apply to Golden Dawn historical convention, not supernatural or scientific evidence.'
   };
 }
