@@ -89,7 +89,7 @@ describe('v0.2.3 bounded local repeat lab', () => {
     expect(median(data)).toBe(6);
     expect(data).toEqual([7, 1, 6, 3, 12]);
     expect(seriesStats(data)).toEqual({
-      count: 5, min: 1, median: 6, max: 12, iqr: 6, range: 11
+      count: 5, min: 1, median: 6, max: 12, iqr: 7.5, range: 11
     });
     expect(seriesStats([])).toBeNull();
     expect(seriesStats([Number.NaN])).toBeNull();
