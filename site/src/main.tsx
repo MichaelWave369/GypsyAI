@@ -21,12 +21,16 @@ import type { TiekatVerificationResult } from '@/lib/tiekat/schema';
 import { LocalLabPanel } from './LocalLabPanel';
 import { SovereignBrainPanel } from './SovereignBrainPanel';
 import { PilotSessionPanel } from './PilotSessionPanel';
+import { ReadingRoomPanel } from './ReadingRoomPanel';
+import { READING_MODES, readingInvitation, tarotReflectionCues } from './readingExperience';
+import type { ReadingKind } from './readingExperience';
 import './styles.css';
 
 const TABS = [
   { id: 'home', name: 'Sanctuary', glyph: '✧' },
-  { id: 'oracle', name: 'Local Oracle', glyph: '◉' },
-  { id: 'pilot', name: 'Pilot Sanctuary', glyph: '✺' },
+  { id: 'readings', name: 'Reading Room', glyph: '✦' },
+  { id: 'oracle', name: 'GAIA Oracle', glyph: '◉' },
+  { id: 'pilot', name: 'Ally Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
   { id: 'brains', name: 'Brain Bridge', glyph: '◇' },
   { id: 'tarot', name: 'Tarot', glyph: '✦' },
@@ -184,10 +188,19 @@ function App() {
     setTab(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  function reflect(context: unknown, label: string, kind: PacketKind) {
+  function reflect(context: unknown, label: string, kind: ReadingKind, focus = '') {
     const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
+    if (!approved) {
+      setStatus('Ancestry consent is off or the reading packet was rejected. Nothing was attached.');
+      return;
+    }
+    // Start each new reading with clean chat context. Never leak past
+    // readings into a different model session implicitly.
+    resetModelContext();
     setPacket(approved);
-    if (!approved) setStatus('Ancestry aggregate consent is off or the packet was rejected. No ancestry context was attached.');
+    setSessionMode(READING_MODES[kind] as TiekatSessionModeKey);
+    setQuery(readingInvitation(kind, focus));
+    setStatus('Reading packet staged for review. No model was contacted. Check the suggested prompt and press Send in the Local Oracle.');
     go('oracle');
   }
   async function connect() {
@@ -216,6 +229,7 @@ function App() {
       setLastBrainTurn(brainTurn);
       setLastVerification(checkLocalBrainReply(answer, brainTurn));
       setTurns([...next, { role: 'assistant' as const, content: answer }].slice(-30));
+      setPacket(null); // One approved reading packet per successful request.
     } catch (error) {
       setReplyError(error instanceof Error ? error.message : String(error));
       setTurns(next); // Preserve user input so it can be retried or copied.
@@ -247,7 +261,7 @@ function App() {
     finally { setBusyAncestry(false); }
   }
   async function deleteAncestry() {
-    if (!window.confirm('Delete GypsyAI ancestry data saved in this browser?')) return;
+    if (!window.confirm('Delete GAIA ancestry data saved in this browser?')) return;
     try { await clearAncestry(); setAncestry(null); setStatus('Local ancestry data deleted.'); }
     catch { setStatus('Unable to delete local ancestry data.'); }
   }
@@ -258,7 +272,7 @@ function App() {
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
     <header className="masthead">
       <div className="logo" aria-hidden="true">✧</div>
-      <div className="brand"><span className="eyebrow">ENTER THE FIELD · SOVEREIGN SYSTEMS</span><h1>Gypsy<span>AI</span></h1><p>THE ORACLE LIVES WITH YOU</p></div>
+      <div className="brand"><span className="eyebrow">ENTER THE FIELD · Φ369 LABS</span><h1>GA<span>IA</span></h1><p>GYPSY ARTIFICIAL INTELLIGENCE ALLY</p></div>
       <div className="header-status"><span className={'dot ' + (connection === 'connected' ? 'active' : '')} />
         {connection === 'connected' ? 'LOCAL MODEL CONNECTED' : 'LOCAL FIRST · NO CLOUD REQUIRED'}</div>
     </header>
@@ -270,15 +284,15 @@ function App() {
     <main>
       {tab === 'home' && <>
         <section className="hero">
-          <div className="hero-copy"><span className="eyebrow">GYPSYAI · SOVEREIGN BRAIN BRIDGE v0.2.6</span>
-            <h2>Wisdom without<br/><em>the leash.</em></h2>
-            <p>Explore symbolic systems with deterministic, source-declared tools. Speak with an optional model on your own computer. Your ancestry, history, and context stay under your control.</p>
-            <div className="actions"><button className="primary" onClick={() => go('oracle')}>Open the Oracle <span>↗</span></button><button className="secondary" onClick={() => go('tarot')}>Explore the readings</button></div>
+          <div className="hero-copy"><span className="eyebrow">MEET GAIA · YOUR LOCAL-FIRST ALLY</span>
+            <h2>Enter the field.<br/><em>Find your meaning.</em></h2>
+            <p>GAIA is your Gypsy Artificial Intelligence Ally. Explore tarot, birth-chart astrology, Gene Keys and ancestry through real local tools, then invite a model running on your own computer to reflect with you. Your questions, your readings, your choice.</p>
+            <div className="actions"><button className="primary" onClick={() => go('readings')}>Begin a reading <span>↗</span></button><button className="secondary" onClick={() => go('pilot')}>Meet your Ally</button></div>
           </div>
-          <div className="orb-wrap" aria-hidden="true"><div className="orb-ring r1"/><div className="orb-ring r2"/><div className="orb-core">✺</div><div className="orb-caption">YOUR FIELD · YOUR KEYS</div></div>
+          <div className="orb-wrap" aria-hidden="true"><div className="orb-ring r1"/><div className="orb-ring r2"/><div className="orb-core">✺</div><div className="orb-caption">GAIA · ROOTED IN FREEDOM</div></div>
         </section>
         <div className="three-cards">
-          <button className="feature" onClick={() => go('tarot')}><span className="feature-symbol">✦</span><strong>Symbolic readings</strong><p>Tarot, astrology and Gene Keys using the original GypsyAI computation libraries.</p><span className="feature-action">ENTER STUDIO ↗</span></button>
+          <button className="feature" onClick={() => go('readings')}><span className="feature-symbol">✦</span><strong>Reading Room</strong><p>Choose a tarot, astrology or Gene Keys chamber, or combine all three into one locally computed constellation reading.</p><span className="feature-action">BEGIN READING ↗</span></button>
           <button className="feature" onClick={() => go('ancestry')}><span className="feature-symbol">♧</span><strong>Ancestral field</strong><p>GEDCOM import, private local IndexedDB storage, living-person redaction and pattern summaries.</p><span className="feature-action">OPEN ARCHIVE ↗</span></button>
           <button className="feature" onClick={() => go('settings')}><span className="feature-symbol">◈</span><strong>Local intelligence</strong><p>Connect a model you already run in Ollama. ΦStream remains separate and experimental.</p><span className="feature-action">REVIEW CONTROLS ↗</span></button>
         </div>
@@ -300,7 +314,7 @@ function App() {
             <p className="muted">For a GitHub Pages HTTPS site, local browser access may need an explicit Ollama origin allowlist and compatible browser permissions. The app will never expose Ollama to the public internet.</p>
             <div className="thin-rule"/>
             <h3>02 / Approved context</h3>
-            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">A deterministic reading packet is attached to your next messages. It will be sent only to the local Ollama endpoint when you submit.</p><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Reflect with Oracle” on a reading to attach its factual packet.</p>}
+            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send.</p><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
 
             <div className="thin-rule"/>
             <h3>03 / TIEKAT Local Brain</h3>
@@ -346,8 +360,8 @@ function App() {
             <div className="conversation-head"><div><span className="eyebrow">DIRECT · LOCAL</span><h3>Conversation</h3></div><span className="conversation-live">{connection === 'connected' ? '● READY' : '○ OFFLINE'}</span></div>
             <div className="message-area" aria-live="polite">
               {!turns.length && <div className="empty-chat"><span>✺</span><h3>An open mind. A grounded reading.</h3><p>Connect your Ollama model, then begin. We separate interpretations from what the underlying reader actually calculated.</p></div>}
-              {turns.map((turn, index) => <div key={index} className={'chat-bubble ' + turn.role}><span className="bubble-role">{turn.role === 'user' ? 'YOU' : 'GYPSYAI · LOCAL MODEL'}</span><p>{turn.content}</p></div>)}
-              {pending && <p className="muted">Local model is generating…</p>}
+              {turns.map((turn, index) => <div key={index} className={'chat-bubble ' + turn.role}><span className="bubble-role">{turn.role === 'user' ? 'YOU' : 'GAIA · LOCAL MODEL'}</span><p>{turn.content}</p></div>)}
+              {pending && <p className="muted">GAIA is reflecting through your local model…</p>}
             </div>
             {replyError && <p className="error" role="alert">{replyError}</p>}
             {lastBrainTurn && <details className="brain-details">
@@ -362,26 +376,27 @@ function App() {
               <textarea id="oracle-message" rows={3} maxLength={5000} placeholder="What's on your mind?" value={query} onChange={(e) => setQuery(e.target.value)} />
               <button className="primary" type="submit" disabled={pending || !query.trim() || !selected || connection !== 'connected'}>{pending ? 'Thinking…' : 'Send to my local model ↗'}</button>
             </form>
-            <p className="muted micro">Model-generated interpretations can be inaccurate. Verify consequential claims independently.</p>
+            <p className="muted micro">GAIA reflects, she does not predict. Model interpretations can be inaccurate. Verify consequential claims independently.</p>
           </div>
         </div>
       </>}
+      {tab === 'readings' && <ReadingRoomPanel onNavigate={go} onReflect={reflect} />}
       {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
       {tab === 'tarot' && <>
-        <SectionHeader kicker="SYMBOLIC STUDIO / I" title="The Tarot Chamber" description="Draw from GypsyAI's original deck and Hermetic correspondence mappings. Cards are chosen locally, not generated by an LLM." />
+        <SectionHeader kicker="SYMBOLIC STUDIO / I" title="The Tarot Chamber" description="Draw from GAIA's original deck and Hermetic correspondence mappings. Cards are chosen locally, not generated by an LLM." />
         <section className="panel control-panel"><div className="field"><label htmlFor="spread">Spread</label><select id="spread" value={spread} onChange={(e) => setSpread(e.target.value as TarotSpreadType)}>{SPREADS.map((s) => <option key={s.value} value={s.value}>{s.name}</option>)}</select></div>
           <div className="field grow"><label htmlFor="question">Reflection focus (optional)</label><input id="question" placeholder="What am I exploring?" value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={500} /></div>
           <button className="primary" onClick={generateTarot}>Draw Cards ✧</button></section>
         {tarot && <><div className="reading-grid">{tarot.cards.map((draw, index) => <article className="reading-card" key={index}>
           <span className="eyebrow">{draw.position}</span><div className="card-symbol">✦</div><h3>{draw.card.name}</h3><p className="orientation">{draw.orientation}</p>
           <p>{(draw.orientation === 'upright' ? draw.card.upright_keywords : draw.card.reversed_keywords).join(' · ')}</p>
-          <p className="muted">Hermetic: {Object.entries(draw.card.hermetic).filter(([,v]) => typeof v === 'string').map(([k,v]) => k + ': ' + v).join(' · ')}</p>
-        </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''), 'tarot')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
+          <p className="muted">Hermetic: {Object.entries(draw.card.hermetic).filter(([,v]) => typeof v === 'string').map(([k,v]) => k + ': ' + v).join(' · ')}</p><p className="gaia-cue">Reflect: {tarotReflectionCues(tarot.cards)[index].question}</p>
+        </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''), 'tarot', question)}>Prepare local GAIA interpretation ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
       </>}
       {tab === 'astrology' && <>
-        <SectionHeader kicker="SYMBOLIC STUDIO / II" title="The Celestial Map" description="Compute positions, aspects, equal houses and mapped Hermetic associations using the existing GypsyAI astronomy engine." />
+        <SectionHeader kicker="SYMBOLIC STUDIO / II" title="The Celestial Map" description="Compute positions, aspects, equal houses and mapped Hermetic associations using the existing GAIA astronomy engine." />
         <Notice>Enter the birth time in UTC, not local civil time. Latitude and longitude are required for the Ascendant. The current astronomical engine includes documented approximations; treat outputs accordingly.</Notice>
         <section className="panel control-panel wrap-fields">
           <div className="field"><label htmlFor="birthdate">Date</label><input id="birthdate" type="date" value={chartDate} onChange={(e) => setChartDate(e.target.value)} /></div>
@@ -394,17 +409,17 @@ function App() {
         {chart && <><div className="two-columns">
           <section className="panel"><h3>Planetary placements</h3><div className="data-list">{chart.chart.placements.map((p) => <div key={p.body} className="data-row"><strong>{p.body}</strong><span>{p.sign} {p.degreeInSign.toFixed(2)}°</span></div>)}</div></section>
           <section className="panel"><h3>Angles &amp; aspects</h3><p className="highlight">ASC {chart.chart.ascendantSign.sign} · MC {chart.chart.mcSign.sign}</p><div className="data-list">{chart.chart.aspects.slice(0, 12).map((a, index) => <div key={index} className="data-row"><strong>{a.bodyA} {a.type} {a.bodyB}</strong><span>{a.orb.toFixed(2)}° orb</span></div>)}</div></section></div>
-          <div className="actions"><button className="primary" onClick={() => reflect(chart.packet, 'Astrology computation', 'astrology')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-astrology.json', chart)}>Export chart JSON</button></div></>}
+          <div className="actions"><button className="primary" onClick={() => reflect(chart.packet, 'Astrology computation', 'astrology')}>Prepare local GAIA interpretation ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-astrology.json', chart)}>Export chart JSON</button></div></>}
       </>}
       {tab === 'genekeys' && <>
-        <SectionHeader kicker="SYMBOLIC STUDIO / III" title="The Gene Keys Atlas" description="Explore activation-sequence associations using GypsyAI's local symbolic mapping data. These correspondences are interpretive, not genetic testing." />
+        <SectionHeader kicker="SYMBOLIC STUDIO / III" title="The Gene Keys Atlas" description="Explore activation-sequence associations using GAIA's local symbolic mapping data. These correspondences are interpretive, not genetic testing." />
         <Notice>This app's current Gene Keys implementation includes approximate astronomical mappings and original generic descriptive material, not an official Gene Keys profile.</Notice>
         <section className="panel control-panel"><div className="field"><label htmlFor="gene-date">Date</label><input id="gene-date" type="date" value={geneDate} onChange={(e) => setGeneDate(e.target.value)} /></div>
           <div className="field"><label htmlFor="gene-time">Time (UTC)</label><input id="gene-time" type="time" value={geneTime} onChange={(e) => setGeneTime(e.target.value)} /></div>
           <button className="primary" onClick={generateGene}>Explore Profile</button></section>
         {gene && <><div className="reading-grid four">{gene.spheres.map((s) => <article className="reading-card" key={s.sphere}>
           <span className="eyebrow">{s.sphere.replace(/([A-Z])/g, ' $1').trim()}</span><div className="key-number">{String(s.key).padStart(2, '0')}</div><h3>Key {s.key} · Line {s.line}</h3><p>{s.summary?.short_gift ?? 'Contemplate this key as a symbolic theme.'}</p></article>)}</div>
-          <div className="actions"><button className="primary" onClick={() => reflect(gene.packet, 'Gene Keys activation sequence', 'genekeys')}>Reflect with Oracle ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-genekeys.json', gene.profile)}>Export profile JSON</button></div></>}
+          <div className="actions"><button className="primary" onClick={() => reflect(gene.packet, 'Gene Keys activation sequence', 'genekeys')}>Prepare local GAIA interpretation ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-genekeys.json', gene.profile)}>Export profile JSON</button></div></>}
       </>}
       {tab === 'ancestry' && <>
         <SectionHeader kicker="PRIVATE ARCHIVE" title="The Ancestral Field" description="Import GEDCOM into your browser's IndexedDB. Living people stay hidden by default, and ancestry is never attached to model prompts automatically." />
@@ -437,14 +452,14 @@ function App() {
           </section>
           <section className="panel"><h3>What's local, what's not</h3>
             <div className="data-list"><div className="data-row"><strong>Tarot / Astronomy / Gene Keys</strong><span>Browser computations</span></div><div className="data-row"><strong>Ancestry GEDCOM</strong><span>IndexedDB only</span></div><div className="data-row"><strong>Model</strong><span>Ollama on localhost</span></div><div className="data-row"><strong>PhiStream</strong><span>Research-only handshake in Local Lab</span></div><div className="data-row"><strong>TIEKAT local brain</strong><span>Modes / consent / council plan / note memory</span></div></div>
-            <div className="thin-rule"/><h3>Local brain &amp; consent</h3><p>Memory is {consent.memoryEnabled ? 'ON' : 'OFF'}; ancestry aggregate context is {consent.allowAncestry ? 'ON (explicit attachment only)' : 'OFF'}; names remain OFF. Advanced legacy TIEKAT habitat, rituals and archives still await migration.</p><button className="secondary" onClick={() => go('oracle')}>Manage TIEKAT settings ↗</button><div className="thin-rule"/><h3>License &amp; provenance</h3><p>GypsyAI project-owned code: MIT. Third-party engines and dataset licenses remain their own. Symbolic interpretation is never presented as a measurement of physical phenomena.</p>
-            <a href="https://github.com/MichaelWave369/GypsyAI" target="_blank" rel="noreferrer" className="text-link">Inspect source and development status ↗</a>
+            <div className="thin-rule"/><h3>Local brain &amp; consent</h3><p>Memory is {consent.memoryEnabled ? 'ON' : 'OFF'}; ancestry aggregate context is {consent.allowAncestry ? 'ON (explicit attachment only)' : 'OFF'}; names remain OFF. Advanced legacy TIEKAT habitat, rituals and archives still await migration.</p><button className="secondary" onClick={() => go('oracle')}>Manage TIEKAT settings ↗</button><div className="thin-rule"/><h3>License &amp; provenance</h3><p>GAIA project-owned code: MIT. Third-party engines and dataset licenses remain their own. Symbolic interpretation is never presented as a measurement of physical phenomena.</p>
+            <a href="https://github.com/MichaelWave369/GAIA" target="_blank" rel="noreferrer" className="text-link">Inspect source and development status ↗</a>
           </section>
         </div>
       </>}
       {status && <p className="status-message" role="status">{status}</p>}
     </main>
-    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.7 · MIT</span></footer>
+    <footer className="footer"><span>GAIA / GYPSY ARTIFICIAL INTELLIGENCE ALLY</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.3.0 · MIT</span></footer>
   </div>;
 }
 createRoot(document.getElementById('root')!).render(<App />);
