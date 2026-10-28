@@ -269,3 +269,41 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-spread-atlas button:focus-visible{outline:3px solid #f1d99b;outline-offset:3px}
 @media(max-width:640px){.gaia-atlas-editor{padding:12px}.gaia-atlas-board-wrap{padding:5px}.gaia-atlas-position-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-atlas-position-tabs button{text-align:left}}
 @media(prefers-reduced-motion:reduce){.gaia-atlas-position-tabs button{transition:none}}
+
+
+/* GAIA v0.7 Symbolic Library. Distinguishes editorial from reviewed historical sources. */
+.gaia-library .panel{margin-bottom:18px}
+.gaia-library-counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 23px}
+.gaia-library-counts>div{display:flex;flex-direction:column;gap:7px;padding:20px;background:#122f31;border:1px solid #476e5e;border-radius:10px}
+.gaia-library-counts strong{font:32px Georgia,serif;color:#e9d19c}
+.gaia-library-counts span{font-size:12px;color:#bbd0c4}
+.gaia-library-workspace{display:grid;grid-template-columns:minmax(220px,.87fr) minmax(0,2fr);gap:20px;align-items:start}
+.gaia-library-index{padding:22px;position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column}
+.gaia-library-index label{display:block;color:#d8d3b5;font-size:12px;margin:10px 0 7px}
+.gaia-library-index input,.gaia-library-index select{width:100%;max-width:100%}
+.gaia-library-items{overflow:auto;max-height:55vh;display:flex;flex-direction:column;gap:6px;padding:3px}
+.gaia-library-items button{display:flex;flex-direction:column;text-align:left;align-items:flex-start;gap:6px;background:#102b30;color:#e2eadf;border:1px solid #45675f;padding:11px 12px;border-radius:8px}
+.gaia-library-items button.active{border-color:#efd59d;background:#285143}
+.gaia-library-items button small{color:#b8cdbf;font-size:10px}
+.gaia-library-items button:hover{border-color:#e9d5a0}
+.gaia-library-card,.gaia-library-sources{padding:25px}
+.gaia-library-card h3{font:clamp(28px,3vw,40px) Georgia,serif;color:#f1dfb5;margin:10px 0 5px}
+.gaia-library-tags{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0}
+.gaia-library-tags span{font-size:11px;border:1px solid #668872;background:#153b35;color:#d9dbc6;border-radius:30px;padding:7px 10px}
+.gaia-library-orientation{display:flex;gap:9px;margin:19px 0 10px}
+.gaia-library-orientation button{min-height:44px;padding:10px 19px;border:1px solid #5e8778;color:#dce7d9;background:#173737;border-radius:9px}
+.gaia-library-orientation button.active{background:#e1ca98;color:#0a2529;border-color:#efdfa9}
+.gaia-library-interpretation{border-left:3px solid #d6bd8b;padding:19px;background:#14352f;margin:16px 0 25px}
+.gaia-library-interpretation>p{line-height:1.75}
+.gaia-library-source-section{border-top:1px solid #5a8371;padding:20px 0 12px}
+.gaia-library-source-section h4,.gaia-library-sources h3{font:26px Georgia,serif;color:#eed9a6;font-weight:400}
+.gaia-library-source-section p,.gaia-library-reference p{line-height:1.7}
+.gaia-library-source-section a,.gaia-library-reference a{color:#b8e9d4;text-decoration:underline;text-underline-offset:3px}
+.gaia-library-hermetic{margin:15px 0;padding:13px 15px;background:#102c32;border:1px solid #41685b;border-radius:8px}
+.gaia-library-hermetic summary{cursor:pointer;color:#d9d1a8;font-size:13px}
+.gaia-library-hermetic p{font-size:12px;color:#b8cfbf;overflow-wrap:anywhere}
+.gaia-library-reference{border-top:1px solid #4b725f;padding:20px 0}
+.gaia-library-reference strong{font:20px Georgia,serif;color:#e8d5a9}
+.gaia-library button:focus-visible,.gaia-library a:focus-visible{outline:3px solid #f0d69d;outline-offset:3px}
+@media(max-width:1000px){.gaia-library-workspace{grid-template-columns:1fr}.gaia-library-index{position:static;max-height:none}.gaia-library-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-height:280px}}
+@media(max-width:630px){.gaia-library-counts{grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-library-card,.gaia-library-sources{padding:16px}.gaia-library-index{padding:15px}.gaia-library-counts>div{padding:14px}}
