@@ -4,7 +4,8 @@ import type { ReadingKind } from './readingExperience';
 
 type Integrated = ReturnType<typeof createIntegratedReading>;
 
-const PATHS: { id: 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+const PATHS: { id: 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+  { id: 'ritual', icon: '✺', title: 'Ritual Draw Table', subtitle: 'Shuffle, cut, select and reveal', truth: 'Choose face-down cards yourself, then explore the Field Loom of recorded meanings and positions.' },
   { id: 'tarot', icon: '✧', title: 'Tarot', subtitle: 'One card to the Tree of Life', truth: 'Real shuffled draws, card orientations and Hermetic correspondences, computed locally.' },
   { id: 'astrology', icon: '☼', title: 'Astrology', subtitle: 'The celestial map', truth: 'Chart placements, angles and aspects calculated from UTC birth data and coordinates.' },
   { id: 'genekeys', icon: '◇', title: 'Gene Keys', subtitle: 'Contemplation atlas', truth: 'Approximate symbolic activation mappings, not a genetic test or official profile.' },
@@ -16,7 +17,7 @@ const PATHS: { id: 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 
 export function ReadingRoomPanel({
   onNavigate, onReflect
 }: {
-  onNavigate: (id: 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
+  onNavigate: (id: 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
   onReflect: (data: unknown, label: string, kind: ReadingKind, focus?: string) => void;
 }) {
   const [focus, setFocus] = useState('');
