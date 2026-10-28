@@ -245,3 +245,27 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-loom-v2 button:focus-visible{outline:3px solid #f1d999;outline-offset:3px}
 @media(max-width:590px){.gaia-loom-selectors{grid-template-columns:1fr}.gaia-loom-evidence-list{grid-template-columns:1fr}.gaia-loom-detail{padding:15px}.gaia-loom-lenses{display:grid;grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.gaia-loom-lenses button,.gaia-loom-link-selectors button,.gaia-loom-selectors button{transition:none}}
+
+
+/* GAIA v0.6 Spread Atlas: local, responsive canvas and accessible editing controls. */
+.gaia-spread-atlas .panel{margin-bottom:22px}
+.gaia-atlas-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.gaia-atlas-tools button{min-height:44px}
+.gaia-atlas-board-wrap{background:radial-gradient(ellipse at center,#224b46,#10252c 85%);border:1px solid #477765;border-radius:14px;padding:12px;margin:20px 0 12px;overflow:hidden}
+.gaia-atlas-board-wrap svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+.gaia-atlas-node{cursor:grab;touch-action:none}
+.gaia-atlas-node:active{cursor:grabbing}
+.gaia-atlas-editor{border:1px solid #46695c;background:#102f31;border-radius:11px;padding:17px;margin:18px 0}
+.gaia-atlas-position-tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
+.gaia-atlas-position-tabs button{color:#d1e0d8;border:1px solid #58796c;border-radius:8px;background:#1a3d3c;min-height:44px;padding:10px 12px;font-size:12px}
+.gaia-atlas-position-tabs button.active{background:#e1cb98;color:#102d2c;border-color:#f6dfa7}
+.gaia-atlas-active{padding:13px 18px;background:#173a37;border-left:3px solid #e4c996;margin:13px 0}
+.gaia-atlas-active>strong{color:#ebd6a0}
+.gaia-atlas-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px}
+.gaia-atlas-preview>div{display:flex;flex-direction:column;gap:7px;padding:11px 12px;background:#0e282c;border:1px solid #457263;border-radius:7px}
+.gaia-atlas-preview strong{font-size:13px;color:#ead4a4}
+.gaia-atlas-preview small{font-size:12px;color:#c5d6cc;line-height:1.6}
+.gaia-spread-atlas textarea{width:100%;resize:vertical;min-height:115px}
+.gaia-spread-atlas button:focus-visible{outline:3px solid #f1d99b;outline-offset:3px}
+@media(max-width:640px){.gaia-atlas-editor{padding:12px}.gaia-atlas-board-wrap{padding:5px}.gaia-atlas-position-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-atlas-position-tabs button{text-align:left}}
+@media(prefers-reduced-motion:reduce){.gaia-atlas-position-tabs button{transition:none}}

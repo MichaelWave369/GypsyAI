@@ -7,6 +7,8 @@ import { getSpreadPositions } from '@/lib/tarot/engine';
 import { getPositionMeanings } from '@/lib/tarot/positions';
 import type { DrawnCard } from '@/types';
 import { selectedCardMeaning } from './ritualDraw';
+import { validateAtlasLayout } from './spreadAtlas';
+import type { AtlasLayout } from './spreadAtlas';
 
 export type LoomLens = 'positions' | 'elements' | 'keywords' | 'arcana';
 export type LoomEvidence = {
@@ -91,23 +93,25 @@ function comparisons(a: LoomNode, b: LoomNode, lens: LoomLens): LoomEvidence[] {
   }
 }
 
-export function buildFieldLoom(draws: readonly DrawnCard[], lens: LoomLens): LoomResult {
+export function buildFieldLoom(draws: readonly DrawnCard[], lens: LoomLens, customLayout?: AtlasLayout | null): LoomResult {
   if (!['positions','elements','keywords','arcana'].includes(lens)) {
     throw new Error('Choose a supported evidence lens.');
   }
-  if (!draws.length || draws.length > 3 || ![1, 3].includes(draws.length)
+  const layout = customLayout ? validateAtlasLayout(customLayout) : null;
+  const validCount = layout ? draws.length === layout.slots.length : [1,3].includes(draws.length);
+  if (!draws.length || draws.length > 5 || !validCount
       || new Set(draws.map(d => d.card.id)).size !== draws.length
       || draws.some(d => !d.card.id || !d.card.name || !['major','minor'].includes(d.card.arcana)
         || !['upright','reversed'].includes(d.orientation))) {
     throw new Error('Field Loom requires a complete confirmed one- or three-card reading.');
   }
   const spread = draws.length === 1 ? 'single' : 'three-card';
-  const positions = getSpreadPositions(spread);
+  const positions = layout ? layout.slots.map(s=>s.label) : getSpreadPositions(spread);
   if (draws.some((d,i) => d.position !== positions[i])) {
     throw new Error('Card positions must match the selected spread.');
   }
   const nodes: LoomNode[] = draws.map((draw, i) => {
-    const positionMeaning = getPositionMeanings(spread)[i].meaning;
+    const positionMeaning = layout ? layout.slots[i].meaning : getPositionMeanings(spread)[i].meaning;
     const keywords = selectedKeywords(draw);
     const element = label(draw.card.hermetic?.element, 50) || null;
     return {
@@ -116,7 +120,8 @@ export function buildFieldLoom(draws: readonly DrawnCard[], lens: LoomLens): Loo
       meaning: label(selectedCardMeaning(draw), 500), positionMeaning,
       sources: [
         { source: 'confirmed-draw' as const, text: 'You chose ' + draw.card.name + ' as ' + draw.position + ' (' + draw.orientation + ').' },
-        { source: 'spread-definition' as const, text: draw.position + ': ' + positionMeaning },
+        { source: 'spread-definition' as const, text: draw.position + ': ' + positionMeaning +
+          (layout ? ' (user-authored Spread Atlas role).' : '') },
         { source: 'deck-data' as const, text: 'Selected-orientation card meaning: ' + selectedCardMeaning(draw) },
         { source: 'deck-data' as const, text: 'Card classification: ' + draw.card.arcana + ' arcana.' },
         { source: 'deck-data' as const, text: element

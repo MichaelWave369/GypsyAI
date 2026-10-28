@@ -6,14 +6,19 @@ import {
 } from './ritualDraw';
 import type { RitualCard, RitualSpread } from './ritualDraw';
 import { FieldLoomPanel } from './FieldLoomPanel';
+import { chooseAtlasCard, atlasReadingPacket, validateAtlasLayout } from './spreadAtlas';
+import type { AtlasLayout } from './spreadAtlas';
 
+type RitualMode = RitualSpread | 'atlas';
 const PAGE_SIZE = 12;
 const SPREAD_SIZE: Record<RitualSpread, number> = { single: 1, 'three-card': 3 };
 
-export function RitualDrawPanel({ onReflect }: {
-  onReflect: (data: unknown, label: string, kind: 'tarot', focus?: string) => void
+export function RitualDrawPanel({ onReflect, atlasLayout }: {
+  onReflect: (data: unknown, label: string, kind: 'tarot', focus?: string) => void;
+  atlasLayout?: AtlasLayout | null;
 }) {
-  const [spread, setSpread] = useState<RitualSpread>('three-card');
+  const layout = atlasLayout ? validateAtlasLayout(atlasLayout) : null;
+  const [spread, setSpread] = useState<RitualMode>(layout ? 'atlas' : 'three-card');
   const [focus, setFocus] = useState('');
   const [deck, setDeck] = useState<RitualCard[]>([]);
   const [selected, setSelected] = useState<DrawnCard[]>([]);
@@ -25,7 +30,7 @@ export function RitualDrawPanel({ onReflect }: {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
 
-  const total = SPREAD_SIZE[spread];
+  const total = spread === 'atlas' && layout ? layout.slots.length : SPREAD_SIZE[spread === 'atlas' ? 'three-card' : spread];
   const complete = selected.length === total;
   const allRevealed = complete && selected.every((_, i) => revealed.includes(i));
   const pageCount = Math.ceil(deck.length / PAGE_SIZE);
@@ -36,7 +41,8 @@ export function RitualDrawPanel({ onReflect }: {
     setConfirmed(false); setPage(0); setJournal(''); setError(''); setStatus('');
   }
 
-  function setNewSpread(value: RitualSpread) {
+  function setNewSpread(value: RitualMode) {
+    if (value === 'atlas' && !layout) return;
     if (selected.length && !window.confirm('Changing spreads discards this in-progress draw and private note. Continue?')) return;
     setSpread(value); clearDraw();
   }
@@ -63,7 +69,9 @@ export function RitualDrawPanel({ onReflect }: {
   function choose(index: number) {
     if (complete || confirmed) return;
     try {
-      const next = chooseRitualCard(deck, selected, spread, index);
+      const next = spread === 'atlas' && layout
+        ? chooseAtlasCard(deck, selected, layout, index)
+        : chooseRitualCard(deck, selected, spread === 'atlas' ? 'three-card' : spread, index);
       setDeck(next.remaining); setSelected(next.selected); setPage(0);
       setStatus('Card ' + next.selected.length + ' of ' + total + ' chosen, face down. Reveal when ready.');
       setError('');
@@ -86,8 +94,12 @@ export function RitualDrawPanel({ onReflect }: {
     if (!confirmed || !allRevealed) return;
     if (journal.trim() && !window.confirm('Your private note stays out of the Oracle and will be lost when you leave this chamber. Export the reading first if you want to keep it. Continue?')) return;
     try {
-      const packet = ritualReadingPacket(spread, selected);
-      onReflect(packet, 'Ritual Draw: ' + (spread === 'single' ? 'one card' : 'three cards'), 'tarot', focus);
+      const packet = spread === 'atlas' && layout
+        ? atlasReadingPacket(layout, selected)
+        : ritualReadingPacket(spread === 'atlas' ? 'three-card' : spread, selected);
+      const name = spread === 'atlas' && layout ? layout.name
+        : spread === 'single' ? 'one card' : 'three cards';
+      onReflect(packet, 'Ritual Draw: ' + name, 'tarot', focus);
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
   }
 
@@ -96,7 +108,7 @@ export function RitualDrawPanel({ onReflect }: {
     if (!window.confirm('Export a JSON file containing your focus, selected cards and private journal note to this device?')) return;
     const record = {
       schema: 'GAIA_RITUAL_DRAW_V1',
-      spread, focus, provenance: {
+      spread, focus, ...(spread === 'atlas' && layout ? { atlasLayout: layout } : {}), provenance: {
         selection: 'person_chose_face_down_cards', shuffle: 'browser_crypto_fisher_yates',
         orientations: 'fixed_before_selection', reader: 'GAIA original deck',
         claimBoundary: 'symbolic_reflection_not_prediction'
@@ -127,9 +139,10 @@ export function RitualDrawPanel({ onReflect }: {
     <section className="panel gaia-ritual-controls">
       <div className="gaia-reading-fields">
         <label>Spread
-          <select value={spread} onChange={e => setNewSpread(e.target.value as RitualSpread)}>
+          <select value={spread} onChange={e => setNewSpread(e.target.value as RitualMode)}>
             <option value="single">One card · Focus</option>
             <option value="three-card">Three cards · Past / Present / Future</option>
+            {layout && <option value="atlas">Spread Atlas · {layout.name} ({layout.slots.length} cards)</option>}
           </select>
         </label>
         <label>Reflection focus (optional)
@@ -146,6 +159,17 @@ export function RitualDrawPanel({ onReflect }: {
         <button className="secondary" type="button" onClick={cut}
           disabled={deck.length !== 78 || !!selected.length}>Cut this deck</button>
       </div>
+      {spread === 'atlas' && layout && <div className="gaia-atlas-active">
+        <strong>Active layout: {layout.name}</strong>
+        <p className="muted">Your position labels and meanings guide this custom draw.
+          Cards are chosen in numbered order. The layout is kept in this tab until
+          you leave, and only the selected source packet is staged to your local Oracle.</p>
+        <div className="gaia-atlas-preview">
+          {layout.slots.map((slot,i)=><div key={slot.id}>
+            <strong>{i+1}. {slot.label}</strong><small>{slot.meaning}</small>
+          </div>)}
+        </div>
+      </div>}
       <p className="muted">The shuffle uses the browser's secure random-number source and a
         Fisher–Yates permutation. This is a software shuffle, not evidence of a supernatural
         influence. Orientations are assigned before you pick any cards.</p>
@@ -190,6 +214,7 @@ export function RitualDrawPanel({ onReflect }: {
             ? draw.card.upright_keywords : draw.card.reversed_keywords) : [];
           return <article className="gaia-reveal-card" key={draw.card.id}>
             <span className="eyebrow">{draw.position}</span>
+            {spread === 'atlas' && layout && <small>{layout.slots[index]?.meaning}</small>}
             {isVisible ? <>
               <div className="gaia-reveal-icon" aria-hidden="true">✺</div>
               <h4>{draw.card.name}</h4>
@@ -215,7 +240,7 @@ export function RitualDrawPanel({ onReflect }: {
     </section>}
 
     {confirmed && <section className="panel gaia-field-loom">
-      <FieldLoomPanel draws={selected}/>
+      <FieldLoomPanel draws={selected} layout={spread === 'atlas' ? layout : null}/>
       <label htmlFor="gaia-ritual-journal">My own interpretation (optional, private in this tab)</label>
       <textarea id="gaia-ritual-journal" rows={4} maxLength={1000} value={journal}
         onChange={e => setJournal(e.target.value)}

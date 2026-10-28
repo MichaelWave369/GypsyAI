@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { DrawnCard } from '@/types';
+import type { AtlasLayout } from './spreadAtlas';
 import { buildFieldLoom, SOURCE_LABELS } from './fieldLoomEvidence';
 import type { LoomEvidence, LoomLens } from './fieldLoomEvidence';
 
@@ -21,17 +22,21 @@ function EvidenceList({ evidence }: { evidence: LoomEvidence[] }) {
   </div>;
 }
 
-export function FieldLoomPanel({ draws }: { draws: readonly DrawnCard[] }) {
+export function FieldLoomPanel({ draws, layout }: { draws: readonly DrawnCard[]; layout?: AtlasLayout | null }) {
   const [lens, setLens] = useState<LoomLens>('positions');
   const [activeCard, setActiveCard] = useState(0);
   const [activeLink, setActiveLink] = useState(0);
   // Re-derived from actual confirmed cards every render. Never mutate a draw.
-  const graph = buildFieldLoom(draws, lens);
+  const graph = buildFieldLoom(draws, lens, layout);
+  const nodeX = (i:number)=>graph.nodes.length===1 ? 480 :
+    185 + i * (graph.nodes.length>3 ? 245 : 295);
+  const viewWidth = Math.max(960, nodeX(graph.nodes.length-1)+185);
   const node = graph.nodes[Math.min(activeCard, graph.nodes.length - 1)];
   const edge = graph.links[Math.min(activeLink, Math.max(0, graph.links.length - 1))];
 
   return <div className="gaia-loom-v2">
-    <span className="eyebrow">FIELD LOOM v2 / SOURCE TRANSPARENT</span>
+    <span className="eyebrow">FIELD LOOM / SOURCE TRANSPARENT</span>
+    {layout && <p className="muted">Custom spread: <strong>{layout.name}</strong>. Position roles are user-authored.</p>}
     <h3>Explore the connections.</h3>
     <p className="muted">Choose an evidence lens, then select a card or a thread.
       Every observation is traceable to your selected spread, its defined positions,
@@ -42,14 +47,14 @@ export function FieldLoomPanel({ draws }: { draws: readonly DrawnCard[] }) {
         aria-pressed={lens === item.id} className={lens === item.id ? 'active' : ''}
         title={item.description} onClick={() => setLens(item.id)}>{item.title}</button>)}
     </div>
-    <svg viewBox="0 0 960 195" role="img" aria-label={'Confirmed spread visualization: ' +
+    <svg viewBox={'0 0 '+viewWidth+' 195'} role="img" aria-label={'Confirmed spread visualization: ' +
       graph.nodes.map(n => n.position + ' ' + n.card + ' ' + n.orientation).join('; ')}>
       {graph.links.map((connection, i) => <line key={connection.fromId}
-        x1={graph.nodes.length === 1 ? 480 : 185 + i * 295} y1="90"
-        x2={graph.nodes.length === 1 ? 480 : 185 + (i + 1) * 295} y2="90"
+        x1={nodeX(i)} y1="90"
+        x2={nodeX(i + 1)} y2="90"
         stroke={activeLink === i ? '#e5c888' : '#729f95'} strokeWidth={activeLink === i ? 5 : 2}/>)}
       {graph.nodes.map((n, i) => {
-        const x = graph.nodes.length === 1 ? 480 : 185 + i * 295;
+        const x = nodeX(i);
         return <g key={n.id}>
           <circle cx={x} cy="90" r={i === activeCard ? 74 : 69}
             fill={i === activeCard ? '#285549' : '#17383c'}
