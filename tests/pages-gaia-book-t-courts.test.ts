@@ -39,7 +39,7 @@ describe('GAIA v1.0 Book T Ace and court index',()=>{
       expect(audit.status).toBe('pending-specialist-review');
       expect(audit.fields).toHaveLength(5);
       expect(audit.sources).toContain('book-t-1912-court-mirror');
-      expect(audit.pendingFields).toContain('Court sign boundary, zodiac region and deck-specific pictorial equivalence');
+      expect(audit.pendingFields).toContain('Modern deck court-region equivalence and pictorial symbolism across editions');
       expect(card.hermetic.decan).toContain('not applicable');
       expect(card.hermetic.planet_ruler).toContain('not applicable');
     }
