@@ -16,9 +16,10 @@ invent those keywords. They came from `src/lib/tarot/deck.json`, in which the
   meaning*, its name, position, keywords and existing Hermetic data.
 - The Constellation Reading and standalone Tarot Chamber show card-specific
   meanings locally before a model is connected.
-- The local Oracle's proposed tarot/synthesis prompts discourage copied
-  disclaimers, packet-field narration, seven-section audits and identical
-  interpretations for different cards. Uncertainty remains explicit but brief.
+- The Pages local Oracle removes the legacy provider's mandatory headings and
+  uses proposed tarot/synthesis prompts that discourage copied disclaimers,
+  packet-field narration and identical interpretations for different cards.
+  The legacy Next.js provider retains its section contract. Uncertainty remains explicit but brief.
 - New tests check that all 78 cards have unique individual themes, verify the
   exact three cards from the field test, and ensure source data reaches the
   deterministic packet.
