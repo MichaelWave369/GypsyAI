@@ -14,7 +14,9 @@
     "test:e2e": "playwright test",
     "test:a11y": "playwright test tests/e2e/a11y.spec.ts",
     "doctor": "node scripts/doctor.mjs",
-    "pnpm:setup": "corepack enable && corepack prepare pnpm@9.12.3 --activate && pnpm config set registry https://registry.npmjs.org/"
+    "pnpm:setup": "corepack enable && corepack prepare pnpm@9.12.3 --activate && pnpm config set registry https://registry.npmjs.org/",
+    "pages:dev": "vite --config site/vite.config.ts",
+    "pages:build": "vite build --config site/vite.config.ts"
   },
   "dependencies": {
     "astronomy-engine": "^2.1.19",
@@ -42,6 +44,7 @@
     "prettier": "^3.3.3",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.4"
+    "vitest": "^2.0.4",
+    "vite": "^5.4.21"
   }
 }
