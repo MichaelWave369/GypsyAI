@@ -9,3 +9,30 @@
 .brain-details{border:1px solid #615173;background:#252137;padding:13px;border-radius:6px;margin-top:8px}
 .brain-details summary{cursor:pointer;color:#e2cb93;font-size:12px;font-weight:700;line-height:1.5}
 .brain-details p{font-size:12px;color:#c8bed7;overflow-wrap:anywhere}
+
+/* v0.2.2: local intelligence lab reports. Subtle, inspectable, no fake green badges. */
+.lab-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lab-heading h3{margin-bottom:16px}
+.lab-pill{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;border:1px solid #594966}
+.lab-pill.pass{border-color:#456c60;color:#9bdfc0;background:#1a2e2b}
+.lab-pill.fail{border-color:#86565d;color:#e5afb5;background:#35222c}
+.lab-pill.neutral{border-color:#6f5b83;color:#d2b8f0;background:#28243a}
+.lab-step{padding:13px;border-bottom:1px solid #40354b}
+.lab-step>div{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lab-step strong{font-size:13px;color:#f1dfbd}
+.lab-step p{margin:4px 0;color:#aba3bc;font-size:12px;overflow-wrap:anywhere}
+.lab-success{background:#1d302e;color:#b8e7d2;border-left:2px solid #85c5a8;border-radius:3px;padding:12px;font-size:12px}
+.lab-metrics .metric{padding:14px}.lab-models{max-height:300px;overflow:auto}
+.lab-model{border-bottom:1px solid #3d3548;padding:11px 4px}
+.lab-model strong{font-size:13px;color:#e3c488;overflow-wrap:anywhere}
+.lab-model p{color:#b6abbd;font-size:12px;margin:3px 0}
+.lab-view .panel h4{color:#e5cfab;font-size:14px;margin:18px 0 10px}
+.lab-sample-details{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin:14px 0}
+.lab-sample-details p{font-size:12px;color:#b8b1c8;margin:2px 0;overflow-wrap:anywhere}
+.lab-sample-details strong{color:#f1d4a7;margin-right:6px}
+.lab-gate{display:flex;align-items:center;gap:18px;padding:12px 4px;border-bottom:1px solid #3b3445}
+.lab-gate>span{color:#a494ba;font-size:10px;font-weight:700;min-width:56px;white-space:nowrap}
+.lab-gate p{flex:1;color:#d9d1df;font-size:12px;line-height:1.5;margin:0}
+.lab-view .field select{width:100%}.lab-view .switch{margin:18px 0}
+.lab-view code{overflow-wrap:anywhere;color:#dfc28c}
+@media(max-width:650px){.lab-gate{align-items:flex-start;flex-wrap:wrap;gap:7px}.lab-gate p{flex-basis:calc(100% - 65px)}.lab-sample-details{grid-template-columns:1fr}}
