@@ -617,7 +617,8 @@
       "sephirah": "Kether",
       "decan": "none",
       "planet_ruler": "n/a",
-      "hermetic_title": "Root of the powers"
+      "hermetic_title": "Root of the Powers of Fire",
+      "book_t_role": "Ace / elemental root"
     }
   },
   {
@@ -885,9 +886,11 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Fire"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Princess of the Shining Flame; Rose of the Palace of Fire",
+      "book_t_role": "Knave / Princess",
+      "book_t_elemental_grade": "Earth of Fire"
     }
   },
   {
@@ -912,9 +915,11 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Fire"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Lord of the Flame and the Lightning",
+      "book_t_role": "Knight / mounted King",
+      "book_t_elemental_grade": "Fire of Fire"
     }
   },
   {
@@ -939,9 +944,11 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Fire"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Queen of the Thrones of Flame",
+      "book_t_role": "Queen",
+      "book_t_elemental_grade": "Water of Fire"
     }
   },
   {
@@ -966,9 +973,11 @@
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Fire"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Prince of the Chariot of Fire",
+      "book_t_role": "King / charioted Prince",
+      "book_t_elemental_grade": "Air of Fire"
     }
   },
   {
@@ -995,7 +1004,8 @@
       "sephirah": "Kether",
       "decan": "none",
       "planet_ruler": "n/a",
-      "hermetic_title": "Root of the powers"
+      "hermetic_title": "Root of the Powers of Water",
+      "book_t_role": "Ace / elemental root"
     }
   },
   {
@@ -1263,9 +1273,11 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Water"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Princess of the Waters; Lotus of the Palace of the Floods",
+      "book_t_role": "Knave / Princess",
+      "book_t_elemental_grade": "Earth of Water"
     }
   },
   {
@@ -1290,9 +1302,11 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Water"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Lord of the Waves and the Waters",
+      "book_t_role": "Knight / mounted King",
+      "book_t_elemental_grade": "Fire of Water"
     }
   },
   {
@@ -1317,9 +1331,11 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Water"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Queen of the Thrones of the Waters",
+      "book_t_role": "Queen",
+      "book_t_elemental_grade": "Water of Water"
     }
   },
   {
@@ -1344,9 +1360,11 @@
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Water"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Prince of the Chariot of the Waters",
+      "book_t_role": "King / charioted Prince",
+      "book_t_elemental_grade": "Air of Water"
     }
   },
   {
@@ -1373,7 +1391,8 @@
       "sephirah": "Kether",
       "decan": "none",
       "planet_ruler": "n/a",
-      "hermetic_title": "Root of the powers"
+      "hermetic_title": "Root of the Powers of Air",
+      "book_t_role": "Ace / elemental root"
     }
   },
   {
@@ -1641,9 +1660,11 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Air"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Princess of the Rushing Winds; Lotus of the Palace of Air",
+      "book_t_role": "Knave / Princess",
+      "book_t_elemental_grade": "Earth of Air"
     }
   },
   {
@@ -1668,9 +1689,11 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Air"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Lord of the Winds and the Breezes",
+      "book_t_role": "Knight / mounted King",
+      "book_t_elemental_grade": "Fire of Air"
     }
   },
   {
@@ -1695,9 +1718,11 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Air"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Queen of the Thrones of Air",
+      "book_t_role": "Queen",
+      "book_t_elemental_grade": "Water of Air"
     }
   },
   {
@@ -1722,9 +1747,11 @@
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Air"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Prince of the Chariot of the Winds",
+      "book_t_role": "King / charioted Prince",
+      "book_t_elemental_grade": "Air of Air"
     }
   },
   {
@@ -1751,7 +1778,8 @@
       "sephirah": "Kether",
       "decan": "none",
       "planet_ruler": "n/a",
-      "hermetic_title": "Root of the powers"
+      "hermetic_title": "Root of the Powers of Earth",
+      "book_t_role": "Ace / elemental root"
     }
   },
   {
@@ -2019,9 +2047,11 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Earth"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Princess of the Echoing Hills; Rose of the Palace of Earth",
+      "book_t_role": "Knave / Princess",
+      "book_t_elemental_grade": "Earth of Earth"
     }
   },
   {
@@ -2046,9 +2076,11 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Earth"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Lord of the Wide and Fertile Land",
+      "book_t_role": "Knight / mounted King",
+      "book_t_elemental_grade": "Fire of Earth"
     }
   },
   {
@@ -2073,9 +2105,11 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Earth"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Queen of the Thrones of Earth",
+      "book_t_role": "Queen",
+      "book_t_elemental_grade": "Water of Earth"
     }
   },
   {
@@ -2100,9 +2134,11 @@
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
-      "decan": "variable",
-      "planet_ruler": "variable",
-      "hermetic_title": "Court of Earth"
+      "decan": "not applicable (court spans multiple degrees)",
+      "planet_ruler": "not applicable (court role)",
+      "hermetic_title": "Prince of the Chariot of Earth",
+      "book_t_role": "King / charioted Prince",
+      "book_t_elemental_grade": "Air of Earth"
     }
   }
 ]
