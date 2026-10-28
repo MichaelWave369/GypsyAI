@@ -8,7 +8,7 @@ export interface GroundingPacket {
   requiredSections: string[];
 }
 
-const tarotSections = ['Reading focus', 'Each card in context', 'How the cards connect', 'Closing reflection'];
+const tarotSections = ['Opening','Spread overview','Card-by-card','Hermetic Layer','Integration','Practical steps','Closing line'];
 const astroSections = ['Big Three summary','Element + modality balance','Strongest aspects highlights','House emphasis','Hermetic Keys synthesis','Practical reflection'];
 const gkSections = ['Short opening','Activation Sequence overview','Each sphere','Integration theme','Journal prompts'];
 
