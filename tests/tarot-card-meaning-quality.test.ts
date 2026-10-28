@@ -52,7 +52,7 @@ describe('GAIA card-specific tarot data', () => {
     expect(facts.map(c => c.name)).toEqual(sample.map(c => c.card.name));
     expect(facts[1].cardSpecificMeaning).toContain('achievement');
     expect(facts[2].cardSpecificMeaning).toContain('Recovery');
-    expect(packet.requiredSections.length).toBeLessThan(6);
+    expect(packet.requiredSections).toHaveLength(7); // Legacy reader contract remains stable.
     expect(JSON.stringify(packet)).not.toContain('literal death predicted');
   });
 
