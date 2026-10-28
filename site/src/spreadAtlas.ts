@@ -127,13 +127,17 @@ export function atlasReadingPacket(layoutInput: AtlasLayout, chosen:readonly Dra
     layout:{ name:layout.name, positions:layout.slots.map(s=>({
       position:s.label,role:s.meaning,x:s.x,y:s.y
     })) },
-    cards:chosen.map((c,i)=>({
-      position:layout.slots[i].label, role:layout.slots[i].meaning,
-      name:c.card.name, orientation:c.orientation, arcana:c.card.arcana,
-      keywords:(c.orientation==='upright'?c.card.upright_keywords:c.card.reversed_keywords).slice(0,3),
-      cardSpecificMeaning:c.orientation==='upright'?c.card.short_upright_meaning:c.card.short_reversed_meaning,
-      recordedElement:c.card.hermetic.element||null
-    })),
+    cards:chosen.map((c,i)=>{
+      // Canonical lookup prevents caller-modified card metadata from entering the Oracle.
+      const card = available.get(c.card.id)!;
+      return {
+        position:layout.slots[i].label, role:layout.slots[i].meaning,
+        name:card.name, orientation:c.orientation, arcana:card.arcana,
+        keywords:(c.orientation==='upright'?card.upright_keywords:card.reversed_keywords).slice(0,3),
+        cardSpecificMeaning:c.orientation==='upright'?card.short_upright_meaning:card.short_reversed_meaning,
+        recordedElement:card.hermetic.element||null
+      };
+    }),
     sourceNote:'Position labels and meanings were user-authored; card identities and descriptions come from the GAIA tarot deck. Symbolic reflection, not prediction.'
   };
   const packet = {modality:'tarot' as const, facts,
