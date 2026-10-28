@@ -84,6 +84,7 @@ export function RitualDrawPanel({ onReflect }: {
 
   function prepare() {
     if (!confirmed || !allRevealed) return;
+    if (journal.trim() && !window.confirm('Your private note stays out of the Oracle and will be lost when you leave this chamber. Export the reading first if you want to keep it. Continue?')) return;
     try {
       const packet = ritualReadingPacket(spread, selected);
       onReflect(packet, 'Ritual Draw: ' + (spread === 'single' ? 'one card' : 'three cards'), 'tarot', focus);
@@ -218,7 +219,8 @@ export function RitualDrawPanel({ onReflect }: {
       <h3>Follow the thread.</h3>
       <p className="muted">This diagram shows the actual selected card positions. Lines denote
         spread order, not a measured energy, supernatural connection or scientific
-        relationship. Every comparison below identifies the recorded evidence.</p>
+        relationship. Every comparison below identifies the recorded evidence;
+        inherited Hermetic labels have not been independently audited.</p>
       <svg viewBox="0 0 960 195" role="img" aria-label={'Diagram of ' +
         selected.map(c => c.position + ': ' + c.card.name).join('; ')}>
         {selected.length > 1 && selected.slice(0, -1).map((_, i) =>
@@ -245,7 +247,8 @@ export function RitualDrawPanel({ onReflect }: {
         onChange={e => setJournal(e.target.value)}
         placeholder="What stood out to me about these cards?"/>
       <p className="muted">Your note is not automatically saved, added to GAIA memory,
-        or sent to Ollama. It is included ONLY in a JSON file if you explicitly export.</p>
+        or sent to Ollama. It is included ONLY in a JSON file if you explicitly export.
+        Leaving this chamber also discards the note, so export first if you want to keep it.</p>
       <div className="actions">
         <button type="button" className="primary" onClick={prepare}>
           Prepare local GAIA interpretation ↗
@@ -256,7 +259,8 @@ export function RitualDrawPanel({ onReflect }: {
       </div>
       <p className="muted">Preparing an interpretation stages the confirmed source packet
         and your optional focus in GAIA Oracle. You review the request and press Send
-        separately before any local model is contacted. Your private note stays here.</p>
+        separately before any local model is contacted. Your private note is not shared
+        and will be cleared when you leave this chamber.</p>
     </section>}
   </section>;
 }
