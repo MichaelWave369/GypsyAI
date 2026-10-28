@@ -63,7 +63,7 @@ export function permittedPacket(packet: ApprovedPacket | null, consent: TiekatCo
       if (!counts || !life || typeof counts !== 'object' || typeof life !== 'object') return null;
       if (Object.keys(counts).some((k) => !['people', 'families'].includes(k))) return null;
       if (Object.keys(life).some((k) => !['count', 'avg', 'min', 'max'].includes(k))) return null;
-      if (Object.values(counts).some((v) => !Number.isSafeInteger(v) || (v as number) < 0)) return null;
+      if (Object.values(counts).some((v) => typeof v !== 'number' || !Number.isSafeInteger(v) || v < 0)) return null;
       if (Object.values(life).some((v) => v !== null && (typeof v !== 'number' || !Number.isFinite(v) || v < 0))) return null;
       // Fixed canonical shape, no stray keys/strings/personal data.
       return { kind: 'ancestry', label: 'Ancestry: aggregate counts only', text: JSON.stringify({
