@@ -1,3 +1,5 @@
+> **TIEKAT Local Brain v0.2.1 (migration phase 2):** The Pages React Oracle now offers original TIEKAT reflection modes, a deterministic Oracle Council planning panel, consent-gated ancestry aggregates, opt-in locally stored note memory, and visible heuristic verification receipts. See [the v0.2.1 contract](TIEKAT_LOCAL_BRAIN.md). This is still one local Ollama response, not a set of independently operating agents or a PhiStream server.
+
 # GypsyAI Sovereign Portal | React / GitHub Pages
 
 This branch begins the **Vercel exit** for GypsyAI. The public frontend is a Vite-built React single-page app published as static files via GitHub Actions. The original Next.js app stays in the repository during parity migration and is **not** deployed to Pages.
@@ -15,7 +17,7 @@ https://michaelwave369.github.io/GypsyAI/
 - Explicit reading-packet handoff, limited to the local model on user action.
 - Clear disabled research status for PhiStream. No downloaded weights, cloud API keys or Vercel backend.
 
-**Not yet migrated:** advanced TIEKAT Oracle Council, habitat/ritual/deck continuity, advanced study and ancestry pages, old encrypted backup import, all provider-grounded verification. This is a real working Phase 1 portal, **not** full functional parity. Preserve old user data and do not turn off the old app before exporting and verifying.
+**Not yet migrated:** provider-executed multi-agent Council, TIEKAT habitat/ritual/deck continuity, advanced study and ancestry pages, old encrypted backup import, all provider-grounded verification. This is a real working Phase 1 portal, **not** full functional parity. Preserve old user data and do not turn off the old app before exporting and verifying.
 
 ## Build
 
