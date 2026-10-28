@@ -188,3 +188,32 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 
 /* GAIA card-specific reading interpretation, visible before any model handoff. */
 .gaia-card-meaning{font-size:14px!important;color:#e6e4cc!important;line-height:1.65!important;border-left:2px solid #81bdaa;padding:9px 12px;background:#0b252a9c;margin:14px 0 16px}
+
+
+/* GAIA v0.4.0 Ritual Table and source-transparent Field Loom. No image assets. */
+.gaia-ritual .panel{margin-bottom:20px}
+.gaia-ritual-controls{background:radial-gradient(circle at 85% 15%,#2c6a5344,#10252b 70%)}
+.gaia-card-fan{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:13px;margin:26px 0}
+.gaia-card-back{min-width:0;aspect-ratio:3/4.5;display:flex;flex-direction:column;justify-content:space-between;align-items:center;border:2px solid #bba572;border-radius:10px;color:#e7d49d;box-shadow:inset 0 0 0 5px #0b232c,inset 0 0 0 7px #497b68,0 12px 22px #0004;background:repeating-linear-gradient(50deg,#173d3a 0,#173d3a 8px,#1b4a42 9px,#1b4a42 13px);padding:20px 6px 11px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.gaia-card-back:hover,.gaia-card-back:focus-visible{transform:translateY(-6px);border-color:#f6dfa4;box-shadow:0 0 25px #75bfa466,inset 0 0 0 5px #0b232c,inset 0 0 0 7px #89c4a2}
+.gaia-card-back-sigil{display:grid;place-items:center;flex:1;font:clamp(40px,5vw,72px) Georgia,serif;text-shadow:0 0 18px #b5e7bd77}
+.gaia-card-back small{font-size:12px;letter-spacing:.12em}
+.gaia-fan-pagination{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:13px;margin:12px auto 3px;color:#cbdcca;font-size:12px}
+.gaia-reveal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:15px 0 20px}
+.gaia-reveal-card{background:radial-gradient(ellipse at top,#1b4540,#0e222d 75%);border:1px solid #628974;border-radius:11px;min-width:0;min-height:300px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.gaia-reveal-card h4{font:27px Georgia,serif;font-weight:400;color:#f2e9ce;margin:0}
+.gaia-reveal-card p{font-size:13px;line-height:1.7;margin:0}
+.gaia-reveal-card small{color:#b2cbbb}
+.gaia-reveal-orientation{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#e4c692}
+.gaia-reveal-icon{font:45px Georgia,serif;color:#f2dba6;text-shadow:0 0 25px #adf6cd77}
+.gaia-face-down{font:95px Georgia,serif;color:#d9c391;display:grid;place-items:center;align-self:stretch;flex:1;background:repeating-linear-gradient(45deg,#154439 0,#154439 8px,#102c35 9px,#102c35 15px);border:4px double #c9af78;border-radius:7px;min-height:180px}
+.gaia-field-loom svg{display:block;max-width:100%;width:100%;height:auto;min-height:120px;margin:16px auto}
+.gaia-thread-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin:18px 0 24px}
+.gaia-thread{padding:15px 17px;border:1px solid #4d786b;border-radius:8px;background:#112f30}
+.gaia-thread strong{font-size:13px;color:#ead9af}
+.gaia-thread p{margin:8px 0 0;font-size:12px;line-height:1.6;color:#c1d5ca}
+.gaia-field-loom label{display:block;margin:15px 0 8px;color:#e2d3af;font-size:13px;font-weight:600}
+.gaia-field-loom textarea{width:100%;resize:vertical}
+@media(max-width:950px){.gaia-card-fan{grid-template-columns:repeat(4,minmax(0,1fr))}.gaia-reveal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.gaia-card-fan{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.gaia-card-back{padding:10px 3px}.gaia-reveal-grid{grid-template-columns:1fr}.gaia-fan-pagination .secondary{min-height:38px;padding:8px 12px}.gaia-field-loom svg{min-height:100px}}
+@media(prefers-reduced-motion:reduce){.gaia-card-back{transition:none}.gaia-card-back:hover{transform:none}}
