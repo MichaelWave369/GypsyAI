@@ -50,7 +50,8 @@ describe('v0.2.3 bounded local repeat lab', () => {
     expect(execute).not.toHaveBeenCalled();
   });
   it('runs bounded sequential calls after explicit invocation, retaining priming but excluding it from medians', async () => {
-    const execute = vi.fn(async (_: string, model: string) => sample(model, 100 + execute.mock.calls.length));
+    let calls = 0;
+    const execute = vi.fn(async (_: string, model: string) => sample(model, 100 + (++calls)));
     expect(execute).not.toHaveBeenCalled();
     const ledger = await runExperiment('http://127.0.0.1:11434', single, [single.modelA], { execute });
     expect(execute).toHaveBeenCalledTimes(4);
