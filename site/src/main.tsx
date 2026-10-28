@@ -393,6 +393,7 @@ function App() {
         {tarot && <><div className="reading-grid">{tarot.cards.map((draw, index) => <article className="reading-card" key={index}>
           <span className="eyebrow">{draw.position}</span><div className="card-symbol">✦</div><h3>{draw.card.name}</h3><p className="orientation">{draw.orientation}</p>
           <p>{(draw.orientation === 'upright' ? draw.card.upright_keywords : draw.card.reversed_keywords).join(' · ')}</p>
+          <p className="gaia-card-meaning">{draw.orientation === 'upright' ? draw.card.short_upright_meaning : draw.card.short_reversed_meaning}</p>
           <p className="muted">Hermetic: {Object.entries(draw.card.hermetic).filter(([,v]) => typeof v === 'string').map(([k,v]) => k + ': ' + v).join(' · ')}</p><p className="gaia-cue">Reflect: {tarotReflectionCues(tarot.cards)[index].question}</p>
         </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''), 'tarot', question)}>Prepare local GAIA interpretation ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
       </>}

@@ -7,17 +7,17 @@
     "number": 0,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "beginnings",
+      "openness",
+      "leap of faith"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "recklessness",
+      "hesitation",
+      "naivety"
     ],
-    "short_upright_meaning": "The Fool invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Fool suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "An uncharted path invites a curious first step without requiring a perfect map.",
+    "short_reversed_meaning": "Freedom becomes clearer when impulse is balanced with awareness of consequences.",
     "hermetic": {
       "hebrew_letter": "Aleph",
       "path": "1->2",
@@ -34,17 +34,17 @@
     "number": 1,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "skill",
+      "intention",
+      "resourcefulness"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "misdirection",
+      "scattered will",
+      "unused gifts"
     ],
-    "short_upright_meaning": "The Magician invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Magician suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "The tools are already on the table; focused intention can give them useful form.",
+    "short_reversed_meaning": "Check whether attention and abilities are being spent on the work that matters.",
     "hermetic": {
       "hebrew_letter": "Beth",
       "path": "1->3",
@@ -61,17 +61,17 @@
     "number": 2,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "intuition",
+      "quiet knowledge",
+      "mystery"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "disconnection",
+      "secrecy",
+      "noise"
     ],
-    "short_upright_meaning": "The High Priestess invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The High Priestess suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "A quieter layer of understanding may emerge through observation rather than action.",
+    "short_reversed_meaning": "Seek clarity between genuine inner knowing and guesses left unexamined.",
     "hermetic": {
       "hebrew_letter": "Gimel",
       "path": "1->6",
@@ -88,17 +88,17 @@
     "number": 3,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "nurturing",
+      "abundance",
+      "creation"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "depletion",
+      "overgiving",
+      "stagnation"
     ],
-    "short_upright_meaning": "The Empress invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Empress suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Care and patient cultivation can turn a small beginning into something alive.",
+    "short_reversed_meaning": "Notice where constant tending leaves too little energy for the caretaker.",
     "hermetic": {
       "hebrew_letter": "Daleth",
       "path": "2->3",
@@ -115,17 +115,17 @@
     "number": 4,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "structure",
+      "leadership",
+      "stability"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "rigidity",
+      "control",
+      "instability"
     ],
-    "short_upright_meaning": "The Emperor invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Emperor suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Clear boundaries and dependable structures can protect what is growing.",
+    "short_reversed_meaning": "Consider whether control has displaced the purpose it was meant to serve.",
     "hermetic": {
       "hebrew_letter": "Heh",
       "path": "2->4",
@@ -142,17 +142,17 @@
     "number": 5,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "tradition",
+      "mentorship",
+      "shared values"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "dogma",
+      "questioning",
+      "conformity"
     ],
-    "short_upright_meaning": "The Hierophant invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Hierophant suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Inherited practices can be useful when their purpose is consciously understood.",
+    "short_reversed_meaning": "Question rules that no longer fit, without dismissing everything they once taught.",
     "hermetic": {
       "hebrew_letter": "Vav",
       "path": "2->6",
@@ -169,17 +169,17 @@
     "number": 6,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "alignment",
+      "choice",
+      "relationship"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "misalignment",
+      "avoidance",
+      "division"
     ],
-    "short_upright_meaning": "The Lovers invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Lovers suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "An important choice asks whether your actions match your deeply held values.",
+    "short_reversed_meaning": "Bring a divided priority into view before asking it to carry a commitment.",
     "hermetic": {
       "hebrew_letter": "Zayin",
       "path": "3->5",
@@ -196,17 +196,17 @@
     "number": 7,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "direction",
+      "discipline",
+      "momentum"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "loss of control",
+      "forcing",
+      "drift"
     ],
-    "short_upright_meaning": "The Chariot invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Chariot suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Energy from competing directions can become movement when guided deliberately.",
+    "short_reversed_meaning": "Check whether the drive to advance is overruling the need to steer.",
     "hermetic": {
       "hebrew_letter": "Cheth",
       "path": "3->6",
@@ -223,17 +223,17 @@
     "number": 8,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "courage",
+      "patience",
+      "compassion"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "self-doubt",
+      "pressure",
+      "exhaustion"
     ],
-    "short_upright_meaning": "Strength invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Strength suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Steady courage often works better through gentleness than force.",
+    "short_reversed_meaning": "Renew patience with your limits before treating fatigue as a failure of will.",
     "hermetic": {
       "hebrew_letter": "Teth",
       "path": "4->5",
@@ -250,17 +250,17 @@
     "number": 9,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "reflection",
+      "solitude",
+      "inner guidance"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "isolation",
+      "withdrawal",
+      "avoidance"
     ],
-    "short_upright_meaning": "The Hermit invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Hermit suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Time apart from noise may help uncover what really deserves attention.",
+    "short_reversed_meaning": "Solitude serves insight best when it does not become permanent retreat.",
     "hermetic": {
       "hebrew_letter": "Yod",
       "path": "4->6",
@@ -277,17 +277,17 @@
     "number": 10,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "cycles",
+      "change",
+      "opportunity"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "resistance",
+      "uncertainty",
+      "stalled cycles"
     ],
-    "short_upright_meaning": "Wheel of Fortune invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Wheel of Fortune suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Conditions evolve; flexibility can uncover openings that rigid plans miss.",
+    "short_reversed_meaning": "Accept what cannot be controlled while choosing a useful response.",
     "hermetic": {
       "hebrew_letter": "Kaph",
       "path": "4->7",
@@ -304,17 +304,17 @@
     "number": 11,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "accountability",
+      "balance",
+      "discernment"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "bias",
+      "imbalance",
+      "avoidance"
     ],
-    "short_upright_meaning": "Justice invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Justice suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Fair decisions begin with a clear-eyed look at evidence and consequences.",
+    "short_reversed_meaning": "Revisit assumptions and take responsibility for the part you can change.",
     "hermetic": {
       "hebrew_letter": "Lamed",
       "path": "5->6",
@@ -331,17 +331,17 @@
     "number": 12,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "new perspective",
+      "surrender",
+      "pause"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "stagnation",
+      "resistance",
+      "delay"
     ],
-    "short_upright_meaning": "The Hanged Man invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Hanged Man suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "A pause can reveal a perspective that constant motion keeps hidden.",
+    "short_reversed_meaning": "Distinguish purposeful waiting from staying stuck out of habit.",
     "hermetic": {
       "hebrew_letter": "Mem",
       "path": "5->8",
@@ -358,17 +358,17 @@
     "number": 13,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "transition",
+      "release",
+      "renewal"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "clinging",
+      "unfinished endings",
+      "fear of change"
     ],
-    "short_upright_meaning": "Death invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Death suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "An ending may make room for a different chapter; this is symbolic transformation, not literal death.",
+    "short_reversed_meaning": "Notice what is being kept alive only because letting go feels unfamiliar.",
     "hermetic": {
       "hebrew_letter": "Nun",
       "path": "6->7",
@@ -385,17 +385,17 @@
     "number": 14,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "integration",
+      "moderation",
+      "flow"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "imbalance",
+      "excess",
+      "impatience"
     ],
-    "short_upright_meaning": "Temperance invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Temperance suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Combining different strengths thoughtfully can create more than either alone.",
+    "short_reversed_meaning": "Find a workable rhythm between competing needs instead of swinging between extremes.",
     "hermetic": {
       "hebrew_letter": "Samekh",
       "path": "6->8",
@@ -412,17 +412,17 @@
     "number": 15,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "attachment",
+      "temptation",
+      "patterns"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "denial",
+      "unbinding",
+      "awareness"
     ],
-    "short_upright_meaning": "The Devil invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Devil suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Look at the habits or bargains that limit your freedom even when they feel familiar.",
+    "short_reversed_meaning": "Recognizing a binding pattern can be the beginning of choosing differently.",
     "hermetic": {
       "hebrew_letter": "Ayin",
       "path": "6->9",
@@ -439,17 +439,17 @@
     "number": 16,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "disruption",
+      "revelation",
+      "upheaval"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "avoided truth",
+      "rebuilding",
+      "aftershock"
     ],
-    "short_upright_meaning": "The Tower invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Tower suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "A challenged assumption can free you to construct a sounder foundation.",
+    "short_reversed_meaning": "Rebuild deliberately instead of pretending nothing important shifted.",
     "hermetic": {
       "hebrew_letter": "Peh",
       "path": "7->8",
@@ -466,17 +466,17 @@
     "number": 17,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "renewal",
+      "hope",
+      "inspiration"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "discouragement",
+      "doubt",
+      "disconnection"
     ],
-    "short_upright_meaning": "The Star invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Star suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Quiet hope returns through restoration and a sense of meaningful possibility.",
+    "short_reversed_meaning": "Small signs of renewal still matter when confidence has faded.",
     "hermetic": {
       "hebrew_letter": "Tzaddi",
       "path": "7->9",
@@ -493,17 +493,17 @@
     "number": 18,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "ambiguity",
+      "dreams",
+      "uncertainty"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "confusion",
+      "misreading",
+      "clarity emerging"
     ],
-    "short_upright_meaning": "The Moon invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Moon suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Move carefully through uncertainty and distinguish intuition from untested fears.",
+    "short_reversed_meaning": "A confusing story may become clearer as assumptions are checked.",
     "hermetic": {
       "hebrew_letter": "Qoph",
       "path": "7->10",
@@ -520,17 +520,17 @@
     "number": 19,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "joy",
+      "clarity",
+      "vitality"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "dimmed confidence",
+      "overexposure",
+      "delay"
     ],
-    "short_upright_meaning": "The Sun invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The Sun suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Warmth, openness and visible progress invite you to celebrate what is working.",
+    "short_reversed_meaning": "Find an honest source of encouragement instead of demanding constant brightness.",
     "hermetic": {
       "hebrew_letter": "Resh",
       "path": "8->9",
@@ -547,17 +547,17 @@
     "number": 20,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "reckoning",
+      "awakening",
+      "renewal"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "self-criticism",
+      "avoidance",
+      "unresolved lessons"
     ],
-    "short_upright_meaning": "Judgement invites conscious alignment with purpose.",
-    "short_reversed_meaning": "Judgement suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "Looking back without denial can lead to a conscious new beginning.",
+    "short_reversed_meaning": "Release endless self-judgment while remaining accountable to what you learned.",
     "hermetic": {
       "hebrew_letter": "Shin",
       "path": "8->10",
@@ -574,17 +574,17 @@
     "number": 21,
     "court": null,
     "upright_keywords": [
-      "insight",
-      "movement",
-      "agency"
+      "integration",
+      "completion",
+      "belonging"
     ],
     "reversed_keywords": [
-      "delay",
-      "fog",
-      "recalibration"
+      "loose ends",
+      "incompletion",
+      "transition"
     ],
-    "short_upright_meaning": "The World invites conscious alignment with purpose.",
-    "short_reversed_meaning": "The World suggests pausing to untangle mixed signals.",
+    "short_upright_meaning": "A cycle comes together, revealing both what was achieved and what it makes possible.",
+    "short_reversed_meaning": "An unfinished transition can still hold valuable progress.",
     "hermetic": {
       "hebrew_letter": "Tav",
       "path": "9->10",
@@ -601,17 +601,17 @@
     "number": 1,
     "court": null,
     "upright_keywords": [
-      "seed",
-      "potential",
-      "spark"
+      "inspiration",
+      "creative spark",
+      "initiative"
     ],
     "reversed_keywords": [
-      "stall",
-      "hesitation",
-      "block"
+      "false starts",
+      "blocked spark",
+      "hesitation"
     ],
-    "short_upright_meaning": "Pure fire current seeks expression.",
-    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "short_upright_meaning": "An exciting idea offers energy for a first experiment, not yet a finished plan.",
+    "short_reversed_meaning": "Protect the initial spark from pressure to prove itself too early.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Kether",
@@ -628,21 +628,21 @@
     "number": 2,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "vision",
+      "planning",
+      "possibility"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "indecision",
+      "small horizons",
+      "overplanning"
     ],
-    "short_upright_meaning": "2 of Wands channels fire through Chokmah.",
-    "short_reversed_meaning": "2 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Consider the wider field before choosing which direction to explore.",
+    "short_reversed_meaning": "A plan kept entirely in the imagination may need a modest real-world test.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Chokmah",
-      "decan": "Sagittarius 0-9\u00b0",
+      "decan": "Sagittarius 0-9°",
       "planet_ruler": "Mercury",
       "hermetic_title": "Chokmah of Fire"
     }
@@ -655,21 +655,21 @@
     "number": 3,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "expansion",
+      "foresight",
+      "early returns"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "delays",
+      "narrow expectations",
+      "course correction"
     ],
-    "short_upright_meaning": "3 of Wands channels fire through Binah.",
-    "short_reversed_meaning": "3 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Early efforts begin reaching outward; watch what actually comes back.",
+    "short_reversed_meaning": "Unexpected feedback may call for a revised route rather than abandonment.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Binah",
-      "decan": "Sagittarius 10-19\u00b0",
+      "decan": "Sagittarius 10-19°",
       "planet_ruler": "Moon",
       "hermetic_title": "Binah of Fire"
     }
@@ -682,21 +682,21 @@
     "number": 4,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "celebration",
+      "community",
+      "stable milestone"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "fragile harmony",
+      "delayed celebration",
+      "disconnection"
     ],
-    "short_upright_meaning": "4 of Wands channels fire through Chesed.",
-    "short_reversed_meaning": "4 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A shared milestone offers an opportunity to recognize support and belonging.",
+    "short_reversed_meaning": "Notice whether the foundation needs care before the next gathering.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Chesed",
-      "decan": "Sagittarius 20-29\u00b0",
+      "decan": "Sagittarius 20-29°",
       "planet_ruler": "Saturn",
       "hermetic_title": "Chesed of Fire"
     }
@@ -709,17 +709,17 @@
     "number": 5,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "creative tension",
+      "competition",
+      "clashing ideas"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "avoided conflict",
+      "scattered effort",
+      "uneasy compromise"
     ],
-    "short_upright_meaning": "5 of Wands channels fire through Geburah.",
-    "short_reversed_meaning": "5 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Several strong energies collide; the challenge is turning disagreement into learning.",
+    "short_reversed_meaning": "Unspoken tension or effort spent fighting the wrong battle may need attention.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Geburah",
@@ -736,17 +736,17 @@
     "number": 6,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "recognition",
+      "encouragement",
+      "visible progress"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "doubt",
+      "unseen effort",
+      "need for approval"
     ],
-    "short_upright_meaning": "6 of Wands channels fire through Tiphareth.",
-    "short_reversed_meaning": "6 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Acknowledge progress and share credit with those who helped.",
+    "short_reversed_meaning": "Separate genuine achievement from the need for constant applause.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Tiphareth",
@@ -763,17 +763,17 @@
     "number": 7,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "conviction",
+      "boundaries",
+      "perseverance"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "defensiveness",
+      "overwhelm",
+      "uncertain position"
     ],
-    "short_upright_meaning": "7 of Wands channels fire through Netzach.",
-    "short_reversed_meaning": "7 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Hold a meaningful boundary without treating every challenge as an enemy.",
+    "short_reversed_meaning": "Ask which battles are worth the energy required to defend them.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Netzach",
@@ -790,17 +790,17 @@
     "number": 8,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "momentum",
+      "communication",
+      "rapid change"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "mixed signals",
+      "delays",
+      "rushed action"
     ],
-    "short_upright_meaning": "8 of Wands channels fire through Hod.",
-    "short_reversed_meaning": "8 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Several developments may align quickly; keep information flowing clearly.",
+    "short_reversed_meaning": "Slowing the message can prevent speed from becoming confusion.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Hod",
@@ -817,17 +817,17 @@
     "number": 9,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "resilience",
+      "watchfulness",
+      "endurance"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "burnout",
+      "suspicion",
+      "low reserves"
     ],
-    "short_upright_meaning": "9 of Wands channels fire through Yesod.",
-    "short_reversed_meaning": "9 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Hard-won experience supports another effort, provided rest is not forgotten.",
+    "short_reversed_meaning": "Distinguish wise caution from guarding against dangers that are no longer present.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Yesod",
@@ -844,17 +844,17 @@
     "number": 10,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "responsibility",
+      "heavy load",
+      "final push"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "overload",
+      "delegation",
+      "release"
     ],
-    "short_upright_meaning": "10 of Wands channels fire through Malkuth.",
-    "short_reversed_meaning": "10 of Wands asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A meaningful commitment has become heavy; completion may require sharing the load.",
+    "short_reversed_meaning": "Release burdens that were never yours to carry alone.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Malkuth",
@@ -871,17 +871,17 @@
     "number": null,
     "court": "Page",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "curiosity",
+      "experiment",
+      "good news"
     ],
     "reversed_keywords": [
+      "restlessness",
       "immaturity",
-      "misfire",
-      "defensiveness"
+      "unfocused spark"
     ],
-    "short_upright_meaning": "Page of Wands personifies the living voice of fire.",
-    "short_reversed_meaning": "Page of Wands can show reactive patterns that need refinement.",
+    "short_upright_meaning": "A playful experiment opens a path to learning through doing.",
+    "short_reversed_meaning": "Give fresh enthusiasm enough direction to survive its first obstacle.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
@@ -898,17 +898,17 @@
     "number": null,
     "court": "Knight",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "bold movement",
+      "passion",
+      "adventure"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "impulsiveness",
+      "inconsistency",
+      "recklessness"
     ],
-    "short_upright_meaning": "Knight of Wands personifies the living voice of fire.",
-    "short_reversed_meaning": "Knight of Wands can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Courage and movement can turn creative desire into experience.",
+    "short_reversed_meaning": "Let enthusiasm lead without letting it skip every necessary check.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
@@ -925,17 +925,17 @@
     "number": null,
     "court": "Queen",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "confidence",
+      "warmth",
+      "creative leadership"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "self-doubt",
+      "comparison",
+      "overextension"
     ],
-    "short_upright_meaning": "Queen of Wands personifies the living voice of fire.",
-    "short_reversed_meaning": "Queen of Wands can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Your presence and encouragement can make space for others to shine.",
+    "short_reversed_meaning": "Protect the source of confidence rather than exhausting it for approval.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
@@ -952,17 +952,17 @@
     "number": null,
     "court": "King",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "vision",
+      "leadership",
+      "enterprise"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "domination",
+      "impatience",
+      "unrealistic ambition"
     ],
-    "short_upright_meaning": "King of Wands personifies the living voice of fire.",
-    "short_reversed_meaning": "King of Wands can show reactive patterns that need refinement.",
+    "short_upright_meaning": "A clear vision gains strength when it empowers others to contribute.",
+    "short_reversed_meaning": "An ambitious plan needs listening as much as decisive direction.",
     "hermetic": {
       "element": "Fire",
       "sephirah": "Court current",
@@ -979,17 +979,17 @@
     "number": 1,
     "court": null,
     "upright_keywords": [
-      "seed",
-      "potential",
-      "spark"
+      "emotional opening",
+      "compassion",
+      "connection"
     ],
     "reversed_keywords": [
-      "stall",
-      "hesitation",
-      "block"
+      "guarded heart",
+      "emotional fatigue",
+      "blocked expression"
     ],
-    "short_upright_meaning": "Pure water current seeks expression.",
-    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "short_upright_meaning": "A fresh emotional opening invites care, creativity or connection.",
+    "short_reversed_meaning": "Give feelings space without demanding that they immediately make sense.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Kether",
@@ -1006,21 +1006,21 @@
     "number": 2,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "reciprocity",
+      "partnership",
+      "mutual respect"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "misunderstanding",
+      "imbalance",
+      "disconnection"
     ],
-    "short_upright_meaning": "2 of Cups channels water through Chokmah.",
-    "short_reversed_meaning": "2 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A meeting of equals becomes stronger through attentive exchange.",
+    "short_reversed_meaning": "Repair communication where one side has stopped feeling heard.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Chokmah",
-      "decan": "Pisces 0-9\u00b0",
+      "decan": "Pisces 0-9°",
       "planet_ruler": "Saturn",
       "hermetic_title": "Chokmah of Water"
     }
@@ -1033,21 +1033,21 @@
     "number": 3,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "friendship",
+      "celebration",
+      "collaboration"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "exclusion",
+      "overindulgence",
+      "social strain"
     ],
-    "short_upright_meaning": "3 of Cups channels water through Binah.",
-    "short_reversed_meaning": "3 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Community can turn a private joy into something shared.",
+    "short_reversed_meaning": "Look for belonging without losing your own pace or boundaries.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Binah",
-      "decan": "Pisces 10-19\u00b0",
+      "decan": "Pisces 10-19°",
       "planet_ruler": "Jupiter",
       "hermetic_title": "Binah of Water"
     }
@@ -1060,21 +1060,21 @@
     "number": 4,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "reassessment",
+      "contemplation",
+      "emotional pause"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "restlessness",
+      "missed openings",
+      "reengagement"
     ],
-    "short_upright_meaning": "4 of Cups channels water through Chesed.",
-    "short_reversed_meaning": "4 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Not every offered possibility deserves an immediate yes; notice what really moves you.",
+    "short_reversed_meaning": "A fresh look may reveal an opportunity hidden by dissatisfaction.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Chesed",
-      "decan": "Pisces 20-29\u00b0",
+      "decan": "Pisces 20-29°",
       "planet_ruler": "Mars",
       "hermetic_title": "Chesed of Water"
     }
@@ -1087,17 +1087,17 @@
     "number": 5,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "grief",
+      "disappointment",
+      "remaining support"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "rumination",
+      "release",
+      "renewed perspective"
     ],
-    "short_upright_meaning": "5 of Cups channels water through Geburah.",
-    "short_reversed_meaning": "5 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A loss or disappointment deserves recognition alongside what remains available.",
+    "short_reversed_meaning": "Healing may begin when attention can move beyond only what went wrong.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Geburah",
@@ -1114,17 +1114,17 @@
     "number": 6,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "memory",
+      "kindness",
+      "nostalgia"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "idealization",
+      "stuck past",
+      "changing roots"
     ],
-    "short_upright_meaning": "6 of Cups channels water through Tiphareth.",
-    "short_reversed_meaning": "6 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A remembered kindness may illuminate a value worth carrying forward.",
+    "short_reversed_meaning": "Honor the past without asking it to replace the present.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Tiphareth",
@@ -1141,17 +1141,17 @@
     "number": 7,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "many options",
+      "imagination",
+      "desire"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "illusion",
+      "overwhelm",
+      "choice fatigue"
     ],
-    "short_upright_meaning": "7 of Cups channels water through Netzach.",
-    "short_reversed_meaning": "7 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Rich possibilities invite vision, but not every image will survive testing.",
+    "short_reversed_meaning": "Choose one promising option to ground instead of chasing every imagined outcome.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Netzach",
@@ -1168,17 +1168,17 @@
     "number": 8,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "walking away",
+      "search for meaning",
+      "emotional maturity"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "fear of leaving",
+      "returning",
+      "unfinished feelings"
     ],
-    "short_upright_meaning": "8 of Cups channels water through Hod.",
-    "short_reversed_meaning": "8 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Leaving what no longer nourishes can be an act of self-respect.",
+    "short_reversed_meaning": "Explore whether staying or returning is chosen freely or from fear.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Hod",
@@ -1195,17 +1195,17 @@
     "number": 9,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "contentment",
+      "gratitude",
+      "wishes fulfilled"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "restlessness",
+      "excess",
+      "shallow satisfaction"
     ],
-    "short_upright_meaning": "9 of Cups channels water through Yesod.",
-    "short_reversed_meaning": "9 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Recognize what already brings satisfaction before seeking the next milestone.",
+    "short_reversed_meaning": "Ask whether external rewards are substituting for deeper contentment.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Yesod",
@@ -1222,17 +1222,17 @@
     "number": 10,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "belonging",
+      "shared joy",
+      "lasting bonds"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "unmet expectations",
+      "family tension",
+      "fragile harmony"
     ],
-    "short_upright_meaning": "10 of Cups channels water through Malkuth.",
-    "short_reversed_meaning": "10 of Cups asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A vision of harmony asks how people can feel safe and valued together.",
+    "short_reversed_meaning": "Replace an idealized picture of happiness with honest connection.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Malkuth",
@@ -1249,17 +1249,17 @@
     "number": null,
     "court": "Page",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "gentle curiosity",
+      "imagination",
+      "emotional message"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "insecurity",
+      "escapism",
+      "unspoken feelings"
     ],
-    "short_upright_meaning": "Page of Cups personifies the living voice of water.",
-    "short_reversed_meaning": "Page of Cups can show reactive patterns that need refinement.",
+    "short_upright_meaning": "A surprising feeling or creative idea deserves a tender hearing.",
+    "short_reversed_meaning": "Bring an elusive feeling into words without forcing certainty.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
@@ -1276,17 +1276,17 @@
     "number": null,
     "court": "Knight",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "romance",
+      "idealism",
+      "heart-led invitation"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "unrealistic promise",
+      "emotional drift",
+      "avoidance"
     ],
-    "short_upright_meaning": "Knight of Cups personifies the living voice of water.",
-    "short_reversed_meaning": "Knight of Cups can show reactive patterns that need refinement.",
+    "short_upright_meaning": "An invitation led by feeling is most helpful when paired with sincerity.",
+    "short_reversed_meaning": "Check whether an attractive vision has enough practical grounding.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
@@ -1303,17 +1303,17 @@
     "number": null,
     "court": "Queen",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "empathy",
+      "intuition",
+      "emotional care"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "porous boundaries",
+      "overwhelm",
+      "self-neglect"
     ],
-    "short_upright_meaning": "Queen of Cups personifies the living voice of water.",
-    "short_reversed_meaning": "Queen of Cups can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Deep empathy is strongest when it includes protection of your own needs.",
+    "short_reversed_meaning": "Care for others without becoming responsible for every feeling around you.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
@@ -1330,17 +1330,17 @@
     "number": null,
     "court": "King",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "emotional steadiness",
+      "compassion",
+      "wise response"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "suppressed emotion",
+      "volatility",
+      "detachment"
     ],
-    "short_upright_meaning": "King of Cups personifies the living voice of water.",
-    "short_reversed_meaning": "King of Cups can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Calm leadership comes from feeling deeply without being ruled by each wave.",
+    "short_reversed_meaning": "Give difficult emotions honest room before presenting a composed exterior.",
     "hermetic": {
       "element": "Water",
       "sephirah": "Court current",
@@ -1357,17 +1357,17 @@
     "number": 1,
     "court": null,
     "upright_keywords": [
-      "seed",
-      "potential",
-      "spark"
+      "clarity",
+      "breakthrough",
+      "honest idea"
     ],
     "reversed_keywords": [
-      "stall",
-      "hesitation",
-      "block"
+      "confusion",
+      "misused words",
+      "mental block"
     ],
-    "short_upright_meaning": "Pure air current seeks expression.",
-    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "short_upright_meaning": "A clear thought can cut through confusion and make a decision possible.",
+    "short_reversed_meaning": "Check whether certainty arrived before the evidence did.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Kether",
@@ -1384,21 +1384,21 @@
     "number": 2,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "difficult choice",
+      "stalemate",
+      "guarded balance"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "avoidance",
+      "overload",
+      "information emerging"
     ],
-    "short_upright_meaning": "2 of Swords channels air through Chokmah.",
-    "short_reversed_meaning": "2 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Two competing considerations ask for an honest decision process.",
+    "short_reversed_meaning": "Name the choice clearly rather than letting indecision decide for you.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Chokmah",
-      "decan": "Aquarius 0-9\u00b0",
+      "decan": "Aquarius 0-9°",
       "planet_ruler": "Venus",
       "hermetic_title": "Chokmah of Air"
     }
@@ -1411,21 +1411,21 @@
     "number": 3,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "heartache",
+      "difficult truth",
+      "grief"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "recovery",
+      "forgiveness",
+      "lingering pain"
     ],
-    "short_upright_meaning": "3 of Swords channels air through Binah.",
-    "short_reversed_meaning": "3 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A painful truth can be acknowledged without letting it define everything.",
+    "short_reversed_meaning": "Healing may involve revisiting pain with greater compassion.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Binah",
-      "decan": "Aquarius 10-19\u00b0",
+      "decan": "Aquarius 10-19°",
       "planet_ruler": "Mercury",
       "hermetic_title": "Binah of Air"
     }
@@ -1438,21 +1438,21 @@
     "number": 4,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "rest",
+      "recovery",
+      "quiet reflection"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "restlessness",
+      "overwork",
+      "returning strength"
     ],
-    "short_upright_meaning": "4 of Swords channels air through Chesed.",
-    "short_reversed_meaning": "4 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Rest can be part of the work when the mind needs time to recover.",
+    "short_reversed_meaning": "Notice whether stillness is restoring energy or becoming another source of worry.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Chesed",
-      "decan": "Aquarius 20-29\u00b0",
+      "decan": "Aquarius 20-29°",
       "planet_ruler": "Moon",
       "hermetic_title": "Chesed of Air"
     }
@@ -1465,17 +1465,17 @@
     "number": 5,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "hollow victory",
+      "conflict",
+      "consequences"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "reconciliation",
+      "resentment",
+      "choosing peace"
     ],
-    "short_upright_meaning": "5 of Swords channels air through Geburah.",
-    "short_reversed_meaning": "5 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Winning an argument may cost more than the victory was worth.",
+    "short_reversed_meaning": "Choose whether to repair a conflict or release a contest that benefits nobody.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Geburah",
@@ -1492,17 +1492,17 @@
     "number": 6,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "transition",
+      "passage",
+      "learning from difficulty"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "resistance",
+      "unfinished passage",
+      "lingering worry"
     ],
-    "short_upright_meaning": "6 of Swords channels air through Tiphareth.",
-    "short_reversed_meaning": "6 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "A gradual move away from strain may need patience and support.",
+    "short_reversed_meaning": "Leaving a hard chapter can take longer than deciding to go.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Tiphareth",
@@ -1519,17 +1519,17 @@
     "number": 7,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "strategy",
+      "privacy",
+      "indirect action"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "disclosure",
+      "self-deception",
+      "ineffective secrecy"
     ],
-    "short_upright_meaning": "7 of Swords channels air through Netzach.",
-    "short_reversed_meaning": "7 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Use discretion thoughtfully while checking the cost of avoiding open discussion.",
+    "short_reversed_meaning": "A hidden strategy may need honesty with yourself before it can change.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Netzach",
@@ -1546,17 +1546,17 @@
     "number": 8,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "feeling trapped",
+      "self-limiting story",
+      "narrow options"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "new perspective",
+      "agency",
+      "slow release"
     ],
-    "short_upright_meaning": "8 of Swords channels air through Hod.",
-    "short_reversed_meaning": "8 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Some constraints are real and others need testing; distinguish them carefully.",
+    "short_reversed_meaning": "A modest change in perspective can reveal a choice that felt unavailable.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Hod",
@@ -1573,17 +1573,17 @@
     "number": 9,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "worry",
+      "night thoughts",
+      "mental strain"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "reassurance",
+      "working through fear",
+      "lessening worry"
     ],
-    "short_upright_meaning": "9 of Swords channels air through Yesod.",
-    "short_reversed_meaning": "9 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Strong worries can feel like facts; seek a steadier view of what is known.",
+    "short_reversed_meaning": "Support and perspective may help loosen a cycle of private anxiety.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Yesod",
@@ -1600,17 +1600,17 @@
     "number": 10,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "painful ending",
+      "exhaustion",
+      "finality"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "recovery",
+      "release",
+      "emerging resilience"
     ],
-    "short_upright_meaning": "10 of Swords channels air through Malkuth.",
-    "short_reversed_meaning": "10 of Swords asks for disciplined balance before expansion.",
+    "short_upright_meaning": "An exhausting chapter may be reaching an endpoint; its meaning is symbolic, not literal harm.",
+    "short_reversed_meaning": "Recovery is possible after a hard ending, even if rebuilding takes time.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Malkuth",
@@ -1627,17 +1627,17 @@
     "number": null,
     "court": "Page",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "inquiry",
+      "alertness",
+      "new ideas"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "rumors",
+      "defensiveness",
+      "rushed conclusions"
     ],
-    "short_upright_meaning": "Page of Swords personifies the living voice of air.",
-    "short_reversed_meaning": "Page of Swords can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Questioning and observation can sharpen an emerging understanding.",
+    "short_reversed_meaning": "Avoid letting quick suspicion outrun careful fact-checking.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
@@ -1654,17 +1654,17 @@
     "number": null,
     "court": "Knight",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "decisive action",
+      "swift thought",
+      "directness"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "haste",
+      "tunnel vision",
+      "verbal clash"
     ],
-    "short_upright_meaning": "Knight of Swords personifies the living voice of air.",
-    "short_reversed_meaning": "Knight of Swords can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Move with conviction while leaving room for new information.",
+    "short_reversed_meaning": "A sharp mind may need to slow before its words cause damage.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
@@ -1681,17 +1681,17 @@
     "number": null,
     "court": "Queen",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "discernment",
+      "independence",
+      "clear boundaries"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "harshness",
+      "cynicism",
+      "closed heart"
     ],
-    "short_upright_meaning": "Queen of Swords personifies the living voice of air.",
-    "short_reversed_meaning": "Queen of Swords can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Clear language and boundaries can coexist with compassion.",
+    "short_reversed_meaning": "Let discernment protect you without turning every encounter into judgment.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
@@ -1708,17 +1708,17 @@
     "number": null,
     "court": "King",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "reason",
+      "fair judgment",
+      "principled authority"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "rigidity",
+      "detachment",
+      "misused logic"
     ],
-    "short_upright_meaning": "King of Swords personifies the living voice of air.",
-    "short_reversed_meaning": "King of Swords can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Sound decisions benefit from reason that answers to humane values.",
+    "short_reversed_meaning": "Check whether a strong argument has lost sight of the people involved.",
     "hermetic": {
       "element": "Air",
       "sephirah": "Court current",
@@ -1735,17 +1735,17 @@
     "number": 1,
     "court": null,
     "upright_keywords": [
-      "seed",
-      "potential",
-      "spark"
+      "tangible opportunity",
+      "new foundation",
+      "practical start"
     ],
     "reversed_keywords": [
-      "stall",
-      "hesitation",
-      "block"
+      "missed opening",
+      "weak groundwork",
+      "resource strain"
     ],
-    "short_upright_meaning": "Pure earth current seeks expression.",
-    "short_reversed_meaning": "Energy is present but needs grounding and rhythm.",
+    "short_upright_meaning": "A small, concrete opportunity can become a lasting resource through care.",
+    "short_reversed_meaning": "Revisit the practical foundation before committing more resources.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Kether",
@@ -1762,21 +1762,21 @@
     "number": 2,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "balance",
+      "adaptability",
+      "multiple demands"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "overcommitment",
+      "disorganization",
+      "dropped priorities"
     ],
-    "short_upright_meaning": "2 of Pentacles channels earth through Chokmah.",
-    "short_reversed_meaning": "2 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Handling several moving parts requires rhythm and deliberate tradeoffs.",
+    "short_reversed_meaning": "A crowded schedule may be asking for one fewer ball in the air.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Chokmah",
-      "decan": "Capricorn 0-9\u00b0",
+      "decan": "Capricorn 0-9°",
       "planet_ruler": "Jupiter",
       "hermetic_title": "Chokmah of Earth"
     }
@@ -1789,21 +1789,21 @@
     "number": 3,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "craftsmanship",
+      "teamwork",
+      "shared learning"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "misalignment",
+      "poor coordination",
+      "unrecognized skill"
     ],
-    "short_upright_meaning": "3 of Pentacles channels earth through Binah.",
-    "short_reversed_meaning": "3 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Distinct skills become more useful when people build toward a common standard.",
+    "short_reversed_meaning": "Improve the way expertise is shared before judging the work alone.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Binah",
-      "decan": "Capricorn 10-19\u00b0",
+      "decan": "Capricorn 10-19°",
       "planet_ruler": "Mars",
       "hermetic_title": "Binah of Earth"
     }
@@ -1816,21 +1816,21 @@
     "number": 4,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "security",
+      "stewardship",
+      "holding resources"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "scarcity mindset",
+      "control",
+      "fear of loss"
     ],
-    "short_upright_meaning": "4 of Pentacles channels earth through Chesed.",
-    "short_reversed_meaning": "4 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Protect what matters while remembering that resources are meant to serve life.",
+    "short_reversed_meaning": "A tight grip can keep security from becoming useful freedom.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Chesed",
-      "decan": "Capricorn 20-29\u00b0",
+      "decan": "Capricorn 20-29°",
       "planet_ruler": "Sun",
       "hermetic_title": "Chesed of Earth"
     }
@@ -1843,17 +1843,17 @@
     "number": 5,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "scarcity",
+      "hardship",
+      "asking for help"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "renewal",
+      "available support",
+      "regaining footing"
     ],
-    "short_upright_meaning": "5 of Pentacles channels earth through Geburah.",
-    "short_reversed_meaning": "5 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Difficulty need not be faced in isolation; noticing support is a practical strength.",
+    "short_reversed_meaning": "Recovery may begin by accepting a hand that was previously hard to see.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Geburah",
@@ -1870,17 +1870,17 @@
     "number": 6,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "generosity",
+      "reciprocity",
+      "fair exchange"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "strings attached",
+      "imbalance",
+      "indebtedness"
     ],
-    "short_upright_meaning": "6 of Pentacles channels earth through Tiphareth.",
-    "short_reversed_meaning": "6 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Giving and receiving work best when dignity flows both ways.",
+    "short_reversed_meaning": "Examine whether a supposed gift creates a hidden obligation.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Tiphareth",
@@ -1897,17 +1897,17 @@
     "number": 7,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "patience",
+      "investment",
+      "assessment"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "impatience",
+      "slow returns",
+      "misplaced effort"
     ],
-    "short_upright_meaning": "7 of Pentacles channels earth through Netzach.",
-    "short_reversed_meaning": "7 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Pause to measure what sustained work has actually produced.",
+    "short_reversed_meaning": "Redirect energy when the evidence no longer supports the original plan.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Netzach",
@@ -1924,17 +1924,17 @@
     "number": 8,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "practice",
+      "craft",
+      "steady improvement"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "perfectionism",
+      "boredom",
+      "misdirected labor"
     ],
-    "short_upright_meaning": "8 of Pentacles channels earth through Hod.",
-    "short_reversed_meaning": "8 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Deliberate practice turns repeated effort into real skill.",
+    "short_reversed_meaning": "Check whether polishing details has replaced progress on the real goal.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Hod",
@@ -1951,17 +1951,17 @@
     "number": 9,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "self-sufficiency",
+      "earned comfort",
+      "confidence"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "dependence",
+      "self-worth questions",
+      "uneasy success"
     ],
-    "short_upright_meaning": "9 of Pentacles channels earth through Yesod.",
-    "short_reversed_meaning": "9 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "Enjoy the independence and comfort your sustained effort has made possible.",
+    "short_reversed_meaning": "Consider whether achievement feels secure when approval or resources change.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Yesod",
@@ -1978,17 +1978,17 @@
     "number": 10,
     "court": null,
     "upright_keywords": [
-      "flow",
-      "focus",
-      "development"
+      "legacy",
+      "shared resources",
+      "long-term stability"
     ],
     "reversed_keywords": [
-      "friction",
-      "overreach",
-      "adjustment"
+      "family expectations",
+      "fragile inheritance",
+      "short-term thinking"
     ],
-    "short_upright_meaning": "10 of Pentacles channels earth through Malkuth.",
-    "short_reversed_meaning": "10 of Pentacles asks for disciplined balance before expansion.",
+    "short_upright_meaning": "The value of a legacy lies in what it enables future people to sustain.",
+    "short_reversed_meaning": "Reconsider inherited expectations when they undermine lasting wellbeing.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Malkuth",
@@ -2005,17 +2005,17 @@
     "number": null,
     "court": "Page",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "study",
+      "practical curiosity",
+      "new venture"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "procrastination",
+      "unrealized potential",
+      "poor planning"
     ],
-    "short_upright_meaning": "Page of Pentacles personifies the living voice of earth.",
-    "short_reversed_meaning": "Page of Pentacles can show reactive patterns that need refinement.",
+    "short_upright_meaning": "A beginner's willingness to learn can turn an idea into a concrete skill.",
+    "short_reversed_meaning": "Give the promising idea a realistic first task rather than endless planning.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
@@ -2032,17 +2032,17 @@
     "number": null,
     "court": "Knight",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "reliability",
+      "patience",
+      "methodical work"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "stagnation",
+      "rigidity",
+      "unbalanced routine"
     ],
-    "short_upright_meaning": "Knight of Pentacles personifies the living voice of earth.",
-    "short_reversed_meaning": "Knight of Pentacles can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Steady effort builds trust when progress is measured honestly.",
+    "short_reversed_meaning": "Revisit the routine if careful repetition has stopped serving the goal.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
@@ -2059,17 +2059,17 @@
     "number": null,
     "court": "Queen",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "practical care",
+      "resourcefulness",
+      "comfort"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "depletion",
+      "overgiving",
+      "neglected needs"
     ],
-    "short_upright_meaning": "Queen of Pentacles personifies the living voice of earth.",
-    "short_reversed_meaning": "Queen of Pentacles can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Practical generosity makes daily life more stable and welcoming.",
+    "short_reversed_meaning": "Sustain your own resources before becoming everyone's foundation.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",
@@ -2086,17 +2086,17 @@
     "number": null,
     "court": "King",
     "upright_keywords": [
-      "character",
-      "style",
-      "message"
+      "stewardship",
+      "stability",
+      "material leadership"
     ],
     "reversed_keywords": [
-      "immaturity",
-      "misfire",
-      "defensiveness"
+      "possessiveness",
+      "stagnation",
+      "status over purpose"
     ],
-    "short_upright_meaning": "King of Pentacles personifies the living voice of earth.",
-    "short_reversed_meaning": "King of Pentacles can show reactive patterns that need refinement.",
+    "short_upright_meaning": "Responsible stewardship turns resources into reliable support for others.",
+    "short_reversed_meaning": "Measure success by the good resources make possible, not by accumulation alone.",
     "hermetic": {
       "element": "Earth",
       "sephirah": "Court current",

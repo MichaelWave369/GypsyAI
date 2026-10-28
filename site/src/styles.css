@@ -185,3 +185,6 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 @media(max-width:950px){.gaia-path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-reading-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.gaia-path-grid,.gaia-reading-fields,.gaia-mini-grid{grid-template-columns:1fr}.gaia-path{min-height:205px}.brand h1{font-size:29px}.brand p{font-size:8px;letter-spacing:.06em}.hero h2{font-size:42px}}
 @media(prefers-reduced-motion:reduce){.gaia-path{transition:none}}
+
+/* GAIA card-specific reading interpretation, visible before any model handoff. */
+.gaia-card-meaning{font-size:14px!important;color:#e6e4cc!important;line-height:1.65!important;border-left:2px solid #81bdaa;padding:9px 12px;background:#0b252a9c;margin:14px 0 16px}

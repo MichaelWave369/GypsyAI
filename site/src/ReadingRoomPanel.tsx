@@ -97,6 +97,7 @@ export function ReadingRoomPanel({
               <span className="eyebrow">{draw.position}</span><strong>{draw.card.name}</strong>
               <small>{draw.orientation} · {(draw.orientation === 'upright'
                 ? draw.card.upright_keywords : draw.card.reversed_keywords).slice(0, 3).join(' / ')}</small>
+              <small>{draw.orientation === 'upright' ? draw.card.short_upright_meaning : draw.card.short_reversed_meaning}</small>
             </div>)}</div>
         </div>
         <div className="gaia-result-group"><h4>☼ Celestial placements</h4>

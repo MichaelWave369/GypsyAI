@@ -17,16 +17,16 @@ export const READING_MODES: Record<ReadingKind, string> = {
 
 export function readingInvitation(kind: ReadingKind, focus = ''): string {
   const prompts: Record<ReadingKind, string> = {
-    tarot: 'Offer a thoughtful tarot reading using only the attached card names, orientations, positions and recorded keywords. Explain how the positions relate; distinguish symbolism from fact.',
+    tarot: 'Give me a real, evocative tarot reading grounded in the attached named cards, positions, orientations and card-specific meanings. Let each card sound different. Connect the cards to my chosen focus without pretending to know my private circumstances. One brief note that this is symbolic reflection is enough. Do not narrate the rules, cite internal packet fields or list repetitive fact notes.',
     astrology: 'Interpret the attached calculated astrological placements and aspects as symbolic reflection, not scientific prediction. Do not invent additional placements, houses or birth details.',
     genekeys: 'Guide a grounded Gene Keys contemplation using only the attached activation sequence. Its mappings are approximate and symbolic; never imply genetic test results.',
     ancestry: 'Reflect gently on the attached anonymized ancestry counts only. Do not infer identities, cultures, lineages, relationships or personal traits from aggregate data.',
-    synthesis: 'Weave a meaningful, cohesive reading from the attached, independently calculated Tarot, Astrology and Gene Keys results. Cite the actual cards, placements and keys. Do not fill in missing data or present symbolic relationships as causal evidence.'
+    synthesis: 'Weave a vivid, grounded reading from the attached, independently calculated Tarot, Astrology and Gene Keys results. Name the actual cards and their individual meanings, calculated placements and mapped keys. Connect their themes naturally without fabricating facts, predicting a fixed future or explaining the internal rules at length.'
   };
   const specific = focus.trim().slice(0, 300);
   return prompts[kind] +
     (specific ? '\nMy chosen reflection focus: ' + specific : '') +
-    '\nBe a curious and creative ally, not a questionnaire. Offer a connected interpretation with nuance, clearly flag approximations and uncertainties, and finish with one optional reflective question. Do not merely repeat the input.';
+    '\nWrite as a thoughtful human-facing reader, not a questionnaire and not a compliance report: open with the pattern, give each card or symbol its own distinctive voice, connect the themes, and offer one meaningful practical insight. A brief uncertainty note is sufficient. Avoid headings named Fact note, Approximation noted or HermeticFrame; do not simply restate the source packet. Finish with at most one optional reflective question.';
 }
 
 export type IntegratedReadingInput = {
@@ -63,7 +63,9 @@ export function createIntegratedReading(input: IntegratedReadingInput) {
         name: draw.card.name,
         orientation: draw.orientation,
         keywords: (draw.orientation === 'upright'
-          ? draw.card.upright_keywords : draw.card.reversed_keywords).slice(0, 6)
+          ? draw.card.upright_keywords : draw.card.reversed_keywords).slice(0, 6),
+        cardSpecificMeaning: draw.orientation === 'upright'
+          ? draw.card.short_upright_meaning : draw.card.short_reversed_meaning
       }))
     },
     astrology: {
