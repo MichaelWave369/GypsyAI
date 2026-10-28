@@ -24,6 +24,7 @@ import { PilotSessionPanel } from './PilotSessionPanel';
 import { ReadingRoomPanel } from './ReadingRoomPanel';
 import { RitualDrawPanel } from './RitualDrawPanel';
 import { SpreadAtlasPanel } from './SpreadAtlasPanel';
+import { SymbolicLibraryPanel } from './SymbolicLibraryPanel';
 import type { AtlasLayout } from './spreadAtlas';
 import { READING_MODES, readingInvitation, tarotReflectionCues } from './readingExperience';
 import type { ReadingKind } from './readingExperience';
@@ -34,6 +35,7 @@ const TABS = [
   { id: 'readings', name: 'Reading Room', glyph: '✦' },
   { id: 'ritual', name: 'Ritual Draw', glyph: '✺' },
   { id: 'atlas', name: 'Spread Atlas', glyph: '◇' },
+  { id: 'library', name: 'Symbolic Library', glyph: '✧' },
   { id: 'oracle', name: 'GAIA Oracle', glyph: '◉' },
   { id: 'pilot', name: 'Ally Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
@@ -124,6 +126,7 @@ function App() {
   const [tarot, setTarot] = useState<ReturnType<typeof createTarotReading> | null>(null);
   // Transient handoff only; custom positions never go to localStorage.
   const [atlasLayout, setAtlasLayout] = useState<AtlasLayout | null>(null);
+  const [libraryCardId, setLibraryCardId] = useState<string | null>(null);
   const [chartDate, setChartDate] = useState('');
   const [chartTime, setChartTime] = useState('12:00');
   const [lat, setLat] = useState('');
@@ -198,6 +201,10 @@ function App() {
   function useAtlasLayout(layout: AtlasLayout) {
     setAtlasLayout(layout);
     go('ritual');
+  }
+  function openLibraryCard(id: string) {
+    setLibraryCardId(id);
+    go('library');
   }
   function reflect(context: unknown, label: string, kind: ReadingKind, focus = '') {
     const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
@@ -395,6 +402,7 @@ function App() {
       {tab === 'readings' && <ReadingRoomPanel onNavigate={go} onReflect={reflect} />}
       {tab === 'ritual' && <RitualDrawPanel onReflect={reflect} atlasLayout={atlasLayout} />}
       {tab === 'atlas' && <SpreadAtlasPanel onUseLayout={useAtlasLayout} />}
+      {tab === 'library' && <SymbolicLibraryPanel key={libraryCardId || 'default'} initialCardId={libraryCardId} />}
       {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
@@ -407,6 +415,7 @@ function App() {
           <span className="eyebrow">{draw.position}</span><div className="card-symbol">✦</div><h3>{draw.card.name}</h3><p className="orientation">{draw.orientation}</p>
           <p>{(draw.orientation === 'upright' ? draw.card.upright_keywords : draw.card.reversed_keywords).join(' · ')}</p>
           <p className="gaia-card-meaning">{draw.orientation === 'upright' ? draw.card.short_upright_meaning : draw.card.short_reversed_meaning}</p>
+          <button type="button" className="secondary" onClick={() => openLibraryCard(draw.card.id)}>Explore card sources ↗</button>
           <p className="muted">Hermetic: {Object.entries(draw.card.hermetic).filter(([,v]) => typeof v === 'string').map(([k,v]) => k + ': ' + v).join(' · ')}</p><p className="gaia-cue">Reflect: {tarotReflectionCues(tarot.cards)[index].question}</p>
         </article>)}</div><div className="actions"><button className="primary" onClick={() => reflect(tarot.packet, 'Tarot: ' + spread + (question ? ' · ' + question : ''), 'tarot', question)}>Prepare local GAIA interpretation ↗</button><button className="secondary" onClick={() => exportJson('gypsyai-tarot.json', { question, ...tarot })}>Export reading JSON</button></div></>}
       </>}
