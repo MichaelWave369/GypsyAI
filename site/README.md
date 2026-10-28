@@ -1,3 +1,5 @@
+> **v0.2.5 Sovereign Brain Bridge:** Dedicated opt-in PocketBrain Tiny browser inference lab using an MIT source-pinned SDK snapshot (runtime and model downloads still external/unpinned), with real browser receipts and explicit disposal. BrainC's connection is only a fixed local read-only liveness probe. Neither replaces the governed Ollama Oracle; PhiStream remains research-only. See [bridge security and validation contract](SOVEREIGN_BRAIN_BRIDGE.md).
+
 > **v0.2.4 Extended Workload Lab:** Operator-approved 128/256-token runs with actual output count/termination reason, `/api/ps` before/after model-residency snapshots, cross-session V3 JSON export/import, and compatibility flags. No forced cold starts, unsupported CUDA claims or PhiStream activation. See [long workload contract](LONG_WORKLOAD_LAB.md).
 
 > **v0.2.3 Cold/Warm Performance Studio:** Controlled opt-in post-warmup repeat samples, exploratory balanced AB/BA model comparisons, descriptive medians/IQR, local V1 receipt import, and V2 exported experiment ledgers. No forced model unload, external benchmarking, or PhiStream chat. See [repeat laboratory contract](REPEAT_LAB.md).

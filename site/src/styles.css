@@ -68,3 +68,21 @@
 .long-compare-card p{font-size:12px;color:#c6bccc}
 .long-sessions{margin:10px 0;max-height:240px;overflow-y:auto}
 @media(max-width:640px){.long-summary .data-row span{text-align:left}}
+
+/* v0.2.5: a clearly partitioned research bridge, no false provider claims. */
+.brain-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.brain-tiles>.panel{padding:20px;min-width:0}
+.brain-tiles h3{margin:0 0 12px}
+.brain-tiles p{font-size:12px;color:#c1b7cc;line-height:1.6}
+.brain-bridge>.panel{margin:20px 0}
+.brain-bridge .actions{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+.brain-bridge h4{margin:18px 0 8px;color:#e6d3ab}
+.brain-bridge .brain-source{color:#e0c28e;font-size:12px;overflow-wrap:anywhere;margin:8px 0}
+.brain-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:15px 0}
+.brain-details span{font-size:12px;padding:12px;background:#1b1c2b;border:1px solid #403850;border-radius:6px}
+.brain-output{background:#161e2c;border-left:2px solid #bda16f;padding:18px;margin:18px 0;border-radius:6px}
+.brain-output strong{color:#f0d9ae;font-size:12px}
+.brain-output p{white-space:pre-wrap;overflow-wrap:anywhere;color:#e2dbe7;font-size:14px;line-height:1.65}
+.brain-bridge code{color:#e9c894;overflow-wrap:anywhere}
+.brain-bridge .metric-row{margin:16px 0}
+.brain-bridge textarea{width:100%;min-height:90px}
