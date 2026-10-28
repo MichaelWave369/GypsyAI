@@ -266,7 +266,7 @@ function App() {
     <main>
       {tab === 'home' && <>
         <section className="hero">
-          <div className="hero-copy"><span className="eyebrow">GYPSYAI · LOCAL INTELLIGENCE v0.2.2</span>
+          <div className="hero-copy"><span className="eyebrow">GYPSYAI · LOCAL INTELLIGENCE v0.2.3</span>
             <h2>Wisdom without<br/><em>the leash.</em></h2>
             <p>Explore symbolic systems with deterministic, source-declared tools. Speak with an optional model on your own computer. Your ancestry, history, and context stay under your control.</p>
             <div className="actions"><button className="primary" onClick={() => go('oracle')}>Open the Oracle <span>↗</span></button><button className="secondary" onClick={() => go('tarot')}>Explore the readings</button></div>
@@ -438,7 +438,7 @@ function App() {
       </>}
       {status && <p className="status-message" role="status">{status}</p>}
     </main>
-    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.2 · MIT</span></footer>
+    <footer className="footer"><span>GYPSYAI / SOVEREIGN PORTAL</span><span>PEOPLE ABOVE PROFIT · LEDGER ABOVE EGO</span><span>v0.2.3 · MIT</span></footer>
   </div>;
 }
 createRoot(document.getElementById('root')!).render(<App />);
