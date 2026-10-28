@@ -26,7 +26,7 @@ export function readingInvitation(kind: ReadingKind, focus = ''): string {
   const specific = focus.trim().slice(0, 300);
   return prompts[kind] +
     (specific ? '\nMy chosen reflection focus: ' + specific : '') +
-    '\nWrite as a thoughtful human-facing reader, not a compliance report: open with the pattern, give each card or symbol its own distinctive voice, connect the themes, and offer one meaningful practical insight. A brief uncertainty note is sufficient. Avoid headings named Fact note, Approximation noted or HermeticFrame; do not simply restate the source packet. Finish with at most one optional reflective question.';
+    '\nWrite as a thoughtful human-facing reader, not a compliance report or a questionnaire: open with the pattern, give each card or symbol its own distinctive voice, connect the themes, and offer one meaningful practical insight. A brief uncertainty note is sufficient. Avoid headings named Fact note, Approximation noted or HermeticFrame; do not simply restate the source packet. Finish with at most one optional reflective question.';
 }
 
 export type IntegratedReadingInput = {
