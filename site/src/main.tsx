@@ -194,6 +194,7 @@ function App() {
       setStatus('Ancestry consent is off or the reading packet was rejected. Nothing was attached.');
       return;
     }
+    if (turns.length && !window.confirm('Start a new GAIA reading? This clears your current Oracle conversation and any saved Oracle chat history. You may export it from Sovereignty first.')) return;
     // Start each new reading with clean chat context. Never leak past
     // readings into a different model session implicitly.
     resetModelContext();
