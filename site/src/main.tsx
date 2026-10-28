@@ -206,7 +206,7 @@ function App() {
     setLibraryCardId(id);
     go('library');
   }
-  function reflect(context: unknown, label: string, kind: ReadingKind, focus = '') {
+  function reflect(context: unknown, label: string, kind: ReadingKind, focus = '', scholar = false) {
     const approved = permittedPacket({ kind, label, text: JSON.stringify(context) }, consent);
     if (!approved) {
       setStatus('Ancestry consent is off or the reading packet was rejected. Nothing was attached.');
@@ -218,7 +218,7 @@ function App() {
     resetModelContext();
     setPacket(approved);
     setSessionMode(READING_MODES[kind] as TiekatSessionModeKey);
-    setQuery(readingInvitation(kind, focus));
+    setQuery(readingInvitation(kind, focus, scholar));
     setStatus('Reading packet staged for review. No model was contacted. Check the suggested prompt and press Send in the Local Oracle.');
     go('oracle');
   }
@@ -333,7 +333,7 @@ function App() {
             <p className="muted">For a GitHub Pages HTTPS site, local browser access may need an explicit Ollama origin allowlist and compatible browser permissions. The app will never expose Ollama to the public internet.</p>
             <div className="thin-rule"/>
             <h3>02 / Approved context</h3>
-            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send.</p><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
+            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send. Review the exact attached JSON below, including any historical annotations.</p><details className="gaia-context-preview"><summary>Inspect exact approved context · {packet.text.length} characters</summary><pre>{packet.text}</pre></details><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
 
             <div className="thin-rule"/>
             <h3>03 / TIEKAT Local Brain</h3>

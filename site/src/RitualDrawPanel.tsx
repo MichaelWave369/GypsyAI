@@ -6,6 +6,7 @@ import {
 } from './ritualDraw';
 import type { RitualCard, RitualSpread } from './ritualDraw';
 import { FieldLoomPanel } from './FieldLoomPanel';
+import { scholarPacket, scholarPreview } from './scholarMode';
 import { chooseAtlasCard, atlasReadingPacket, validateAtlasLayout } from './spreadAtlas';
 import type { AtlasLayout } from './spreadAtlas';
 
@@ -14,7 +15,7 @@ const PAGE_SIZE = 12;
 const SPREAD_SIZE: Record<RitualSpread, number> = { single: 1, 'three-card': 3 };
 
 export function RitualDrawPanel({ onReflect, atlasLayout }: {
-  onReflect: (data: unknown, label: string, kind: 'tarot', focus?: string) => void;
+  onReflect: (data: unknown, label: string, kind: 'tarot', focus?: string, scholar?: boolean) => void;
   atlasLayout?: AtlasLayout | null;
 }) {
   const layout = atlasLayout ? validateAtlasLayout(atlasLayout) : null;
@@ -27,18 +28,20 @@ export function RitualDrawPanel({ onReflect, atlasLayout }: {
   const [page, setPage] = useState(0);
   const [confirmed, setConfirmed] = useState(false);
   const [journal, setJournal] = useState('');
+  const [scholar, setScholar] = useState(false);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
 
   const total = spread === 'atlas' && layout ? layout.slots.length : SPREAD_SIZE[spread === 'atlas' ? 'three-card' : spread];
   const complete = selected.length === total;
   const allRevealed = complete && selected.every((_, i) => revealed.includes(i));
+  const scholarView = confirmed ? scholarPreview(selected) : null;
   const pageCount = Math.ceil(deck.length / PAGE_SIZE);
   const shown = deck.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   function clearDraw() {
     setDeck([]); setSelected([]); setRevealed([]);
-    setConfirmed(false); setPage(0); setJournal(''); setError(''); setStatus('');
+    setConfirmed(false); setPage(0); setJournal(''); setScholar(false); setError(''); setStatus('');
   }
 
   function setNewSpread(value: RitualMode) {
@@ -99,7 +102,8 @@ export function RitualDrawPanel({ onReflect, atlasLayout }: {
         : ritualReadingPacket(spread === 'atlas' ? 'three-card' : spread, selected);
       const name = spread === 'atlas' && layout ? layout.name
         : spread === 'single' ? 'one card' : 'three cards';
-      onReflect(packet, 'Ritual Draw: ' + name, 'tarot', focus);
+      const handoff = scholar ? scholarPacket(packet, selected) : packet;
+      onReflect(handoff, 'Ritual Draw: ' + name + (scholar ? ' · Historical Scholar Mode' : ''), 'tarot', focus, scholar);
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
   }
 
@@ -241,6 +245,33 @@ export function RitualDrawPanel({ onReflect, atlasLayout }: {
 
     {confirmed && <section className="panel gaia-field-loom">
       <FieldLoomPanel draws={selected} layout={spread === 'atlas' ? layout : null}/>
+      <div className="gaia-scholar-box">
+        <label className="gaia-scholar-toggle">
+          <input type="checkbox" checked={scholar} onChange={e=>setScholar(e.target.checked)} />
+          <span><strong>Historical Scholar Mode</strong>
+            <small>Opt in to reviewed source comparisons with the same chosen cards.</small></span>
+        </label>
+        <p className="muted">Only four cards in GAIA's historical catalog currently have checked
+          source notes. The other 74 remain editorial-only. Turning this on includes
+          available short historical annotations in the staged local model packet,
+          not a network lookup. Regular reading mode stays unchanged.</p>
+        {scholar && scholarView && <>
+          <p className="muted"><strong>{scholarView.matches.length} of {scholarView.drawnCount}</strong>
+            {' '}cards in this spread have a reviewed historical note.</p>
+          {scholarView.matches.map(match=><div className="gaia-scholar-source" key={match.position}>
+            <strong>{match.cardName} · {match.position}</strong>
+            <p>{match.summary}</p>
+            <small>{match.scope === 'card-symbolism'
+              ? 'Imagery/symbolism only; no reviewed reversed meaning.'
+              : 'Historical upright/reversed descriptions.'}</small>
+            <a href={match.sectionUrl} target="_blank" rel="noopener noreferrer">
+              Read original section: {match.sectionTitle} ↗</a>
+          </div>)}
+          {!!scholarView.unreviewed.length && <p className="muted">
+            <strong>Historical comparison pending:</strong> {scholarView.unreviewed.join(', ')}.
+            GAIA will not invent historical citations for these cards.</p>}
+        </>}
+      </div>
       <label htmlFor="gaia-ritual-journal">My own interpretation (optional, private in this tab)</label>
       <textarea id="gaia-ritual-journal" rows={4} maxLength={1000} value={journal}
         onChange={e => setJournal(e.target.value)}
@@ -250,7 +281,7 @@ export function RitualDrawPanel({ onReflect, atlasLayout }: {
         Leaving this chamber also discards the note, so export first if you want to keep it.</p>
       <div className="actions">
         <button type="button" className="primary" onClick={prepare}>
-          Prepare local GAIA interpretation ↗
+          {scholar ? 'Prepare sourced Scholar reading ↗' : 'Prepare local GAIA interpretation ↗'}
         </button>
         <button type="button" className="secondary" onClick={exportPrivate}>
           Export my reading + note as JSON
