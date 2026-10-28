@@ -85,7 +85,8 @@ describe('GypsyAI PocketBrain comparison v0.2.6', () => {
     expect(result.answers[0].text).toContain('LOCAL_SECRET');
     expect(encoded).not.toContain('LOCAL_SECRET');
     expect(encoded).not.toContain(PAIR_PROMPT);
-    expect(encoded).not.toContain('responseText');
+    expect(encoded).not.toContain('"responseText":');
+    expect(encoded).not.toContain('discard');
     expect(result.ledger.observations[0].evidence.responseTextIncluded).toBe(false);
     expect(result.ledger.observations[0].evidence.userPromptIncluded).toBe(false);
     expect(result.ledger.observations[0].evidence.source.artifactRevision).toBe('UNPINNED');
