@@ -21,15 +21,19 @@ describe('GAIA Symbolic Library historical provenance', () => {
     }
   });
 
-  it('marks only the four explicitly checked historical card sections as reviewed', () => {
+  it('counts only the sixteen explicitly checked historical card sections as reviewed', () => {
     const coverage = symbolicCoverage();
     expect(coverage).toEqual({
-      total:78, editorial:78, historicalReviewed:4, historicalNotReviewed:74
+      total:78, editorial:78, historicalReviewed:16, historicalNotReviewed:62
     });
     const ids = REVIEWED_CARD_NOTES.map(n=>n.cardId);
-    expect(ids).toEqual(['major-7','major-13','wands-5','wands-8']);
-    expect(new Set(ids).size).toBe(4);
-    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(4);
+    expect(new Set(ids)).toEqual(new Set([
+      'major-0','major-1','major-2','major-3','major-7','major-8','major-9',
+      'major-13','major-17','major-19','wands-ace','wands-5','wands-8',
+      'cups-2','swords-3','pentacles-7'
+    ]));
+    expect(new Set(ids).size).toBe(16);
+    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(16);
     expect(findSymbolicEntry('wands-9')?.annotationStatus).toBe('not-yet-reviewed');
   });
 
@@ -63,7 +67,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(searchSymbolicEntries('recovery').some(c=>c.name==='10 of Swords')).toBe(true);
     expect(searchSymbolicEntries('', 'major')).toHaveLength(22);
     expect(searchSymbolicEntries('', 'minor')).toHaveLength(56);
-    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(4);
+    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(16);
     expect(searchSymbolicEntries('invalid-query-never-exists')).toEqual([]);
     expect(() => searchSymbolicEntries('', 'secret' as 'all')).toThrow('Unsupported');
   });
@@ -77,10 +81,53 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(fresh.recordedHermetic).not.toHaveProperty('fake');
   });
 
+  it('records the new twelve primary-text chapters with exact card-specific URLs and honest evidence scope',()=>{
+    const added=[
+      ['major-0','zero-the-fool','card-symbolism'],
+      ['major-1','i-the-magician','card-symbolism'],
+      ['major-2','ii-the-high-priestess','card-symbolism'],
+      ['major-3','iii-the-empress','card-symbolism'],
+      ['major-8','viii-strength-or-fortitude','card-symbolism'],
+      ['major-9','ix-the-hermit','card-symbolism'],
+      ['major-17','xvii-the-star','card-symbolism'],
+      ['major-19','xix-the-sun','card-symbolism'],
+      ['wands-ace','ace-of-wands','divinatory-upright-reversed'],
+      ['cups-2','two-of-cups','card-symbolism'],
+      ['swords-3','three-of-swords','divinatory-upright-reversed'],
+      ['pentacles-7','seven-of-pentacles','divinatory-upright-reversed']
+    ] as const;
+    for (const [id,slug,scope] of added){
+      const note=findSymbolicEntry(id)!.annotation!;
+      expect(note).not.toBeNull();
+      expect(note.sourceId).toBe('waite-pictorial-key');
+      expect(note.sectionUrl).toBe('https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/'+slug);
+      expect(note.interpretationScope).toBe(scope);
+      expect(note.checkedMeaning.length).toBeGreaterThan(80);
+      expect(note.readingNote.length).toBeGreaterThan(65);
+      expect(note.checkedMeaning).not.toMatch(/verified prediction|empirical proof/);
+    }
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(11);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(5);
+  });
+
+  it('preserves source disagreements rather than laundering edited keywords into Waite meanings',()=>{
+    const star=findSymbolicEntry('major-17')!.annotation!;
+    expect(star.checkedMeaning).toContain('incomplete');
+    const hermit=findSymbolicEntry('major-9')!.annotation!;
+    expect(hermit.readingNote).toContain('disputes');
+    const pentacles=findSymbolicEntry('pentacles-7')!.annotation!;
+    expect(pentacles.checkedMeaning).toContain('contradictory');
+    const cups=findSymbolicEntry('cups-2')!.annotation!;
+    expect(cups.readingNote).toContain('not a distinct reversed');
+    const strength=findSymbolicEntry('major-8')!.annotation!;
+    expect(strength.checkedMeaning).toContain('Strength and Justice');
+    expect(findSymbolicEntry('swords-4')!.annotation).toBeNull();
+  });
+
   it('does not attach institutional context to a card meaning by default', () => {
     const archivalIds = SYMBOLIC_SOURCES.filter(s=>s.kind==='institutional-collection').map(s=>s.id);
     expect(archivalIds).toEqual(['jhu-pam-a','loc-papus']);
     expect(REVIEWED_CARD_NOTES.every(n=>!archivalIds.includes(n.sourceId))).toBe(true);
-    expect(findSymbolicEntry('major-0')?.annotation).toBeNull();
+    expect(findSymbolicEntry('major-15')?.annotation).toBeNull();
   });
 });

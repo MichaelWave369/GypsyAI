@@ -125,7 +125,7 @@ export function MinorConcordancePanel({onOpenCard}:{onOpenCard:(id:string)=>void
       </div>
       <p className="muted">Structural indexing across GAIA's chambers now covers
         { ' ' }{coverage.structurallyIndexedAcrossMajorCourtAndPip} card identities
-        (22 major, 16 court and 40 Ace/pip). This does not turn the four
+        (22 major, 16 court and 40 Ace/pip). This does not turn the sixteen
         historically reviewed Waite *interpretation* notes into 78 reviewed
         meanings, and does not prove universal image equivalence.</p>
     </section>
