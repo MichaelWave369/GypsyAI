@@ -400,3 +400,10 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-concordance button:focus-visible,.gaia-concordance a:focus-visible{outline:3px solid #f4dca3;outline-offset:3px}
 @media(max-width:1100px){.gaia-concordance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-concordance-picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:630px){.gaia-concordance-grid,.gaia-concordance-source-list{grid-template-columns:1fr}.gaia-concordance-workbench,.gaia-concordance-sources{padding:15px}.gaia-concordance-picker{grid-template-columns:1fr 1fr}.gaia-concordance-tradition{min-height:190px}.gaia-concordance-coverage>div{padding:11px}}
+
+
+/* GAIA v1.3: secondary transcriptions are visibly separate from deck identities. */
+.gaia-concordance-plate{display:flex;flex-direction:column;gap:5px;background:#122b30;padding:10px 12px;border:1px dashed #638a79;border-radius:7px;line-height:1.6}
+.gaia-concordance-plate strong{font-size:11px;color:#e7d5a4}
+.gaia-concordance-plate small{font-size:10px;line-height:1.6;color:#b6ccbe}
+.gaia-concordance-workbench .gaia-concordance-picker{max-height:370px;overflow-y:auto;padding:3px}
