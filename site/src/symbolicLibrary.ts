@@ -535,6 +535,96 @@ export const REVIEWED_CARD_NOTES: readonly HistoricalAnnotation[] = [
     checkedMeaning: "Waite pictures a prosperous merchant weighing coins and distributing them to people in need. Upright he lists gifts, gratification and present prosperity, with another source emphasizing watchfulness; reversed he gives desire, greed, envy, jealousy and illusion.",
     interpretationScope: 'divinatory-upright-reversed',
     readingNote: "This is a period account of giving, status and desire, not a measurement of generosity or grounds for judging a real person's finances."
+  },
+  {
+    cardId: "wands-9",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Nine of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/nine-of-wands",
+    checkedMeaning: "Waite pictures an injured-looking defender leaning on a staff while eight upright wands form a barrier behind him. Upright he describes courage and strength in the face of opposition, accompanied by delay or suspension; reversed he lists obstacles, adversity and misfortune.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The imagery describes preparedness and resistance in Waite's printed tradition, not evidence that an actual adversary or calamity is approaching."
+  },
+  {
+    cardId: "cups-4",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Four of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/four-of-cups",
+    checkedMeaning: "Waite shows a dissatisfied young man under a tree, disregarding a fourth cup offered from a cloud beside three existing cups. Upright he records weariness, aversion, imagined vexation and even blended pleasure; reversed he gives novelty, new teaching and new connections.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite's reversal specifically introduces new relations and instruction. Do not mistake the illustration for a mental-health diagnosis or promise a new relationship."
+  },
+  {
+    cardId: "cups-9",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Nine of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/nine-of-cups",
+    checkedMeaning: "Waite shows a satisfied host with nine cups arranged behind him. His upright associations include contentment, physical ease, advantage and success; reversed he unusually lists truth, loyalty and freedom while adding that conflicting interpretations include error and imperfection.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The reversed list mixes favorable and unfavorable words. Do not invent a single settled meaning or treat the image as a health assessment."
+  },
+  {
+    cardId: "cups-10",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ten of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ten-of-cups",
+    checkedMeaning: "Waite describes a rainbow of cups above a couple and two children before a home. Upright he associates wholehearted satisfaction, loving friendship and a settled place or community; reversed he lists false-hearted repose, indignation and violence.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The family imagery and reversed vocabulary are historically attributed to Waite, not predictions about a reader's family safety, relationships or exposure to violence."
+  },
+  {
+    cardId: "swords-4",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Four of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/four-of-swords",
+    checkedMeaning: "Waite depicts a praying knight's tomb effigy. Upright he lists watchfulness, withdrawal, solitude and repose as well as exile and burial imagery; reversed he gives prudent administration, thrift, caution, possessiveness and a will or testament.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The tomb setting does not indicate a reader's literal death. Waite's reversed terms concern management and caution, not a generic call to become active."
+  },
+  {
+    cardId: "swords-9",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Nine of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/nine-of-swords",
+    checkedMeaning: "Waite pictures a person sitting in grief on a bed beneath nine hanging swords. His upright list includes deep sorrow, failure, delay and despair, together with period references to death and miscarriage; reversed he records imprisonment, suspicion, doubt, fear and shame.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The historic vocabulary includes severe medical and reproductive terms; none is a diagnosis, forecast of death or miscarriage, or evidence of psychological illness."
+  },
+  {
+    cardId: "swords-10",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ten of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ten-of-swords",
+    checkedMeaning: "Waite depicts a fallen figure struck by ten swords, describing distress, grief and desolation, but explicitly says it is not especially a card of violent death. Reversed he lists gains, success, favor and authority, while warning those apparent advantages are temporary.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite's violent-death exclusion and fleeting reversed successes must not be omitted. The image is no evidence of injury, imminent death or guaranteed success."
+  },
+  {
+    cardId: "pentacles-8",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Eight of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/eight-of-pentacles",
+    checkedMeaning: "Waite shows a stoneworker displaying finished work. Upright he lists employment, commission, technical skill, craft and business, sometimes at an early stage; reversed he names frustrated ambition, vanity, greed or usury, and potentially skill redirected into cunning.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite distinguishes skill itself from its possible misuse. The terms do not establish a real person's integrity, employer conduct or financial future."
+  },
+  {
+    cardId: "pentacles-9",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Nine of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/nine-of-pentacles",
+    checkedMeaning: "Waite depicts a woman holding a bird amid fruiting vines on a country estate. Upright he lists careful judgment, safety, accomplishment and success; reversed he records deception, dishonesty, an abandoned plan and bad faith.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The estate scene reflects historical material symbolism, not proof of anyone's wealth or a factual accusation of fraud."
+  },
+  {
+    cardId: "pentacles-10",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ten of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ten-of-pentacles",
+    checkedMeaning: "Waite depicts an elder with dogs near a family at the entry to a home. Upright he mentions gain, riches, family affairs, records and ancestral origins; reversed he lists chance, loss, theft and gambling but also sometimes gifts, dowry or pensions.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The reversed list mixes loss with possible gifts and pensions. These are period divinatory associations, not financial guidance, estate verification or a prediction of theft."
   }
 ] as const;
 
