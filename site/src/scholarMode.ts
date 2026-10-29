@@ -1,8 +1,8 @@
 /**
  * GAIA Scholar Mode v0.8: opt-in, source-bounded local reading handoff.
  *
- * Never invent historical references. A primary-source note only exists for
- * the small reviewed set in the existing Symbolic Library.
+ * Never invent historical references. The 78-card Symbolic Library now has
+ * one checked Waite source section per card, with source-specific scope limits.
  * Does not call a model, network, or change the selected cards.
  */
 import type { DrawnCard } from '@/types';

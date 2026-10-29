@@ -625,6 +625,150 @@ export const REVIEWED_CARD_NOTES: readonly HistoricalAnnotation[] = [
     checkedMeaning: "Waite depicts an elder with dogs near a family at the entry to a home. Upright he mentions gain, riches, family affairs, records and ancestral origins; reversed he lists chance, loss, theft and gambling but also sometimes gifts, dowry or pensions.",
     interpretationScope: 'divinatory-upright-reversed',
     readingNote: "The reversed list mixes loss with possible gifts and pensions. These are period divinatory associations, not financial guidance, estate verification or a prediction of theft."
+  },
+  {
+    cardId: "wands-page",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Page of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/page-of-wands",
+    checkedMeaning: "Waite describes a young herald standing to proclaim news. His upright list presents a faithful messenger, envoy or lover and family tidings, with a neighboring-card caveat about rivalry; reversed he names announcements, disagreeable news and indecision.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite's page is a historical portrait framed by period appearance and gender assumptions; do not infer a real person's skin color, loyalty, romantic interest or intentions from a card."
+  },
+  {
+    cardId: "wands-knight",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Knight of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/knight-of-wands",
+    checkedMeaning: "Waite depicts a mounted traveler, equipped but not riding into battle, whose restless horse suggests impulsiveness. Upright associations include departure, travel, emigration and a move of home; reversed he records separation, rupture, discord and interruption.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "A historical travel or separation association is not proof of a forthcoming journey, immigration outcome, relationship rupture or relocation."
+  },
+  {
+    cardId: "wands-queen",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Queen of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/queen-of-wands",
+    checkedMeaning: "Waite connects the leafy Wands suit with vitality and portrays the Queen as magnetic and friendly. Upright he includes honorable affection and sometimes material ambition or success; reversed he actually lists goodness, thrift and helpfulness, but adds conditional jealousy or deceit only with surrounding cards.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Preserve the positive reversed readings and their conditional contrary alternatives; Waite's gendered personality claims are not judgments about actual women or evidence of infidelity."
+  },
+  {
+    cardId: "wands-king",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "King of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/king-of-wands",
+    checkedMeaning: "Waite shows a king bearing a flowering wand with a lion on the throne. His upright list emphasizes conscientious honesty and helpfulness, sometimes bringing family or inheritance news; reversed he describes a good but stern or austere person who can still be tolerant.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Reversed is not automatically corruption or tyranny in Waite; his gender, complexion and inheritance references are historical stereotypes or fortune-telling claims, not factual identification."
+  },
+  {
+    cardId: "cups-page",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Page of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/page-of-cups",
+    checkedMeaning: "Waite's Page watches a fish rise out of a cup as an image of thoughts taking form. Upright he lists studious reflection, useful service, application and messages or business news; reversed he names attachment and attraction together with temptation, deception or artifice.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "This is an imaginative period portrayal, not a verified description of a person's temperament, sex, age, sexual intentions or honesty."
+  },
+  {
+    cardId: "cups-knight",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Knight of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/knight-of-cups",
+    checkedMeaning: "Waite portrays a quietly advancing, wing-helmeted rider as a dreamer rather than a warrior. Upright associations concern approaches, invitations, proposals and messages; reversed he lists subtle manipulation, deception, swindling and fraud.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "A possible proposal is not a prediction of romance or marriage, and reversed historical charges of fraud must never be treated as proof that a real person is dishonest."
+  },
+  {
+    cardId: "cups-queen",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Queen of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/queen-of-cups",
+    checkedMeaning: "Waite presents an imaginative queen contemplating the cup, but notes that she acts upon her visions rather than merely dreaming. Upright he lists care, devotion, insight, happiness and wisdom; the reversed lists explicitly vary between a good woman and another tradition alleging mistrust or dishonor.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite states the reversed accounts vary. Retain the conflicting good/untrustworthy alternatives and identify period gender stereotypes instead of judging any real mother, partner or woman."
+  },
+  {
+    cardId: "cups-king",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "King of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/king-of-cups",
+    checkedMeaning: "Waite depicts a king enthroned upon water holding a cup and scepter, with a ship and dolphin nearby. Upright he connects responsibility, fairness, artistic and scientific intelligence, and law or business; reversed he names injustice, deception, scandal and loss.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The historic occupations and accusations are symbolic associations, not professional credentials or evidence that an actual man committed fraud or misconduct."
+  },
+  {
+    cardId: "swords-page",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Page of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/page-of-swords",
+    checkedMeaning: "Waite shows an alert figure with an upright sword striding across rugged land amid restless clouds. Upright terms include scrutiny, observation, vigilance, authority and spying; reversed he describes dangerous extremes of surveillance, the unexpected and a period association with illness.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Vigilance and spying are divinatory imagery, not evidence that anyone is under surveillance; the reversed sickness term is not a diagnosis or health forecast."
+  },
+  {
+    cardId: "swords-knight",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Knight of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/knight-of-swords",
+    checkedMeaning: "Waite portrays a charging knight resembling a chivalric hero. Upright he combines skill and courage with aggression, warfare and destruction, but restricts the card's death association to cases where other so-called fatality cards surround it; reversed he names recklessness, incompetence and excess.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Preserve Waite's neighbor-card qualification; no spread establishes imminent death, violence, a person's competence or an actual enemy."
+  },
+  {
+    cardId: "swords-queen",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Queen of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/queen-of-swords",
+    checkedMeaning: "Waite's seated Queen raises a sword while extending her other hand; he describes a severe expression marked by sorrow rather than simple authority. Upright he associates bereavement, separation, absence and infertility; reversed he lists malice, prejudice and deceit.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "These severe widowhood and infertility associations reflect Waite's historical gendered framework, not a medical diagnosis, life expectancy forecast or judgment of a real woman."
+  },
+  {
+    cardId: "swords-king",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "King of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/king-of-swords",
+    checkedMeaning: "Waite presents a king with an unsheathed sword as a judge, with imagery of authority over grave decisions. Upright he lists law, command, official power, judgment and forceful intelligence; reversed he names cruelty, abuse, treachery and harmful intention.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The source's references to life and death concern historical imagery of official power, not a literal death prediction or grounds to allege abuse by a real authority figure."
+  },
+  {
+    cardId: "pentacles-page",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Page of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/page-of-pentacles",
+    checkedMeaning: "Waite describes a youthful figure concentrating on a suspended pentacle. Upright he associates study, scholarship, reflection and careful management, while recording another tradition of messages and news; reversed he lists extravagance, excess and unfavorable tidings.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Keep Waite's alternative upright news tradition and avoid equating academic diligence, income, spending or character with a person's age, gender or social standing."
+  },
+  {
+    cardId: "pentacles-knight",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Knight of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/knight-of-pentacles",
+    checkedMeaning: "Waite places a knight on a deliberate and enduring horse, holding out a pentacle rather than staring into it. Upright he lists utility, responsible service, integrity and practical interest; reversed he includes idleness and stagnation but also placidity, discouragement and carelessness.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Reversed repose is not universally bad in the original list; none of these terms objectively assesses a real worker's diligence, morality or mental health."
+  },
+  {
+    cardId: "pentacles-queen",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Queen of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/queen-of-pentacles",
+    checkedMeaning: "Waite describes an intelligent, contemplative queen gazing at her pentacle. Upright he associates generosity, security, prosperity and freedom; reversed he lists doubt, fear, mistrust, threat and suspicion.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The period depiction includes gendered and appearance-based framing. These associations are not measures of wealth, a person's trustworthiness or an actual threat."
+  },
+  {
+    cardId: "pentacles-king",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "King of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/king-of-pentacles",
+    checkedMeaning: "Waite depicts a king with a bull-marked throne and uses the pentacle to discuss the suit's relation to coins, elements and practical competence. Upright he lists courage, judgment, commerce and sometimes mathematical skill; reversed he names corruption, weakness and danger.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite explicitly cautions that Pentacles are not solely about money; his historical appearance, occupation and corruption labels must never be asserted as facts about an actual person."
   }
 ] as const;
 

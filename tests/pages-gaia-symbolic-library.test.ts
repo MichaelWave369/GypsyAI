@@ -21,10 +21,10 @@ describe('GAIA Symbolic Library historical provenance', () => {
     }
   });
 
-  it('counts sixty-two reviewed interpretations with complete Ace/pip coverage and pending courts', () => {
+  it('counts all seventy-eight source-reviewed card sections distinct from original editorial meanings', () => {
     const coverage = symbolicCoverage();
     expect(coverage).toEqual({
-      total:78, editorial:78, historicalReviewed:62, historicalNotReviewed:16
+      total:78, editorial:78, historicalReviewed:78, historicalNotReviewed:0
     });
     const ids = REVIEWED_CARD_NOTES.map(n=>n.cardId);
     expect(new Set(ids)).toEqual(new Set([
@@ -38,11 +38,15 @@ describe('GAIA Symbolic Library historical provenance', () => {
       'wands-6','wands-7','wands-10','cups-6','cups-7','cups-8',
       'swords-6','swords-7','swords-8','pentacles-4','pentacles-5','pentacles-6',
       'wands-9','cups-4','cups-9','cups-10','swords-4','swords-9','swords-10',
-      'pentacles-8','pentacles-9','pentacles-10'
+      'pentacles-8','pentacles-9','pentacles-10',
+      'wands-page','wands-knight','wands-queen','wands-king',
+      'cups-page','cups-knight','cups-queen','cups-king',
+      'swords-page','swords-knight','swords-queen','swords-king',
+      'pentacles-page','pentacles-knight','pentacles-queen','pentacles-king'
     ]));
-    expect(new Set(ids).size).toBe(62);
-    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(62);
-    expect(findSymbolicEntry('wands-page')?.annotationStatus).toBe('not-yet-reviewed');
+    expect(new Set(ids).size).toBe(78);
+    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(78);
+    expect(findSymbolicEntry('wands-page')?.annotationStatus).toBe('reviewed-source-note');
   });
 
   it('pins every reviewed card to a registered primary-source section, not an archive catalog', () => {
@@ -75,7 +79,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(searchSymbolicEntries('recovery').some(c=>c.name==='10 of Swords')).toBe(true);
     expect(searchSymbolicEntries('', 'major')).toHaveLength(22);
     expect(searchSymbolicEntries('', 'minor')).toHaveLength(56);
-    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(62);
+    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(78);
     expect(searchSymbolicEntries('invalid-query-never-exists')).toEqual([]);
     expect(() => searchSymbolicEntries('', 'secret' as 'all')).toThrow('Unsupported');
   });
@@ -115,7 +119,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note.checkedMeaning).not.toMatch(/verified prediction|empirical proof/);
     }
     expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(39);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(55);
   });
 
   it('preserves source disagreements rather than laundering edited keywords into Waite meanings',()=>{
@@ -129,7 +133,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(cups.readingNote).toContain('not a distinct reversed');
     const strength=findSymbolicEntry('major-8')!.annotation!;
     expect(strength.checkedMeaning).toContain('Strength and Justice');
-    expect(findSymbolicEntry('swords-page')!.annotation).toBeNull();
+    expect(findSymbolicEntry('swords-page')!.annotation).not.toBeNull();
   });
 
   it('completes all 22 Major Arcana imagery chapters with precise primary URLs and no invented reversals',()=>{
@@ -159,7 +163,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note?.readingNote).not.toMatch(/guarantees|will definitely/i);
     }
     expect(listSymbolicEntries().filter(e=>e.arcana==='major'&&e.annotation)).toHaveLength(22);
-    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(40);
+    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(56);
     expect(findSymbolicEntry('major-12')?.annotation?.checkedMeaning).toContain('rather than suffering');
     expect(findSymbolicEntry('major-10')?.annotation?.checkedMeaning).toContain('chance or fatalism');
     expect(findSymbolicEntry('major-16')?.annotation?.readingNote).toContain('prediction of injury');
@@ -183,14 +187,14 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note?.readingNote.length).toBeGreaterThan(65);
     }
     expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(39);
-    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(40);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(55);
+    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(56);
     expect(findSymbolicEntry('wands-4')?.annotation?.checkedMeaning).toContain('remains favorable');
     expect(findSymbolicEntry('wands-2')?.annotation?.checkedMeaning).toContain('conflicting upright traditions');
     expect(findSymbolicEntry('swords-ace')?.annotation?.readingNote).toContain('reversed alternatives conflict');
     expect(findSymbolicEntry('pentacles-ace')?.annotation?.readingNote).toContain('Both orientations can involve money');
-    expect(findSymbolicEntry('cups-page')?.annotationStatus).toBe('not-yet-reviewed');
-    expect(findSymbolicEntry('swords-page')?.annotation).toBeNull();
+    expect(findSymbolicEntry('cups-page')?.annotationStatus).toBe('reviewed-source-note');
+    expect(findSymbolicEntry('swords-page')?.annotation).not.toBeNull();
   });
 
   it('v1.9 reviews twelve additional Waite pips with exact source sections and honest reversals',()=>{
@@ -211,18 +215,18 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note?.readingNote.length).toBeGreaterThan(65);
     }
     expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(39);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(55);
     expect(listSymbolicEntries().filter(e=>e.arcana==='major'&&e.annotation)).toHaveLength(22);
-    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(40);
+    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(56);
     expect(findSymbolicEntry('pentacles-5')?.annotation?.readingNote).toContain('cannot be reconciled');
     expect(findSymbolicEntry('swords-8')?.annotation?.checkedMeaning).toContain('temporary rather than inescapable');
     expect(findSymbolicEntry('cups-8')?.annotation?.checkedMeaning).toContain('sharply opposed');
     expect(findSymbolicEntry('wands-10')?.annotation?.checkedMeaning).toContain('cannot be reconciled');
-    expect(findSymbolicEntry('cups-page')?.annotationStatus).toBe('not-yet-reviewed');
-    expect(findSymbolicEntry('wands-page')?.annotation).toBeNull();
+    expect(findSymbolicEntry('cups-page')?.annotationStatus).toBe('reviewed-source-note');
+    expect(findSymbolicEntry('wands-page')?.annotation).not.toBeNull();
   });
 
-  it('v2.0 independently completes all forty Aces and numbered pips, keeping sixteen courts pending',()=>{
+  it('v2.0 source-review retains complete Ace and numbered pip coverage after adding courts',()=>{
     const additions=[
       ['wands-9','nine-of-wands'],
       ['cups-4','four-of-cups'],['cups-9','nine-of-cups'],['cups-10','ten-of-cups'],
@@ -248,19 +252,51 @@ describe('GAIA Symbolic Library historical provenance', () => {
       suit+'-page', suit+'-knight', suit+'-queen', suit+'-king'
     ]);
     expect(courtIds).toHaveLength(16);
-    expect(courtIds.every(id=>findSymbolicEntry(id)?.annotation===null)).toBe(true);
+    expect(courtIds.every(id=>findSymbolicEntry(id)?.annotation!==null)).toBe(true);
     expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(39);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(55);
     expect(findSymbolicEntry('swords-10')?.annotation?.checkedMeaning).toContain('not especially a card of violent death');
     expect(findSymbolicEntry('cups-9')?.annotation?.readingNote).toContain('favorable and unfavorable');
     expect(findSymbolicEntry('pentacles-10')?.annotation?.readingNote).toContain('possible gifts and pensions');
     expect(findSymbolicEntry('cups-4')?.annotation?.checkedMeaning).toContain('new teaching');
   });
 
+  it('v2.1 source-reviews all sixteen courts with exact Waite chapter URLs and preserved rank boundaries',()=>{
+    const suits=['wands','cups','swords','pentacles'] as const;
+    const ranks=['page','knight','queen','king'] as const;
+    for (const suit of suits) {
+      for (const rank of ranks) {
+        const id=suit+'-'+rank;
+        const slug=rank+'-of-'+suit;
+        const note=findSymbolicEntry(id)?.annotation;
+        expect(note).not.toBeNull();
+        expect(note?.sourceId).toBe('waite-pictorial-key');
+        expect(note?.sectionTitle).toBe(
+          rank.slice(0,1).toUpperCase()+rank.slice(1)+' of '+suit.slice(0,1).toUpperCase()+suit.slice(1)
+        );
+        expect(note?.sectionUrl).toBe('https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/'+slug);
+        expect(note?.interpretationScope).toBe('divinatory-upright-reversed');
+        expect(note?.checkedMeaning.length).toBeGreaterThan(100);
+        expect(note?.readingNote.length).toBeGreaterThan(65);
+      }
+    }
+    expect(REVIEWED_CARD_NOTES).toHaveLength(78);
+    expect(new Set(REVIEWED_CARD_NOTES.map(n=>n.sectionUrl)).size).toBe(78);
+    expect(listSymbolicEntries().every(e=>e.annotationStatus==='reviewed-source-note')).toBe(true);
+    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(56);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(55);
+    expect(findSymbolicEntry('wands-queen')?.annotation?.checkedMeaning).toContain('conditional jealousy');
+    expect(findSymbolicEntry('cups-queen')?.annotation?.checkedMeaning).toContain('reversed lists explicitly vary');
+    expect(findSymbolicEntry('swords-knight')?.annotation?.checkedMeaning).toContain('restricts the card');
+    expect(findSymbolicEntry('pentacles-king')?.annotation?.readingNote).toContain('not solely about money');
+    expect(findSymbolicEntry('swords-queen')?.annotation?.readingNote).toContain('not a medical diagnosis');
+  });
+
   it('does not attach institutional context to a card meaning by default', () => {
     const archivalIds = SYMBOLIC_SOURCES.filter(s=>s.kind==='institutional-collection').map(s=>s.id);
     expect(archivalIds).toEqual(['jhu-pam-a','loc-papus']);
     expect(REVIEWED_CARD_NOTES.every(n=>!archivalIds.includes(n.sourceId))).toBe(true);
-    expect(findSymbolicEntry('cups-page')?.annotation).toBeNull();
+    expect(findSymbolicEntry('cups-page')?.annotation).not.toBeNull();
   });
 });
