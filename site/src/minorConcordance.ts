@@ -99,6 +99,13 @@ export function minorConcordanceEntry(id:string):MinorEntry|null{
   const historical=auditHermeticCard(card);
   if(!historical.fields.length) throw new Error('Unverified Golden Dawn record for '+card.id);
   const existing=suitMap[suit];
+  const titleFromBookT=card.hermetic.hermetic_title;
+  const sephirah=card.hermetic.sephirah;
+  const decan=card.hermetic.decan;
+  const ruler=card.hermetic.planet_ruler;
+  if (!titleFromBookT || !sephirah || (!isAce && (!decan || !ruler))) {
+    throw new Error('Incomplete sourced Golden Dawn record for '+card.id);
+  }
   const keyword=isAce?null:THOTH_PIP_KEYWORDS[suit][rank-2];
   if(!isAce&&!keyword)throw new Error('Missing documented Thoth pip title.');
   const title=isAce?'Ace of '+existing.thoth:rank+' of '+existing.thoth;
@@ -116,11 +123,11 @@ export function minorConcordanceEntry(id:string):MinorEntry|null{
       printedLabelCaution:'Modern normalized card identifier; NOT a claim that a particular Marseille engraving prints this exact label or even a numeral.'
     },
     goldenDawn:{
-      title:card.hermetic.hermetic_title,
+      title:titleFromBookT,
       element:existing.element,
-      sephirah:card.hermetic.sephirah,
-      decan:isAce?null:card.hermetic.decan,
-      planetRuler:isAce?null:card.hermetic.planet_ruler,
+      sephirah,
+      decan:isAce?null:decan!,
+      planetRuler:isAce?null:ruler!,
       isDecanPip:!isAce,sourceId:'golden-dawn-book-t'
     },
     thoth:{
