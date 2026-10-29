@@ -4,7 +4,8 @@ import type { ReadingKind } from './readingExperience';
 
 type Integrated = ReturnType<typeof createIntegratedReading>;
 
-const PATHS: { id: 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+const PATHS: { id: 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+  { id: 'concordance', icon: '⌘', title: 'Cross-Tradition Concordance', subtitle: 'What the tarot traditions actually share', truth: 'Compare eight historically sourced trump examples across Marseille, Waite–Smith, Golden Dawn and Thoth without claiming identical meanings.' },
   { id: 'library', icon: '✧', title: 'Symbolic Library', subtitle: 'Explore meanings with citations', truth: 'Browse all 78 original card meanings and see explicitly reviewed historical notes with primary source links.' },
   { id: 'atlas', icon: '◇', title: 'Spread Atlas', subtitle: 'Design your own tarot map', truth: 'Compose 1–5 card layouts with named roles, move their positions and use them in a real private draw.' },
   { id: 'ritual', icon: '✺', title: 'Ritual Draw Table', subtitle: 'Shuffle, cut, select and reveal', truth: 'Choose face-down cards yourself, then explore the Field Loom of recorded meanings and positions.' },
@@ -19,7 +20,7 @@ const PATHS: { id: 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'gen
 export function ReadingRoomPanel({
   onNavigate, onReflect
 }: {
-  onNavigate: (id: 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
+  onNavigate: (id: 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
   onReflect: (data: unknown, label: string, kind: ReadingKind, focus?: string) => void;
 }) {
   const [focus, setFocus] = useState('');
