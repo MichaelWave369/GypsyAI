@@ -14,14 +14,14 @@ function chosen(names:string[], positions:string[]): DrawnCard[] {
     return {card,position:positions[i],orientation:i%2===0?'upright':'reversed'};
   });
 }
-const sample=()=>chosen(['The Chariot','5 of Wands','10 of Swords'],['Past','Present','Future']);
+const sample=()=>chosen(['The Chariot','5 of Wands','Page of Wands'],['Past','Present','Future']);
 
 describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
   it('only attaches reviewed historical notes to matched cards',()=>{
     const view=scholarPreview(sample());
     expect(view.drawnCount).toBe(3);
     expect(view.matches.map(m=>m.cardName)).toEqual(['The Chariot','5 of Wands']);
-    expect(view.unreviewed).toEqual(['10 of Swords']);
+    expect(view.unreviewed).toEqual(['Page of Wands']);
     for(const match of view.matches){
       expect(match.sectionUrl).toMatch(/^https:\/\/sacred-texts\.com\/book\/the-pictorial-key-to-the-tarot\//);
       expect(match.source).toContain('Arthur Edward Waite');
@@ -46,7 +46,7 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
       unreviewedCards:string[];
     };
     expect(history.reviewedMatches.map(m=>m.name)).toEqual(['The Chariot','5 of Wands']);
-    expect(history.unreviewedCards).toEqual(['10 of Swords']);
+    expect(history.unreviewedCards).toEqual(['Page of Wands']);
     expect(history.reviewedMatches[0].position).toBe('Past');
     expect(history.reviewedMatches[1].position).toBe('Present');
     expect(history.reviewedMatches[0].historicalSourceURL).toContain('vii-the-chariot');
@@ -58,7 +58,7 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
   it('handles custom five-card spreads without dropping references or exceeding the consent boundary',()=>{
     const layout=ATLAS_TEMPLATES[0];
     const draws=chosen(
-      ['The Chariot','Death','5 of Wands','8 of Wands','9 of Pentacles'],
+      ['The Chariot','Death','5 of Wands','8 of Wands','Page of Pentacles'],
       layout.slots.map(s=>s.label)
     );
     const base=atlasReadingPacket(layout,draws);
@@ -71,14 +71,14 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
     expect(field.reviewedMatches.map(m=>m.name)).toEqual(
       ['The Chariot','Death','5 of Wands','8 of Wands']
     );
-    expect(field.unreviewedCards).toEqual(['9 of Pentacles']);
+    expect(field.unreviewedCards).toEqual(['Page of Pentacles']);
   });
 
   it('stages only confirmed new source notes and keeps unreviewed cards out of citations',()=>{
-    const draws=chosen(['The Fool','Ace of Wands','4 of Cups'],['Past','Present','Future']);
+    const draws=chosen(['The Fool','Ace of Wands','Page of Cups'],['Past','Present','Future']);
     const preview=scholarPreview(draws);
     expect(preview.matches.map(m=>m.cardName)).toEqual(['The Fool','Ace of Wands']);
-    expect(preview.unreviewed).toEqual(['4 of Cups']);
+    expect(preview.unreviewed).toEqual(['Page of Cups']);
     expect(preview.matches[0].scope).toBe('card-symbolism');
     expect(preview.matches[1].scope).toBe('divinatory-upright-reversed');
     expect(preview.matches[0].sectionUrl).toContain('/zero-the-fool');
@@ -90,27 +90,27 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
       unreviewedCards:string[];
     };
     expect(history.reviewedMatches).toHaveLength(2);
-    expect(history.unreviewedCards).toEqual(['4 of Cups']);
-    expect(JSON.stringify(packet)).not.toContain('/four-of-cups');
+    expect(history.unreviewedCards).toEqual(['Page of Cups']);
+    expect(JSON.stringify(packet)).not.toContain('/page-of-cups');
   });
 
   it('does not fabricate a source when zero selected cards have historical review',()=>{
-    const draws=chosen(['4 of Cups'],['Focus']);
+    const draws=chosen(['Page of Cups'],['Focus']);
     const base=ritualReadingPacket('single',draws);
     const scholar=scholarPacket(base,draws);
     const field=(scholar.facts as Record<string,unknown>).scholarMode as {
       reviewedMatches:unknown[]; unreviewedCards:string[];
     };
     expect(field.reviewedMatches).toEqual([]);
-    expect(field.unreviewedCards).toEqual(['4 of Cups']);
+    expect(field.unreviewedCards).toEqual(['Page of Cups']);
     expect(JSON.stringify(scholar)).not.toContain('https://');
   });
 
   it('includes the newly reviewed Devil and Tower only on explicit Scholar staging',()=>{
-    const draws=chosen(['The Devil','The Tower','4 of Cups'],['Past','Present','Future']);
+    const draws=chosen(['The Devil','The Tower','Page of Cups'],['Past','Present','Future']);
     const preview=scholarPreview(draws);
     expect(preview.matches.map(m=>m.cardName)).toEqual(['The Devil','The Tower']);
-    expect(preview.unreviewed).toEqual(['4 of Cups']);
+    expect(preview.unreviewed).toEqual(['Page of Cups']);
     expect(preview.matches.every(m=>m.scope==='card-symbolism')).toBe(true);
     const ordinary=ritualReadingPacket('three-card',draws);
     expect(JSON.stringify(ordinary)).not.toContain('scholarMode');
@@ -120,7 +120,7 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
       unreviewedCards:string[];
     };
     expect(facts.reviewedMatches.map(m=>m.name)).toEqual(['The Devil','The Tower']);
-    expect(facts.unreviewedCards).toEqual(['4 of Cups']);
+    expect(facts.unreviewedCards).toEqual(['Page of Cups']);
     expect(facts.reviewedMatches.map(m=>m.historicalSourceURL)).toEqual([
       'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xv-the-devil',
       'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xvi-the-tower'
@@ -129,10 +129,10 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
   });
 
   it('stages new Wands and Cups source reviews but excludes an unreviewed Minor card',()=>{
-    const draws=chosen(['4 of Wands','Ace of Cups','4 of Cups'],['Past','Present','Future']);
+    const draws=chosen(['4 of Wands','Ace of Cups','Page of Cups'],['Past','Present','Future']);
     const preview=scholarPreview(draws);
     expect(preview.matches.map(m=>m.cardName)).toEqual(['4 of Wands','Ace of Cups']);
-    expect(preview.unreviewed).toEqual(['4 of Cups']);
+    expect(preview.unreviewed).toEqual(['Page of Cups']);
     expect(preview.matches.every(m=>m.scope==='divinatory-upright-reversed')).toBe(true);
     const base=ritualReadingPacket('three-card',draws);
     expect(JSON.stringify(base)).not.toContain('scholarMode');
@@ -148,16 +148,16 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
     expect(history.reviewedMatches.map(m=>m.scope)).toEqual([
       'divinatory-upright-reversed','divinatory-upright-reversed'
     ]);
-    expect(history.unreviewedCards).toEqual(['4 of Cups']);
+    expect(history.unreviewedCards).toEqual(['Page of Cups']);
     expect(JSON.stringify(sourced).length).toBeLessThanOrEqual(5800);
-    expect(JSON.stringify(sourced)).not.toContain('/four-of-cups');
+    expect(JSON.stringify(sourced)).not.toContain('/page-of-cups');
   });
 
   it('stages v1.9 Cups and Pentacles citations, with an unreviewed card still excluded',()=>{
-    const draws=chosen(['6 of Cups','5 of Pentacles','4 of Cups'],['Past','Present','Future']);
+    const draws=chosen(['6 of Cups','5 of Pentacles','Page of Cups'],['Past','Present','Future']);
     const preview=scholarPreview(draws);
     expect(preview.matches.map(m=>m.cardName)).toEqual(['6 of Cups','5 of Pentacles']);
-    expect(preview.unreviewed).toEqual(['4 of Cups']);
+    expect(preview.unreviewed).toEqual(['Page of Cups']);
     expect(preview.matches.map(m=>m.scope)).toEqual([
       'divinatory-upright-reversed','divinatory-upright-reversed'
     ]);
@@ -172,9 +172,31 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
       'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/six-of-cups',
       'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/five-of-pentacles'
     ]);
-    expect(history.unreviewedCards).toEqual(['4 of Cups']);
-    expect(JSON.stringify(sourced)).not.toContain('/four-of-cups');
+    expect(history.unreviewedCards).toEqual(['Page of Cups']);
+    expect(JSON.stringify(sourced)).not.toContain('/page-of-cups');
     expect(JSON.stringify(sourced).length).toBeLessThanOrEqual(5800);
+  });
+
+  it('v2.0 stages a newly reviewed Ten of Swords and Four of Cups, never inventing a court citation',()=>{
+    const draws=chosen(['10 of Swords','4 of Cups','Page of Wands'],['Past','Present','Future']);
+    const preview=scholarPreview(draws);
+    expect(preview.matches.map(m=>m.cardName)).toEqual(['10 of Swords','4 of Cups']);
+    expect(preview.unreviewed).toEqual(['Page of Wands']);
+    expect(preview.matches.every(m=>m.scope==='divinatory-upright-reversed')).toBe(true);
+    const normal=ritualReadingPacket('three-card',draws);
+    expect(JSON.stringify(normal)).not.toContain('scholarMode');
+    const packet=scholarPacket(normal,draws);
+    const history=(packet.facts as Record<string,unknown>).scholarMode as {
+      reviewedMatches:Array<{name:string;historicalSourceURL:string}>;
+      unreviewedCards:string[];
+    };
+    expect(history.reviewedMatches.map(m=>m.historicalSourceURL)).toEqual([
+      'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ten-of-swords',
+      'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/four-of-cups'
+    ]);
+    expect(history.unreviewedCards).toEqual(['Page of Wands']);
+    expect(JSON.stringify(packet)).not.toContain('/page-of-wands');
+    expect(JSON.stringify(packet).length).toBeLessThanOrEqual(5800);
   });
 
   it('fails closed on a fabricated card, duplicate cards, mismatched position, and missing base',()=>{
