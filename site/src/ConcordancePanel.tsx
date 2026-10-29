@@ -26,6 +26,10 @@ function TraditionFace({face}:{face:ConcordanceFace}){
   return <>
     <div className="gaia-concordance-rank">{face.ordinal}</div>
     <h4>{face.label}</h4>
+    {face.engravedCartouche && <p className="gaia-concordance-plate">
+      <strong>Conver-style printed cartouche:</strong> {face.engravedCartouche}
+      <small> Transcribed in a modern secondary index of a BnF collection; not a direct scan audit.</small>
+    </p>}
     <p>{face.note}</p>
     <ReferenceLink id={face.sourceId} label="View historical reference"/>
   </>;
@@ -48,20 +52,20 @@ export function ConcordancePanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
 
   return <section className="gaia-concordance">
     <div className="section-header">
-      <span className="eyebrow">GAIA / CROSS-TRADITION CONCORDANCE · v1.2</span>
+      <span className="eyebrow">GAIA / CROSS-TRADITION CONCORDANCE · v1.3</span>
       <h2>One card. Four historical lenses.</h2>
       <p>Tarot traditions share some recognizable symbols but do not share every
         title, ordinal, historical interpretation or pictorial design. Compare
-        eight carefully sourced Major Arcana case studies without altering
+        all 22 source-indexed Major Arcana structural correspondences without altering
         GAIA's actual cards or treating historical labels as scientific truth.</p>
     </div>
     <div className="gaia-concordance-coverage">
-      <div><strong>{coverage.comparisons}</strong><small>Reviewed structural examples</small></div>
+      <div><strong>{coverage.comparisons}</strong><small>Source-indexed major cards</small></div>
       <div><strong>{coverage.traditions}</strong><small>Traditions shown</small></div>
-      <div><strong>{coverage.pending}</strong><small>Major trump comparisons pending</small></div>
+      <div><strong>{coverage.pending}</strong><small>Major card labels missing</small></div>
     </div>
     <section className="panel gaia-concordance-workbench">
-      <label htmlFor="gaia-concordance-search">Search the reviewed examples</label>
+      <label htmlFor="gaia-concordance-search">Search all 22 Major Arcana comparisons</label>
       <input id="gaia-concordance-search" maxLength={100} value={search}
         placeholder="Strength, Justice, Lust, La Force..."
         onChange={e=>setSearch(e.target.value)}/>
@@ -73,12 +77,12 @@ export function ConcordancePanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
           <span>{card.canonicalName}</span>
           <small>{card.marseille.ordinal} Marseille · {card.rws.ordinal} RWS</small>
         </button>)}
-        {!matched.length&&<p className="muted">No reviewed matches. Only eight of the 22 trumps have
-          cross-tradition comparison records in this release.</p>}
+        {!matched.length&&<p className="muted">No matching Major Arcana title in the 22-card catalog.
+          Try the English, Marseille or Thoth name.</p>}
       </div>
       <div className="gaia-concordance-header">
         <div>
-          <span className="eyebrow">REVIEWED CASE STUDY</span>
+          <span className="eyebrow">SOURCE-INDEXED STRUCTURAL RECORD</span>
           <h3>{entry.canonicalName}</h3>
         </div>
         <button className="secondary" type="button" onClick={()=>onOpenCard(entry.cardId)}>
@@ -104,7 +108,8 @@ export function ConcordancePanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
       <div className="gaia-concordance-boundary" role="note">
         <strong>What the comparison does and does not establish</strong>
         <p>{entry.interpretationBoundary}</p>
-        <p>Historical card-name and numbering concordance is not a verified
+        <p>Coverage of all 22 Major Arcana is coverage of indexed names and numbers, not 22
+          independent critical studies of each deck’s history. This concordance is not a verified
           shared upright/reversed reading, a reconstructed original card image,
           or proof of supernatural effects. The existing Symbolic Library's
           four Waite interpretation reviews are a separate audit.</p>
