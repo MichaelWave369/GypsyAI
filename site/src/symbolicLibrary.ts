@@ -211,6 +211,114 @@ export const REVIEWED_CARD_NOTES: readonly HistoricalAnnotation[] = [
     checkedMeaning: 'Waite describes wands in flight approaching a destination. His upright associations include activity and swiftness; reversed associations include dispute and discord.',
     interpretationScope: 'divinatory-upright-reversed',
     readingNote: 'GAIA’s “mixed signals” reversed theme is a modern editorial suggestion, not Waite’s recorded wording.'
+  },
+  {
+    cardId: "major-4",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "IV. The Emperor",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/iv-the-emperor",
+    checkedMeaning: "Waite depicts a crowned ruler on a throne adorned with rams, holding a globe and an ankh-shaped sceptre. He distinguishes worldly executive authority from higher intellectual kingship and expressly warns that the Emperor and Empress do not simply represent marriage.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "This is Waite's symbolic account of authority and thought, not evidence that any individual will gain power, marry, or exercise control."
+  },
+  {
+    cardId: "major-5",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "V. The Hierophant",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/v-the-hierophant",
+    checkedMeaning: "Waite describes a triple-crowned religious figure between pillars, with crossed keys and two kneeling ministers. He connects the card to visible institutional religion and orthodox teaching, explicitly distinguishing it from the High Priestess and from the ruler of occult doctrine.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "The source represents Waite's view of outward religious institutions, not a claim that any one doctrine is objectively true or that the card commands obedience."
+  },
+  {
+    cardId: "major-6",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "VI. The Lovers",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/vi-the-lovers",
+    checkedMeaning: "Waite places two unclothed human figures beneath a winged being, with the Tree of Life behind the man and the tree of knowledge behind the woman. He frames this new design as innocent human love and a theological covenant, replacing older marriage and vice-versus-virtue images.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "This imagery does not establish a romantic prediction or measure compatibility; Waite's religious account is distinct from GAIA's editorial relationship advice."
+  },
+  {
+    cardId: "major-10",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "X. Wheel of Fortune",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/x-wheel-of-fortune",
+    checkedMeaning: "Waite describes a moving wheel with the four living creatures, a Sphinx representing balance and symbolic lettering inspired in part by Eliphas Levi. For him the turning image reflects flux in life and the universe while rejecting simple chance or fatalism.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "The chapter's criticism of chance is part of Waite's esoteric philosophy, not empirical proof of providence or a forecast of changing fortune."
+  },
+  {
+    cardId: "major-11",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XI. Justice",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xi-justice",
+    checkedMeaning: "Waite locates Justice between pillars and distinguishes moral justice, which addresses deeds, from the more mysterious spiritual election he associates with a separate order of Providence. He specifically contrasts these pillars with those of the High Priestess.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "Waite's discussion is moral and theological symbolism, not a prediction of a court ruling, legal outcome, or deserved reward."
+  },
+  {
+    cardId: "major-12",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XII. The Hanged Man",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xii-the-hanged-man",
+    checkedMeaning: "Waite describes a living tree, an inverted suspended figure, and a halo; the face expresses entrancement rather than suffering. He rejects easy labels such as martyrdom or mere prudence and links the image to a veiled relation between the Divine and the universe.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "Do not rewrite Waite's suspended-life symbolism into a literal demand for sacrifice, self-harm, suffering, or a guaranteed spiritual awakening."
+  },
+  {
+    cardId: "major-14",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XIV. Temperance",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xiv-temperance",
+    checkedMeaning: "Waite's winged, neither-male-nor-female figure pours between chalices with one foot on land and one in water. His account connects this to the harmony of psychic and material aspects and a mystical idea of eternal life, not merely everyday moderation.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "This is a specifically esoteric description, not a claim of physical immortality, medical benefit, or a universally agreed meaning of balance."
+  },
+  {
+    cardId: "major-15",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XV. The Devil",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xv-the-devil",
+    checkedMeaning: "Waite portrays a winged goat-like figure with an inverted torch above two chained, humanlike figures. He interprets their condition in terms of material bondage and the fallen human state, while noting the dominant figure is itself bound rather than free.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "This is period religious symbolism, not evidence of demons, curses, literal possession, or an unavoidable fate for the reader."
+  },
+  {
+    cardId: "major-16",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XVI. The Tower",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xvi-the-tower",
+    checkedMeaning: "Waite disputes simple explanations of the Tower as pride or Adam's fall. He emphasizes the destruction of a false house of doctrine, where mistaken teaching and interpretation collapse, rather than treating the image solely as a falling physical building.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "Do not translate Waite's contested intellectual and religious symbolism into a prediction of injury, disaster, or imminent personal ruin."
+  },
+  {
+    cardId: "major-18",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XVIII. The Moon",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xviii-the-moon",
+    checkedMeaning: "Waite describes a road passing between towers, a dog and wolf, an emerging water creature, and the moon's reflected light. He presents the scene as imaginative and instinctual fear at the edge of the unknown, with the mind observing unrest below.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "This is a historical allegory of imagination and reflected light, not clinical evidence of anxiety, a diagnosis, or proof of hidden threats."
+  },
+  {
+    cardId: "major-20",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XX. The Last Judgement",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xx-the-last-judgement",
+    checkedMeaning: "Waite shows a trumpet-bearing angel above people rising from tombs. He treats their shared response as an inward call toward spiritual transformation, beyond a purely literal picture of final judgment and bodily resurrection.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "The source is an explicitly Christian-esoteric interpretation, not a prediction of apocalypse, resurrection, or a supernatural event in a person's life."
+  },
+  {
+    cardId: "major-21",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "XXI. The World",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xxi-the-world",
+    checkedMeaning: "Waite reads the final trump as cosmic completion and the soul's vision of a self-knowing universe, while also rejecting explanations that identify the figure simply with an initiated Magus or the Absolute. He preserves multiple levels of meaning.",
+    interpretationScope: 'card-symbolism',
+    readingNote: "His concept of perfection is metaphysical symbolism, not a guarantee that an individual's work, relationship, or circumstances will reach completion."
   }
 ] as const;
 
