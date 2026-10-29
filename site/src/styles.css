@@ -336,3 +336,22 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-hermetic-audit p{line-height:1.7;overflow-wrap:anywhere}
 .gaia-hermetic-audit a{color:#b5e5d5;text-decoration:underline;text-underline-offset:3px}
 .gaia-hermetic-audit a:focus-visible{outline:3px solid #e7d3a2;outline-offset:3px}
+
+
+/* GAIA v1.1 Court Spheres: a source-labeled band, never a birth-chart prediction. */
+.gaia-court-sphere{margin-top:22px;padding:19px 18px 22px;border:1px solid #628e7a;background:radial-gradient(ellipse at top,#173c39,#102a32 90%);border-radius:12px}
+.gaia-court-sphere h4{font:clamp(22px,3vw,30px) Georgia,serif;color:#efdbaf;font-weight:400;margin:12px 0 14px}
+.gaia-court-sphere p{font-size:13px;line-height:1.7;color:#d1e0d0}
+.gaia-court-sphere p strong{color:#efdeb7}
+.gaia-court-sphere>a{display:inline-block;color:#b1e7d4;margin:12px 0;text-decoration:underline;text-underline-offset:3px}
+.gaia-sphere-band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;background:#8ba88b;border:1px solid #99bba0;border-radius:9px;overflow:hidden;margin:18px 0}
+.gaia-sphere-sector{padding:18px 11px 15px;min-height:139px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;justify-content:space-between;color:#e8e5d8;background:#204940;gap:9px}
+.gaia-sphere-sector.sector-1{background:#305950}
+.gaia-sphere-sector.sector-2{background:#1c423a}
+.gaia-sphere-sector:hover{background:#3c6b5a}
+.gaia-sphere-sector strong{font:clamp(15px,2vw,22px) Georgia,serif;color:#fae7bc}
+.gaia-sphere-sector small{font-size:11px;color:#cbe9d7}
+.gaia-sphere-polar{display:flex;gap:14px;align-items:center;min-height:110px;padding:20px;background:#183a42;border:1px dashed #bdac77;border-radius:8px;margin:16px 0}
+.gaia-sphere-polar span{font:56px Georgia,serif;color:#d9c68a}
+.gaia-court-sphere button:focus-visible,.gaia-court-sphere a:focus-visible{outline:3px solid #f6d999;outline-offset:2px}
+@media(max-width:570px){.gaia-sphere-band{grid-template-columns:1fr}.gaia-sphere-sector{min-height:75px;flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}.gaia-court-sphere{padding:13px}}

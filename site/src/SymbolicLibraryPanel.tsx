@@ -5,6 +5,8 @@ import {
 } from './symbolicLibrary';
 import type { SymbolicFilter } from './symbolicLibrary';
 import { getHermeticAuditForCard, hermeticAuditCoverage, HERMETIC_AUDIT_REFERENCES } from './hermeticAudit';
+import { CourtSpheresPanel } from './CourtSpheresPanel';
+import { courtSphereCoverage } from './courtSpheres';
 
 type Orientation = 'upright' | 'reversed';
 
@@ -15,6 +17,7 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
   const [orientation, setOrientation] = useState<Orientation>('upright');
   const coverage = symbolicCoverage();
   const hermeticCoverage = hermeticAuditCoverage();
+  const courtCoverage = courtSphereCoverage();
   const matches = searchSymbolicEntries(search, filter);
   const entry = findSymbolicEntry(chosenId);
   const audit = getHermeticAuditForCard(chosenId);
@@ -43,7 +46,8 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
     <p className="muted gaia-audit-coverage">Hermetic correspondence audit:
       <strong> {hermeticCoverage.traditionChecked} of {hermeticCoverage.total}</strong>
       {' '}cards have checked Golden Dawn fields; <strong>{hermeticCoverage.specialistPending}</strong>
-      {' '}court/ace records still require specialist review. Book T headings and
+      {' '}court/ace records still require specialist review. The Court Spheres Atlas now indexes
+      {' '}{courtCoverage.zodiacSpans} historical 30-degree court spans and {courtCoverage.polarQuadrants} polar Princess quadrants. Book T headings and
       basic roles are now source-indexed for <strong>{hermeticCoverage.bookTAceCourtTitlesIndexed}</strong>
       {' '}additional Ace/court records, but their full imagery and zodiac regions
       remain under review. Historical attribution is not empirical proof of divination.</p>
@@ -142,6 +146,8 @@ export function SymbolicLibraryPanel({ initialCardId }: { initialCardId?: string
                 ? String(value).trim() || 'Not recorded' : 'Not recorded'}
             </p>)}
           </details>
+          {entry.arcana === 'minor' && entry.id.split('-').some(part => ['page','knight','queen','king'].includes(part)) &&
+            <CourtSpheresPanel cardId={entry.id} onSelectCard={selectCard} />}
         </article>}
         <section className="panel gaia-library-sources">
           <span className="eyebrow">REFERENCE DESK</span>

@@ -124,9 +124,9 @@ export function auditHermeticCard(card: TarotCard): HermeticAuditRecord {
       pendingFields.push('Full Ace imagery and meaning comparison across deck editions');
       notes.push('Book T explicitly calls each Ace an elemental Root in Kether, not one of the 36 ten-degree zodiac decans.');
     }else{
-      pendingFields.push('Court sign boundary, zodiac region and deck-specific pictorial equivalence');
+      pendingFields.push('Modern deck court-region equivalence and pictorial symbolism across editions');
       pendingFields.push('Historical rank/person associations outside the Book T headings');
-      notes.push('Book T uses King for the charioted Prince and Knave for the Princess; GAIA retains familiar Page/Knight/Queen/King names. Courts cover sign regions or polar quadrants, not a single pip decan.');
+      notes.push('Book T uses King for the charioted Prince and Knave for the Princess; GAIA retains familiar Page/Knight/Queen/King names. The source court zodiac regions and Princess quadrants are indexed separately in Court Spheres Atlas. These are not the numbered pip decans.');
     }
     sources.push('book-t-1912-court-mirror');
   }
