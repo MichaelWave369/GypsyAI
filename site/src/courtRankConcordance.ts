@@ -69,7 +69,6 @@ const RANKS:CourtRank[]=['Page','Knight','Queen','King'];
 const marseilleSuit:Record<CourtSuit,string>={Wands:'Bâtons',Cups:'Coupes',Swords:'Épées',Pentacles:'Deniers'};
 const marseilleRank:Record<CourtRank,string>={Page:'Valet',Knight:'Cavalier',Queen:'Reyne',King:'Roy'};
 const thothSuit:Record<CourtSuit,string>={Wands:'Wands',Cups:'Cups',Swords:'Swords',Pentacles:'Disks'};
-const thothRank:Record<CourtRank,string>={Page:'Princess',Knight:'Knight',Queen:'Queen',King:'Prince'};
 const SOURCE_IDS=COURT_REFERENCES.map(x=>x.id);
 const source= (id:string) => {
   const match=COURT_REFERENCES.find(x=>x.id===id);
