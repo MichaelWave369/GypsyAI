@@ -134,8 +134,8 @@ export function CourtRankPanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
       </div>
       <p className="muted">This release completes the **16 court-card rank/title
         comparisons only**. The other 40 Minor Arcana (four Aces and
-        thirty-six numbered cards) do not yet have a complete four-tradition
-        *structural* comparison. No new cards or artwork were introduced.
+        thirty-six numbered cards) are compared separately in GAIA's
+        **Minor Pips** chamber, with different source and interpretation limits. No new cards or artwork were introduced.
         The previously reviewed four Waite card-meaning notes remain
         a separate and much smaller historical interpretation audit.</p>
     </section>
