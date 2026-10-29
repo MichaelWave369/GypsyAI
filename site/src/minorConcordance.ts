@@ -45,19 +45,19 @@ export const MINOR_REFERENCES: readonly MinorReference[]=[
   },
   {
     id:'thoth-title-list',
-    title:'Thoth minor cards: original deck labels indexed by suit',
-    authorOrEditor:'Bill Heidrick, historical deck title table',
+    title:'Thoth 78-card index: minor-card labels by suit',
+    authorOrEditor:'Marselia, modern comparative deck catalog',
     kind:'modern-secondary-index',
-    url:'https://billheidrick.com/works/tarottbl.htm',
-    scope:'The 36 displayed Thoth small-card keywords and four Aces, including substantial differences from the older Golden Dawn Lord titles.'
+    url:'https://marselia.app/tarot-decks/thoth',
+    scope:'Thoth printed keywords across all 36 numbered cards and four Aces, including Works for Three of Disks. Secondary structural catalog, not Crowley’s original book.'
   },
   {
     id:'thoth-comparison',
-    title:'Thoth Tarot 78-card index and Marseille comparisons',
-    authorOrEditor:'Marselia, modern secondary deck catalog',
+    title:'Thoth minor trumps: alternate title transcription',
+    authorOrEditor:'Bill Heidrick, historical deck comparison table',
     kind:'modern-secondary-index',
-    url:'https://marselia.app/tarot-decks/thoth',
-    scope:'Thoth Wands/Cups/Swords/Disks labels, numbering and selected planetary associations. Not an original Crowley 1944 book edition or a source of copyrighted Harris artwork.'
+    url:'https://billheidrick.com/works/tarottbl.htm',
+    scope:'Independent secondary title cross-check; some printed forms differ between catalogs (e.g., Work versus Works for Three of Disks), so source differences must remain attributed.'
   }
 ] as const;
 
