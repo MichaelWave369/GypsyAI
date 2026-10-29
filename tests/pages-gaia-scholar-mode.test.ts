@@ -74,6 +74,26 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
     expect(field.unreviewedCards).toEqual(['9 of Pentacles']);
   });
 
+  it('stages only confirmed new source notes and keeps unreviewed cards out of citations',()=>{
+    const draws=chosen(['The Fool','Ace of Wands','The Devil'],['Past','Present','Future']);
+    const preview=scholarPreview(draws);
+    expect(preview.matches.map(m=>m.cardName)).toEqual(['The Fool','Ace of Wands']);
+    expect(preview.unreviewed).toEqual(['The Devil']);
+    expect(preview.matches[0].scope).toBe('card-symbolism');
+    expect(preview.matches[1].scope).toBe('divinatory-upright-reversed');
+    expect(preview.matches[0].sectionUrl).toContain('/zero-the-fool');
+    expect(preview.matches[1].sectionUrl).toContain('/ace-of-wands');
+    const packet=scholarPacket(ritualReadingPacket('three-card',draws),draws);
+    expect(JSON.stringify(packet).length).toBeLessThanOrEqual(5800);
+    const history=(packet.facts as Record<string,unknown>).scholarMode as {
+      reviewedMatches:Array<{name:string;historicalSourceURL:string;scope:string}>;
+      unreviewedCards:string[];
+    };
+    expect(history.reviewedMatches).toHaveLength(2);
+    expect(history.unreviewedCards).toEqual(['The Devil']);
+    expect(JSON.stringify(packet)).not.toContain('/xv-the-devil');
+  });
+
   it('does not fabricate a source when zero selected cards have historical review',()=>{
     const draws=chosen(['The Devil'],['Focus']);
     const base=ritualReadingPacket('single',draws);
