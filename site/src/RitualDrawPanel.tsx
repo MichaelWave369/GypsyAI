@@ -7,6 +7,7 @@ import {
 import type { RitualCard, RitualSpread } from './ritualDraw';
 import { FieldLoomPanel } from './FieldLoomPanel';
 import { scholarPacket, scholarPreview } from './scholarMode';
+import { symbolicCoverage } from './symbolicLibrary';
 import { chooseAtlasCard, atlasReadingPacket, validateAtlasLayout } from './spreadAtlas';
 import type { AtlasLayout } from './spreadAtlas';
 
@@ -251,8 +252,8 @@ export function RitualDrawPanel({ onReflect, atlasLayout }: {
           <span><strong>Historical Scholar Mode</strong>
             <small>Opt in to reviewed source comparisons with the same chosen cards.</small></span>
         </label>
-        <p className="muted">Only four cards in GAIA's historical catalog currently have checked
-          source notes. The other 74 remain editorial-only. Turning this on includes
+        <p className="muted">GAIA currently has {symbolicCoverage().historicalReviewed} source-reviewed interpretation
+          notes; {symbolicCoverage().historicalNotReviewed} cards are still editorial-only. Turning this on includes
           available short historical annotations in the staged local model packet,
           not a network lookup. Regular reading mode stays unchanged.</p>
         {scholar && scholarView && <>
