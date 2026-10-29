@@ -27,6 +27,7 @@ import { SpreadAtlasPanel } from './SpreadAtlasPanel';
 import { SymbolicLibraryPanel } from './SymbolicLibraryPanel';
 import { ConcordancePanel } from './ConcordancePanel';
 import { CourtRankPanel } from './CourtRankPanel';
+import { MinorConcordancePanel } from './MinorConcordancePanel';
 import type { AtlasLayout } from './spreadAtlas';
 import { READING_MODES, readingInvitation, tarotReflectionCues } from './readingExperience';
 import type { ReadingKind } from './readingExperience';
@@ -40,6 +41,7 @@ const TABS = [
   { id: 'library', name: 'Symbolic Library', glyph: '✧' },
   { id: 'concordance', name: 'Concordance', glyph: '⌘' },
   { id: 'courts', name: 'Court Ranks', glyph: '♜' },
+  { id: 'pips', name: 'Minor Pips', glyph: '◈' },
   { id: 'oracle', name: 'GAIA Oracle', glyph: '◉' },
   { id: 'pilot', name: 'Ally Sanctuary', glyph: '✺' },
   { id: 'lab', name: 'Local Lab', glyph: '⌁' },
@@ -409,6 +411,7 @@ function App() {
       {tab === 'library' && <SymbolicLibraryPanel key={libraryCardId || 'default'} initialCardId={libraryCardId} />}
       {tab === 'concordance' && <ConcordancePanel onOpenCard={openLibraryCard} />}
       {tab === 'courts' && <CourtRankPanel onOpenCard={openLibraryCard} />}
+      {tab === 'pips' && <MinorConcordancePanel onOpenCard={openLibraryCard} />}
       {tab === 'pilot' && <PilotSessionPanel />}
       {tab === 'lab' && <LocalLabPanel origin={base} modelPreference={selected} />}
       {tab === 'brains' && <SovereignBrainPanel />}
