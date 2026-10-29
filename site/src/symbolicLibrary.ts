@@ -66,8 +66,116 @@ export type HistoricalAnnotation = {
   readingNote: string;
 };
 
-/** Explicitly reviewed samples only. No automatic mapping to other 74 cards. */
+/** Individual checked sections only. Unreviewed entries receive no historical note. */
 export const REVIEWED_CARD_NOTES: readonly HistoricalAnnotation[] = [
+  {
+    cardId: 'major-0',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'Zero. The Fool',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/zero-the-fool',
+    checkedMeaning: 'Waite pictures a finely dressed traveler pausing at a precipice, accompanied by a dog and carrying a rose and travel bag. He describes the figure as a spirit seeking experience, not merely a foolish person acting without thought.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'Waite\'s image interpretation does not verify a positive upright or reversed outcome. GAIA\'s newer advice about first steps is independently authored.'
+  },
+  {
+    cardId: 'major-1',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'I. The Magician',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/i-the-magician',
+    checkedMeaning: 'Waite depicts one hand raised and one pointing to earth, with symbols of all four tarot suits on the table. For him these gestures and tools express spiritual gifts and the communication of power from above to below.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'The historical chapter presents Waite\'s Christian-esoteric symbolism; it does not prove supernatural powers or specifically establish a reversed card meaning.'
+  },
+  {
+    cardId: 'major-2',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'II. The High Priestess',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ii-the-high-priestess',
+    checkedMeaning: 'Waite describes the High Priestess between two temple pillars, holding a partly veiled Tora scroll, with moon imagery and pomegranate-patterned veil. He links her to concealed teaching, reflected light and Shekinah.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'This reflects Waite\'s particular religious and Kabbalistic framework, not a universal historical consensus or empirical evidence of intuition.'
+  },
+  {
+    cardId: 'major-3',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'III. The Empress',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/iii-the-empress',
+    checkedMeaning: 'Waite describes an enthroned woman with twelve stars, a Venus-marked shield, ripening grain and water. He relates her to earthly paradise and fecundity, while distinguishing her function from the High Priestess.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'Waite\'s fecundity imagery is historical source symbolism, not a prediction of pregnancy, fertility or personal circumstances.'
+  },
+  {
+    cardId: 'major-8',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'VIII. Strength, or Fortitude',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/viii-strength-or-fortitude',
+    checkedMeaning: 'Waite shows a woman calmly handling a lion with a garland of flowers. He discusses spiritual fortitude and the liberation of the higher nature from passions, and explicitly notes his switch of Strength and Justice\'s customary numbers.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'This source explains Waite\'s inner symbolism and trump numbering, not an independently reviewed reversed divinatory meaning or a measured force.'
+  },
+  {
+    cardId: 'major-9',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'IX. The Hermit',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ix-the-hermit',
+    checkedMeaning: 'Waite\'s Hermit raises a star-lit lantern from a height. Contrary to interpretations centered on isolation or private secrecy, Waite frames the lantern as a beacon associated with attainment and illumination.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'The chapter should not be paraphrased as Waite endorsing complete withdrawal; he explicitly disputes that narrow isolation reading.'
+  },
+  {
+    cardId: 'major-17',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'XVII. The Star',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xvii-the-star',
+    checkedMeaning: 'Waite describes a kneeling figure pouring water upon land and into water beneath a large eight-rayed star and seven smaller stars. He connects the scene to unveiled truth and spiritual gifts; he treats simple \'hope\' as an incomplete account.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'GAIA\'s modern language of renewal may be useful editorial reflection, but Waite\'s commentary is more specifically mystical and not proof of future reassurance.'
+  },
+  {
+    cardId: 'major-19',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'XIX. The Sun',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/xix-the-sun',
+    checkedMeaning: 'Waite portrays a child riding a white horse beneath the sun, leaving a walled garden. He interprets the image as a movement from worldly light to spiritual consciousness, emphasizing simplicity and restored innocence.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'This historical account is spiritual allegory, not an objective prediction of prosperity, health or a guaranteed favorable event.'
+  },
+  {
+    cardId: 'wands-ace',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'Ace of Wands',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ace-of-wands',
+    checkedMeaning: 'Waite shows a hand emerging from a cloud holding a wand. His upright list relates the card to creation, enterprise and origins; his reversed list includes decline, ruin and a qualified kind of clouded joy.',
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: 'Waite\'s reversed vocabulary differs markedly from GAIA\'s modern suggestion to protect an early spark; do not attribute the newer wording to Waite.'
+  },
+  {
+    cardId: 'cups-2',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'Two of Cups',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/two-of-cups',
+    checkedMeaning: 'Waite depicts two figures exchanging cups beneath a winged caduceus and lion\'s head. He links the card\'s divinatory associations to affection, affinity, friendship, union and sympathy, but this section does not separately list a reversed meaning.',
+    interpretationScope: 'card-symbolism',
+    readingNote: 'Waite supplies upright associations here, not a distinct reversed list. GAIA\'s reversed communication guidance remains its own editorial reflection.'
+  },
+  {
+    cardId: 'swords-3',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'Three of Swords',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/three-of-swords',
+    checkedMeaning: 'Waite\'s Three of Swords shows swords piercing a heart against storm clouds. He associates the upright card with absence, separation and division, and gives reversed terms including confusion and mental estrangement.',
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: 'These are Waite\'s period-specific divinatory terms, not a diagnosis of mental illness or evidence that a relationship will fail.'
+  },
+  {
+    cardId: 'pentacles-7',
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: 'Seven of Pentacles',
+    sectionUrl: 'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/seven-of-pentacles',
+    checkedMeaning: 'Waite pictures a person leaning on a staff while examining seven pentacles among foliage. He explicitly calls the inherited upright meanings contradictory: money and business in some accounts, quarrels or innocence in others; reversed he notes anxiety over lending money.',
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: 'The source itself records contradictory upright interpretations. GAIA must not present a single settled Waite prediction or treat this as financial advice.'
+  },
   {
     cardId: 'major-7',
     sourceId: 'waite-pictorial-key',
