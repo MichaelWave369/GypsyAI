@@ -6,17 +6,18 @@ import {
 } from '../site/src/crossTradition';
 import { getHermeticAuditForCard } from '../site/src/hermeticAudit';
 
-describe('GAIA v1.2 limited Cross-Tradition Concordance',()=>{
+describe('GAIA v1.3 complete Major structural Cross-Tradition Concordance',()=>{
   const samples=concordanceEntries();
 
-  it('curates exactly eight transparent structural case studies rather than fake full-deck coverage',()=>{
-    expect(samples).toHaveLength(8);
-    expect(new Set(samples.map(c=>c.cardId)).size).toBe(8);
+  it('indexes exactly 22 structural comparisons, while not implying full 78-card interpretation coverage',()=>{
+    expect(samples).toHaveLength(22);
+    expect(new Set(samples.map(c=>c.cardId)).size).toBe(22);
+    expect(samples.map(c=>c.cardId)).toEqual(Array.from({length:22},(_,i)=>'major-'+i));
     expect(concordanceCoverage()).toEqual({
-      originalDeckCards:78, majorTrumps:22, comparisons:8,pending:14,
+      originalDeckCards:78, majorTrumps:22, comparisons:22,pending:0,
       traditions:4,interpretationReviewsNotImplied:true
     });
-    expect(concordanceEntry('major-2')).toBeNull();
+    expect(concordanceEntry('major-2')?.marseille.label).toBe('La Papesse');
     expect(concordanceEntry('fake')).toBeNull();
   });
 
@@ -27,6 +28,7 @@ describe('GAIA v1.2 limited Cross-Tradition Concordance',()=>{
       expect(c.canonicalName).toBe(original.name);
       expect(c.rws.label).toBe(original.name);
       expect(c.interpretationBoundary.length).toBeGreaterThan(55);
+      expect(c.marseille.engravedCartouche?.length).toBeGreaterThan(5);
       const verified=getHermeticAuditForCard(c.cardId)!;
       expect(verified.status).toBe('checked-in-golden-dawn-tradition');
       expect(c.goldenDawn.hebrewLetter).toBe(original.hermetic.hebrew_letter);
@@ -66,7 +68,7 @@ describe('GAIA v1.2 limited Cross-Tradition Concordance',()=>{
     expect(concordanceEntry('major-20')?.thoth.label).toBe('The Aeon');
     expect(concordanceEntry('major-21')?.thoth.label).toBe('The Universe');
     expect(concordanceEntry('major-7')?.thoth.label).toBe('The Chariot');
-    expect(samples.every(e=>e.thoth.sourceId==='thoth-names')).toBe(true);
+    expect(samples.every(e=>e.thoth.sourceId==='thoth-full-index')).toBe(true);
     expect(samples.every(e=>e.differences.every(x=>['numbering','renaming','untitled-card','unchanged-label'].includes(x)))).toBe(true);
   });
 
@@ -74,6 +76,7 @@ describe('GAIA v1.2 limited Cross-Tradition Concordance',()=>{
     const types=CONCORDANCE_SOURCES.map(s=>s.type);
     expect(types).toContain('historical-primary-text');
     expect(types).toContain('institutional-exhibit');
+    expect(findConcordanceSource('bnf-conver-catalog').url).toBe('https://catalogue.bnf.fr/ark:/12148/cb43706229t');
     expect(types).toContain('secondary-reference');
     expect(types).toContain('academic-study');
     for(const s of CONCORDANCE_SOURCES){
@@ -88,6 +91,44 @@ describe('GAIA v1.2 limited Cross-Tradition Concordance',()=>{
       expect(findConcordanceSource(e.goldenDawn.sourceId).id).toBe('gd-book-t');
     }
     expect(()=>findConcordanceSource('invented-source')).toThrow();
+  });
+
+  it('tracks historical additive Conver numerals and separately transcribed plate wording',()=>{
+    const cases: Array<[string,string,string,string]> = [
+      ['major-1','I','LE·BATELEUR','The Magus'],
+      ['major-4','IIII','LEMPEREUR','The Emperor'],
+      ['major-9','VIIII',"L'HERMITE",'The Hermit'],
+      ['major-10','X','LA·ROVE·DE·FORTVNE','Fortune'],
+      ['major-14','XIIII','TEMPERANCE','Art'],
+      ['major-16','XVI','LA·MAISON·DIEV','The Tower'],
+      ['major-19','XVIIII','LE SOLEIL','The Sun']
+    ];
+    for (const [id,ordinal,plate,thoth] of cases){
+      const c=concordanceEntry(id)!;
+      expect(c.marseille.ordinal).toBe(ordinal);
+      expect(c.marseille.engravedCartouche).toBe(plate);
+      expect(c.thoth.label).toBe(thoth);
+      expect(c.marseille.sourceId).toBe('marseille-pattern');
+    }
+    expect(concordanceEntry('major-13')?.marseille.engravedCartouche).toBe('(no cartouche)');
+  });
+
+  it('does not silently equate Golden Dawn and Thoth Emperor/Star Hebrew attributions',()=>{
+    const emperor=concordanceEntry('major-4')!;
+    const star=concordanceEntry('major-17')!;
+    expect(emperor.goldenDawn.hebrewLetter).toBe('Heh');
+    expect(star.goldenDawn.hebrewLetter).toBe('Tzaddi');
+    expect(emperor.thoth.note).toContain('Tzaddi');
+    expect(star.thoth.note).toContain('Heh');
+    expect(emperor.interpretationBoundary).toContain('must not be conflated');
+    expect(star.interpretationBoundary).toContain('conceals this genuine attribution difference');
+  });
+
+  it('uses source-aware labels without inventing a 56-card Minor Arcana concordance',()=>{
+    expect(samples.some(e=>e.cardId.includes('wands'))).toBe(false);
+    expect(concordanceCoverage().originalDeckCards).toBe(78);
+    expect(concordanceCoverage().majorTrumps).toBe(22);
+    expect(concordanceCoverage().interpretationReviewsNotImplied).toBe(true);
   });
 
   it('keeps original 78-card deck and sourced 1912 Book T fields immutable',()=>{
