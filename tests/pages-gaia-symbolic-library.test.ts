@@ -106,8 +106,8 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note.readingNote.length).toBeGreaterThan(65);
       expect(note.checkedMeaning).not.toMatch(/verified prediction|empirical proof/);
     }
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(10);
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(6);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(11);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(5);
   });
 
   it('preserves source disagreements rather than laundering edited keywords into Waite meanings',()=>{
