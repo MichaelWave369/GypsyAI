@@ -407,3 +407,40 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-concordance-plate strong{font-size:11px;color:#e7d5a4}
 .gaia-concordance-plate small{font-size:10px;line-height:1.6;color:#b6ccbe}
 .gaia-concordance-workbench .gaia-concordance-picker{max-height:370px;overflow-y:auto;padding:3px}
+
+
+/* GAIA v1.4 Court Rank Concordance: two visible source conventions. */
+.gaia-court-concordance .panel{margin-bottom:21px}
+.gaia-court-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.gaia-court-metrics>div{display:flex;flex-direction:column;gap:9px;padding:17px;background:#123632;border:1px solid #64826b;border-radius:10px}
+.gaia-court-metrics strong{font:clamp(27px,4vw,40px) Georgia,serif;color:#efd5a2}
+.gaia-court-metrics small{font-size:12px;color:#c1d6c8}
+.gaia-court-workbench,.gaia-court-sources{padding:25px}
+.gaia-court-workbench h3,.gaia-court-sources h3{font:clamp(23px,3vw,32px) Georgia,serif;font-weight:400;color:#f0dcaf;margin:17px 0 15px}
+.gaia-court-alignment{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:13px 0}
+.gaia-court-alignment button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:9px;padding:19px;border-radius:9px;border:1px solid #607b68;color:#dbebdb;background:#11363a;min-height:100px}
+.gaia-court-alignment button.active{border-color:#f1dca6;background:#2a5446;box-shadow:inset 0 0 0 1px #e3c98a99}
+.gaia-court-alignment button strong{font:20px Georgia,serif;color:#e9d7a8}
+.gaia-court-alignment button small{font-size:12px;color:#cadccf;line-height:1.7}
+.gaia-court-suit-tabs,.gaia-court-picker{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 17px}
+.gaia-court-suit-tabs button,.gaia-court-picker button{min-height:44px;border:1px solid #5c7d71;background:#17383b;border-radius:8px;color:#cce2d2;padding:10px 15px}
+.gaia-court-suit-tabs button.active,.gaia-court-picker button.active{color:#142b2a;background:#e6d4a5;border-color:#f3e7b4}
+.gaia-court-heading{border-top:1px solid #537967;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:13px;margin:22px 0 18px;padding-top:20px}
+.gaia-court-heading h3{margin:8px 0}
+.gaia-court-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.gaia-court-columns>article{display:flex;align-items:flex-start;flex-direction:column;gap:12px;padding:20px 15px;background:linear-gradient(150deg,#1a413b,#112e34);border:1px solid #547e70;border-radius:10px;min-width:0}
+.gaia-court-columns>article:nth-child(even){background:linear-gradient(150deg,#254b3e,#162f37)}
+.gaia-court-columns h4{font:clamp(20px,2.5vw,27px) Georgia,serif;font-weight:400;color:#f0dca8;overflow-wrap:anywhere;margin:5px 0}
+.gaia-court-columns p{font-size:12px;color:#c7d7ca;line-height:1.7;margin:0}
+.gaia-court-columns p strong{color:#eed8a0}
+.gaia-court-columns a,.gaia-court-source-grid a{color:#b6e8d6;font-size:12px;text-decoration:underline;text-underline-offset:3px;margin-top:auto}
+.gaia-court-caution{border-left:3px solid #ddc38c;background:#193a32;padding:17px 18px;margin:23px 0 5px}
+.gaia-court-caution strong{color:#f3d9ad}
+.gaia-court-caution p{color:#cde1d3;font-size:12px;line-height:1.7}
+.gaia-court-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gaia-court-source-grid article{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:16px;background:#133339;border:1px solid #577b6e;border-radius:10px}
+.gaia-court-source-grid h4{font:21px Georgia,serif;font-weight:400;color:#efdcaf;margin:0}
+.gaia-court-source-grid p{font-size:12px;line-height:1.6;color:#c4d6cd;margin:0}
+.gaia-court-concordance button:focus-visible,.gaia-court-concordance a:focus-visible{outline:3px solid #f4d89c;outline-offset:3px}
+@media(max-width:1100px){.gaia-court-columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.gaia-court-columns,.gaia-court-alignment,.gaia-court-source-grid{grid-template-columns:1fr}.gaia-court-workbench,.gaia-court-sources{padding:15px}.gaia-court-metrics>div{padding:12px}.gaia-court-suit-tabs button{flex:1 1 42%}}
