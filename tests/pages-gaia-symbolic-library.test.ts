@@ -21,19 +21,21 @@ describe('GAIA Symbolic Library historical provenance', () => {
     }
   });
 
-  it('counts only the sixteen explicitly checked historical card sections as reviewed', () => {
+  it('counts all twenty-eight source-reviewed card sections separately from structural indexing', () => {
     const coverage = symbolicCoverage();
     expect(coverage).toEqual({
-      total:78, editorial:78, historicalReviewed:16, historicalNotReviewed:62
+      total:78, editorial:78, historicalReviewed:28, historicalNotReviewed:50
     });
     const ids = REVIEWED_CARD_NOTES.map(n=>n.cardId);
     expect(new Set(ids)).toEqual(new Set([
       'major-0','major-1','major-2','major-3','major-7','major-8','major-9',
       'major-13','major-17','major-19','wands-ace','wands-5','wands-8',
-      'cups-2','swords-3','pentacles-7'
+      'cups-2','swords-3','pentacles-7',
+      'major-4','major-5','major-6','major-10','major-11','major-12',
+      'major-14','major-15','major-16','major-18','major-20','major-21'
     ]));
-    expect(new Set(ids).size).toBe(16);
-    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(16);
+    expect(new Set(ids).size).toBe(28);
+    expect(listSymbolicEntries().filter(e=>e.annotation)).toHaveLength(28);
     expect(findSymbolicEntry('wands-9')?.annotationStatus).toBe('not-yet-reviewed');
   });
 
@@ -67,7 +69,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(searchSymbolicEntries('recovery').some(c=>c.name==='10 of Swords')).toBe(true);
     expect(searchSymbolicEntries('', 'major')).toHaveLength(22);
     expect(searchSymbolicEntries('', 'minor')).toHaveLength(56);
-    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(16);
+    expect(searchSymbolicEntries('', 'reviewed')).toHaveLength(28);
     expect(searchSymbolicEntries('invalid-query-never-exists')).toEqual([]);
     expect(() => searchSymbolicEntries('', 'secret' as 'all')).toThrow('Unsupported');
   });
@@ -106,7 +108,7 @@ describe('GAIA Symbolic Library historical provenance', () => {
       expect(note.readingNote.length).toBeGreaterThan(65);
       expect(note.checkedMeaning).not.toMatch(/verified prediction|empirical proof/);
     }
-    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(11);
+    expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='card-symbolism')).toHaveLength(23);
     expect(REVIEWED_CARD_NOTES.filter(n=>n.interpretationScope==='divinatory-upright-reversed')).toHaveLength(5);
   });
 
@@ -124,10 +126,43 @@ describe('GAIA Symbolic Library historical provenance', () => {
     expect(findSymbolicEntry('swords-4')!.annotation).toBeNull();
   });
 
+  it('completes all 22 Major Arcana imagery chapters with precise primary URLs and no invented reversals',()=>{
+    const added=[
+      ['major-4','iv-the-emperor'],
+      ['major-5','v-the-hierophant'],
+      ['major-6','vi-the-lovers'],
+      ['major-10','x-wheel-of-fortune'],
+      ['major-11','xi-justice'],
+      ['major-12','xii-the-hanged-man'],
+      ['major-14','xiv-temperance'],
+      ['major-15','xv-the-devil'],
+      ['major-16','xvi-the-tower'],
+      ['major-18','xviii-the-moon'],
+      ['major-20','xx-the-last-judgement'],
+      ['major-21','xxi-the-world']
+    ] as const;
+    const prefix='https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/';
+    for (const [id,slug] of added){
+      const note=findSymbolicEntry(id)?.annotation;
+      expect(note).not.toBeNull();
+      expect(note?.sourceId).toBe('waite-pictorial-key');
+      expect(note?.sectionUrl).toBe(prefix+slug);
+      expect(note?.interpretationScope).toBe('card-symbolism');
+      expect(note?.checkedMeaning.length).toBeGreaterThan(100);
+      expect(note?.readingNote.length).toBeGreaterThan(60);
+      expect(note?.readingNote).not.toMatch(/guarantees|will definitely/i);
+    }
+    expect(listSymbolicEntries().filter(e=>e.arcana==='major'&&e.annotation)).toHaveLength(22);
+    expect(listSymbolicEntries().filter(e=>e.arcana==='minor'&&e.annotation)).toHaveLength(6);
+    expect(findSymbolicEntry('major-12')?.annotation?.checkedMeaning).toContain('rather than suffering');
+    expect(findSymbolicEntry('major-10')?.annotation?.checkedMeaning).toContain('chance or fatalism');
+    expect(findSymbolicEntry('major-16')?.annotation?.readingNote).toContain('prediction of injury');
+  });
+
   it('does not attach institutional context to a card meaning by default', () => {
     const archivalIds = SYMBOLIC_SOURCES.filter(s=>s.kind==='institutional-collection').map(s=>s.id);
     expect(archivalIds).toEqual(['jhu-pam-a','loc-papus']);
     expect(REVIEWED_CARD_NOTES.every(n=>!archivalIds.includes(n.sourceId))).toBe(true);
-    expect(findSymbolicEntry('major-15')?.annotation).toBeNull();
+    expect(findSymbolicEntry('cups-4')?.annotation).toBeNull();
   });
 });
