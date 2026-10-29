@@ -92,6 +92,15 @@ export const CONCORDANCE_SOURCES:readonly ConcordanceSource[] = [
     scope:'Thoth trump titles and numbering, including VIII Adjustment, XI Lust, the Magus, Art, Aeon and Universe; Crowley also changed Emperor/Star Hebrew-letter associations. No reproduction of Frieda Harris artwork.'
   },
   {
+    id:'thoth-full-index',
+    title:'Thoth Tarot: full Major Arcana title and number index',
+    author:'Marselia, modern deck catalog',
+    year:'Historical 1938–1943 painted deck; contemporary catalog transcription',
+    type:'secondary-reference',
+    url:'https://marselia.app/tarot-decks/thoth',
+    scope:'Source-indexed list of all 22 Crowley–Harris trump names and ordinals, including Emperor/Star letter exchange. Secondary comparison, not an edition of The Book of Thoth or evidence of divinatory efficacy.'
+  },
+  {
     id:'thoth-scholarship',
     title:'The Lady and the Beast, chapter 9: The Book of Thoth',
     author:'Deja Whitehouse, Oxford University Press',
@@ -318,7 +327,7 @@ export function concordanceEntries():ConcordanceEntry[]{
       rws:face(card.name,numeral(card.number),'rws-waite','GAIA’s familiar Rider–Waite–Smith-oriented deck identity.'),
       marseille:{...face(c.marseille[0],c.marseille[1],'marseille-pattern',c.marseille[2]),
         engravedCartouche:converCartouches[c.id]},
-      thoth:face(c.thoth[0],c.thoth[1],'thoth-names',c.thoth[2]),
+      thoth:face(c.thoth[0],c.thoth[1],'thoth-full-index',c.thoth[2]),
       goldenDawn:{hebrewLetter:letter,attribution,path,sourceId:'gd-book-t',
         note:'Audited Golden Dawn letter / attribution / Tree path; not an additional physical card draw.'},
       differences:[...c.differences],interpretationBoundary:c.boundary
