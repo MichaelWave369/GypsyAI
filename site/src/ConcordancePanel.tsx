@@ -112,7 +112,7 @@ export function ConcordancePanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
           independent critical studies of each deck’s history. This concordance is not a verified
           shared upright/reversed reading, a reconstructed original card image,
           or proof of supernatural effects. The existing Symbolic Library's
-          twenty-eight Waite interpretation reviews (all 22 Major, six Minor) are a separate audit.</p>
+          forty Waite interpretation reviews (all 22 Major, 18 Minor) are a separate audit.</p>
       </div>
     </section>
     <section className="panel gaia-concordance-sources">
