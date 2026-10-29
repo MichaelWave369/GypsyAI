@@ -75,14 +75,14 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
   });
 
   it('does not fabricate a source when zero selected cards have historical review',()=>{
-    const draws=chosen(['The Fool'],['Focus']);
+    const draws=chosen(['The Devil'],['Focus']);
     const base=ritualReadingPacket('single',draws);
     const scholar=scholarPacket(base,draws);
     const field=(scholar.facts as Record<string,unknown>).scholarMode as {
       reviewedMatches:unknown[]; unreviewedCards:string[];
     };
     expect(field.reviewedMatches).toEqual([]);
-    expect(field.unreviewedCards).toEqual(['The Fool']);
+    expect(field.unreviewedCards).toEqual(['The Devil']);
     expect(JSON.stringify(scholar)).not.toContain('https://');
   });
 
