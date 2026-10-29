@@ -444,3 +444,37 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-court-concordance button:focus-visible,.gaia-court-concordance a:focus-visible{outline:3px solid #f4d89c;outline-offset:3px}
 @media(max-width:1100px){.gaia-court-columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.gaia-court-columns,.gaia-court-alignment,.gaia-court-source-grid{grid-template-columns:1fr}.gaia-court-workbench,.gaia-court-sources{padding:15px}.gaia-court-metrics>div{padding:12px}.gaia-court-suit-tabs button{flex:1 1 42%}}
+
+
+/* GAIA v1.5 Minor Arcana source comparison: 40 Ace and numbered pip records. */
+.gaia-minor-concordance .panel{margin-bottom:20px}
+.gaia-minor-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.gaia-minor-metrics>div{padding:18px;background:#133638;border:1px solid #5e7f6a;border-radius:10px;display:flex;flex-direction:column;gap:8px}
+.gaia-minor-metrics strong{font:clamp(28px,4vw,40px) Georgia,serif;color:#efdbad}
+.gaia-minor-metrics small{font-size:12px;color:#c7d9cd}
+.gaia-minor-workbench,.gaia-minor-references{padding:25px}
+.gaia-minor-suits,.gaia-minor-ranks,.gaia-minor-source-filters{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.gaia-minor-suits button,.gaia-minor-ranks button,.gaia-minor-source-filters button{min-height:44px;background:#143735;color:#d2e4d9;border:1px solid #5c8374;padding:10px 15px;border-radius:8px}
+.gaia-minor-suits button.active,.gaia-minor-ranks button.active,.gaia-minor-source-filters button.active{color:#122d2c;background:#e8d29c;border-color:#f0dcad}
+.gaia-minor-ranks button{min-width:48px}
+.gaia-minor-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-top:1px solid #587d69;padding-top:23px;margin:23px 0}
+.gaia-minor-heading h3{font:clamp(27px,4vw,42px) Georgia,serif;font-weight:400;color:#f1ddab;margin:8px 0}
+.gaia-minor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.gaia-minor-grid>article{min-width:0;background:linear-gradient(145deg,#173d3b,#132c35);border:1px solid #5c7e6e;padding:19px 15px;border-radius:10px;display:flex;flex-direction:column;gap:12px}
+.gaia-minor-grid>article:nth-child(odd){background:linear-gradient(145deg,#20493b,#102e32)}
+.gaia-minor-grid h4{font:clamp(20px,2.4vw,27px) Georgia,serif;font-weight:400;color:#f2dcb2;margin:6px 0;overflow-wrap:anywhere}
+.gaia-minor-grid p{font-size:12px;line-height:1.7;color:#d0dfd1;margin:0}
+.gaia-minor-grid p strong{color:#efd6a1}
+.gaia-minor-grid p.gaia-minor-disclaimer{background:#143036;padding:10px;border-left:2px solid #ddca95;color:#d5ddc7}
+.gaia-minor-grid a,.gaia-minor-source-grid a{color:#b5ead5;font-size:12px;text-decoration:underline;text-underline-offset:3px;margin-top:auto;overflow-wrap:anywhere}
+.gaia-minor-boundaries{background:#173932;border-left:3px solid #e0c994;padding:18px;margin:23px 0 0}
+.gaia-minor-boundaries strong{color:#f0d6a4}
+.gaia-minor-boundaries p{font-size:12px;line-height:1.75;color:#d2e2d5}
+.gaia-minor-references h3{font:clamp(23px,3vw,32px) Georgia,serif;font-weight:400;color:#ead4a1;margin:0 0 15px}
+.gaia-minor-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0}
+.gaia-minor-source-grid article{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:18px;border:1px solid #5d8275;border-radius:10px;background:#123135}
+.gaia-minor-source-grid h4{font:21px Georgia,serif;color:#eed5a4;font-weight:400;margin:0}
+.gaia-minor-source-grid p{font-size:12px;line-height:1.6;color:#c6d7cb;margin:0}
+.gaia-minor-concordance button:focus-visible,.gaia-minor-concordance a:focus-visible{outline:3px solid #f5dfa7;outline-offset:3px}
+@media(max-width:1100px){.gaia-minor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.gaia-minor-workbench,.gaia-minor-references{padding:14px}.gaia-minor-grid,.gaia-minor-source-grid{grid-template-columns:1fr}.gaia-minor-suits button{flex:1 1 43%}.gaia-minor-ranks button{flex:1 1 17%}.gaia-minor-metrics>div{padding:11px}}
