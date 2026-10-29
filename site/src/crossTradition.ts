@@ -323,7 +323,7 @@ export function concordanceEntries():ConcordanceEntry[]{
         note:'Audited Golden Dawn letter / attribution / Tree path; not an additional physical card draw.'},
       differences:[...c.differences],interpretationBoundary:c.boundary
     };
-  });
+  }).sort((a,b)=>Number(a.cardId.slice(6))-Number(b.cardId.slice(6)));
 }
 
 export function concordanceEntry(cardId:string):ConcordanceEntry|null{
