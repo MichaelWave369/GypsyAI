@@ -128,6 +128,31 @@ describe('GAIA v0.8 opt-in historical Scholar Mode',()=>{
     expect(JSON.stringify(reviewed).length).toBeLessThanOrEqual(5800);
   });
 
+  it('stages new Wands and Cups source reviews but excludes an unreviewed Minor card',()=>{
+    const draws=chosen(['4 of Wands','Ace of Cups','4 of Cups'],['Past','Present','Future']);
+    const preview=scholarPreview(draws);
+    expect(preview.matches.map(m=>m.cardName)).toEqual(['4 of Wands','Ace of Cups']);
+    expect(preview.unreviewed).toEqual(['4 of Cups']);
+    expect(preview.matches.every(m=>m.scope==='divinatory-upright-reversed')).toBe(true);
+    const base=ritualReadingPacket('three-card',draws);
+    expect(JSON.stringify(base)).not.toContain('scholarMode');
+    const sourced=scholarPacket(base,draws);
+    const history=(sourced.facts as Record<string,unknown>).scholarMode as {
+      reviewedMatches:Array<{name:string;historicalSourceURL:string;scope:string}>;
+      unreviewedCards:string[];
+    };
+    expect(history.reviewedMatches.map(m=>m.historicalSourceURL)).toEqual([
+      'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/four-of-wands',
+      'https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ace-of-cups'
+    ]);
+    expect(history.reviewedMatches.map(m=>m.scope)).toEqual([
+      'divinatory-upright-reversed','divinatory-upright-reversed'
+    ]);
+    expect(history.unreviewedCards).toEqual(['4 of Cups']);
+    expect(JSON.stringify(sourced).length).toBeLessThanOrEqual(5800);
+    expect(JSON.stringify(sourced)).not.toContain('/four-of-cups');
+  });
+
   it('fails closed on a fabricated card, duplicate cards, mismatched position, and missing base',()=>{
     const draws=sample();
     const bad=chosen(['The Chariot'],['Focus']);

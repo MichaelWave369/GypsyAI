@@ -319,6 +319,114 @@ export const REVIEWED_CARD_NOTES: readonly HistoricalAnnotation[] = [
     checkedMeaning: "Waite reads the final trump as cosmic completion and the soul's vision of a self-knowing universe, while also rejecting explanations that identify the figure simply with an initiated Magus or the Absolute. He preserves multiple levels of meaning.",
     interpretationScope: 'card-symbolism',
     readingNote: "His concept of perfection is metaphysical symbolism, not a guarantee that an individual's work, relationship, or circumstances will reach completion."
+  },
+  {
+    cardId: "wands-2",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Two of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/two-of-wands",
+    checkedMeaning: "Waite shows a rich man above land and sea with a globe and two wands. He explicitly records conflicting upright traditions: worldly magnificence alongside sadness, illness or chagrin; reversed he gives surprise, wonder, emotional disturbance and fear.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite's upright alternatives conflict. Preserve both rather than presenting a settled promise of wealth or a medical forecast."
+  },
+  {
+    cardId: "wands-3",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Three of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/three-of-wands",
+    checkedMeaning: "Waite depicts a merchant-like figure on a cliff observing ships at sea. His upright associations concern established strength, commerce, discovery and cooperative enterprise; reversed he describes the end or suspension of difficulties and toil.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Do not convert these historical commerce and adversity lists into a guaranteed business result or GAIA's own editorial guidance."
+  },
+  {
+    cardId: "wands-4",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Four of Wands",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/four-of-wands",
+    checkedMeaning: "Waite depicts four wands supporting a garland, people with bouquets and a manor beyond a bridge. Upright he associates refuge, domestic peace, harmony and prosperity; unusually, he says the reversed interpretation remains favorable rather than turning negative.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite explicitly preserves favorable reversed associations. Do not replace them with the modern automatic 'blocked celebration' convention."
+  },
+  {
+    cardId: "cups-ace",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ace of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ace-of-cups",
+    checkedMeaning: "Waite depicts a hand holding a cup receiving a descending dove and religious wafer, with streams above water lilies. His upright list concerns heartfelt contentment, nourishment and abundance; reversed he records instability, change and the image of a false heart.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The dove and host belong to Waite's Christian-symbolic imagery. His fertility vocabulary is not a personal pregnancy or medical prediction."
+  },
+  {
+    cardId: "cups-3",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Three of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/three-of-cups",
+    checkedMeaning: "Waite shows three women raising cups in a garden. Upright he lists merriment, fulfillment, solace and healing; reversed he includes swift completion and, separately, excessive physical enjoyment and sensory pleasure.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Waite's reversed list is not simply the opposite of friendship; his historical 'healing' language is not clinical evidence or medical advice."
+  },
+  {
+    cardId: "cups-5",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Five of Cups",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/five-of-cups",
+    checkedMeaning: "Waite depicts a cloaked figure looking toward three fallen cups while two remain standing. Upright he describes loss with something preserved, disputed inheritance and sometimes bitter marriage; reversed he lists news, alliances, family ties, return and false undertakings.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Preserve Waite's mixed inheritance and marriage variants. The image does not forecast a bereavement, inheritance, or relationship outcome."
+  },
+  {
+    cardId: "swords-ace",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ace of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ace-of-swords",
+    checkedMeaning: "Waite shows a cloud-borne hand gripping a crowned sword. Upright he emphasizes overwhelming force and conquest, whether loving or hostile; reversed he warns of destructive results while noting an alternative historical reading involving conception and multiplication.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The reversed alternatives conflict. The historical childbirth language is not a fertility diagnosis or a literal prediction."
+  },
+  {
+    cardId: "swords-2",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Two of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/two-of-swords",
+    checkedMeaning: "Waite shows a blindfolded woman balancing two swords. His upright terms include balance, courage, concord and tenderness, yet he qualifies those favorable senses within the Swords suit; reversed he names deceit, disloyalty and duplicity.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Keep Waite's own warning that apparently harmonious upright readings are qualified; do not infer an actual person's honesty from a draw."
+  },
+  {
+    cardId: "swords-5",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Five of Swords",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/five-of-swords",
+    checkedMeaning: "Waite depicts an armed victor looking back at two dispirited figures. Upright he lists defeat, dishonor, loss and degradation; reversed the same negative concerns remain, with additional funeral and burial language.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "His burial associations are period divinatory terms, never evidence of imminent death, violence, or personal catastrophe."
+  },
+  {
+    cardId: "pentacles-ace",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Ace of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/ace-of-pentacles",
+    checkedMeaning: "Waite shows a hand emerging from a cloud holding a pentacle. Upright he associates satisfaction and material ease; reversed he also allows riches but stresses the darker implications of wealth and misleading news.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "Both orientations can involve money in Waite. Do not simplify reversal to poverty or turn a historic fortune-telling term into financial advice."
+  },
+  {
+    cardId: "pentacles-2",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Two of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/two-of-pentacles",
+    checkedMeaning: "Waite depicts a dancing figure holding two pentacles joined by an endless loop. His upright alternatives range from enjoyment to messages, obstacles and agitation; reversed he includes forced gaiety, writing and commercial correspondence.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "The source's diverse and sometimes conflicting associations must not be reduced to only 'work-life balance' or a guaranteed financial event."
+  },
+  {
+    cardId: "pentacles-3",
+    sourceId: 'waite-pictorial-key',
+    sectionTitle: "Three of Pentacles",
+    sectionUrl: "https://sacred-texts.com/book/the-pictorial-key-to-the-tarot/three-of-pentacles",
+    checkedMeaning: "Waite describes a sculptor working in a monastery. Upright he links skill and trade with renown and noble standing; reversed he names mediocrity, immaturity, pettiness and weakness.",
+    interpretationScope: 'divinatory-upright-reversed',
+    readingNote: "These are historic social and labor valuations, not an objective judgment of any person's ability or work quality."
   }
 ] as const;
 
