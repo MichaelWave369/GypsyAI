@@ -355,3 +355,48 @@ input:focus,select:focus,textarea:focus{outline-color:#a3d8aa}
 .gaia-sphere-polar span{font:56px Georgia,serif;color:#d9c68a}
 .gaia-court-sphere button:focus-visible,.gaia-court-sphere a:focus-visible{outline:3px solid #f6d999;outline-offset:2px}
 @media(max-width:570px){.gaia-sphere-band{grid-template-columns:1fr}.gaia-sphere-sector{min-height:75px;flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}.gaia-court-sphere{padding:13px}}
+
+
+/* GAIA v1.2 Cross-Tradition Concordance. Static evidence, no borrowed art. */
+.gaia-concordance .panel{margin-bottom:21px}
+.gaia-concordance-coverage{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:22px 0}
+.gaia-concordance-coverage>div{display:flex;flex-direction:column;gap:8px;background:#112f34;border:1px solid #537867;border-radius:10px;padding:18px}
+.gaia-concordance-coverage strong{font:clamp(26px,4vw,36px) Georgia,serif;color:#ead3a0}
+.gaia-concordance-coverage small{font-size:12px;color:#c8d6c6}
+.gaia-concordance-workbench,.gaia-concordance-sources{padding:24px}
+.gaia-concordance-workbench>label{display:block;font-size:12px;color:#d4dec6;margin:0 0 7px}
+.gaia-concordance-workbench>input{width:100%;max-width:560px}
+.gaia-concordance-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:17px 0 24px}
+.gaia-concordance-picker button{border:1px solid #487568;background:#113138;color:#e8e3d2;border-radius:9px;padding:12px;text-align:left;display:flex;min-height:72px;flex-direction:column;gap:8px}
+.gaia-concordance-picker button.active{background:#285649;border-color:#ebd198;box-shadow:0 0 0 1px #e7c98977}
+.gaia-concordance-picker button:hover{border-color:#e7d3aa}
+.gaia-concordance-picker button span{font-size:14px}
+.gaia-concordance-picker button small{font-size:11px;color:#c1d6c6;line-height:1.5}
+.gaia-concordance-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;border-top:1px solid #587366;padding-top:24px}
+.gaia-concordance-header h3{font:clamp(27px,4vw,42px) Georgia,serif;color:#f1e1b5;margin:8px 0}
+.gaia-concordance-differences{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0 21px}
+.gaia-concordance-differences span{padding:7px 11px;border:1px solid #758b78;border-radius:30px;color:#eedcaa;background:#163833;font-size:11px}
+.gaia-concordance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.gaia-concordance-tradition{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:linear-gradient(150deg,#183a38,#0e2931);border:1px solid #59806f;border-radius:10px;padding:20px 15px 18px}
+.gaia-concordance-tradition:nth-child(2){background:linear-gradient(145deg,#25413c,#172b35)}
+.gaia-concordance-tradition:nth-child(4){background:linear-gradient(145deg,#304238,#162b32)}
+.gaia-concordance-tradition h4{font:clamp(20px,2.5vw,28px) Georgia,serif;color:#f1dcaf;font-weight:400;margin:0;overflow-wrap:anywhere}
+.gaia-concordance-tradition>p{font-size:12px;color:#c7d7ca;line-height:1.65;margin:0;flex:1}
+.gaia-concordance-tradition>a{font-size:12px;color:#bce9d6;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.gaia-concordance-caption{color:#afc7bd;font-size:10px;line-height:1.5;min-height:28px}
+.gaia-concordance-rank{font:clamp(28px,4vw,40px) Georgia,serif;color:#d7c489;border-bottom:1px solid #689180;padding-bottom:9px;align-self:stretch}
+.gaia-concordance-boundary{padding:16px 19px;background:#173833;border-left:3px solid #d7c38d;border-radius:4px;margin-top:22px}
+.gaia-concordance-boundary strong{color:#f1d9a7}
+.gaia-concordance-boundary p{font-size:12px;line-height:1.7;color:#d2e1cf;margin:9px 0}
+.gaia-concordance-sources h3{font:30px Georgia,serif;font-weight:400;color:#e8d8b3;margin:10px 0}
+.gaia-concordance-source-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.gaia-concordance-source-tabs button{min-height:44px;padding:9px 13px;color:#d6e5d5;background:#153637;border:1px solid #5a786d;border-radius:7px}
+.gaia-concordance-source-tabs button.active{color:#132b2b;background:#e5ce9b;border-color:#f5dea9}
+.gaia-concordance-source-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gaia-concordance-source-list article{background:#132e35;border:1px solid #50786d;border-radius:9px;padding:17px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.gaia-concordance-source-list h4{font:20px Georgia,serif;color:#f0dfb8;font-weight:400;margin:0}
+.gaia-concordance-source-list p{margin:0;color:#c1d6cb;font-size:12px;line-height:1.6}
+.gaia-concordance-source-list a{color:#b5ead6;text-decoration:underline;text-underline-offset:3px;margin-top:auto}
+.gaia-concordance button:focus-visible,.gaia-concordance a:focus-visible{outline:3px solid #f4dca3;outline-offset:3px}
+@media(max-width:1100px){.gaia-concordance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gaia-concordance-picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:630px){.gaia-concordance-grid,.gaia-concordance-source-list{grid-template-columns:1fr}.gaia-concordance-workbench,.gaia-concordance-sources{padding:15px}.gaia-concordance-picker{grid-template-columns:1fr 1fr}.gaia-concordance-tradition{min-height:190px}.gaia-concordance-coverage>div{padding:11px}}
