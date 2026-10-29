@@ -136,8 +136,9 @@ export function CourtRankPanel({onOpenCard}:{onOpenCard:(id:string)=>void}){
         comparisons only**. The other 40 Minor Arcana (four Aces and
         thirty-six numbered cards) are compared separately in GAIA's
         **Minor Pips** chamber, with different source and interpretation limits. No new cards or artwork were introduced.
-        The currently reviewed 62 Waite card-meaning notes (22 Major, all 40 Aces/pips) remain
-        a separate and much smaller historical interpretation audit.</p>
+        The separate Waite source ledger now includes all 78 cards, including 16 court-card
+        upright/reversed historical interpretations. Those reviews do not resolve all
+        Marseille, Golden Dawn or Thoth court correspondences.</p>
     </section>
   </section>;
 }
