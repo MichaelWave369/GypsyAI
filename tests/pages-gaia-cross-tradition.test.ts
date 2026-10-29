@@ -68,7 +68,7 @@ describe('GAIA v1.3 complete Major structural Cross-Tradition Concordance',()=>{
     expect(concordanceEntry('major-20')?.thoth.label).toBe('The Aeon');
     expect(concordanceEntry('major-21')?.thoth.label).toBe('The Universe');
     expect(concordanceEntry('major-7')?.thoth.label).toBe('The Chariot');
-    expect(samples.every(e=>e.thoth.sourceId==='thoth-names')).toBe(true);
+    expect(samples.every(e=>e.thoth.sourceId==='thoth-full-index')).toBe(true);
     expect(samples.every(e=>e.differences.every(x=>['numbering','renaming','untitled-card','unchanged-label'].includes(x)))).toBe(true);
   });
 
