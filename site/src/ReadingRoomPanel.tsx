@@ -4,7 +4,8 @@ import type { ReadingKind } from './readingExperience';
 
 type Integrated = ReturnType<typeof createIntegratedReading>;
 
-const PATHS: { id: 'courts' | 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+const PATHS: { id: 'pips' | 'courts' | 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot'; icon: string; title: string; subtitle: string; truth: string }[] = [
+  { id: 'pips', icon: '◈', title: 'Ace & Pip Concordance', subtitle: 'Compare all forty numbered minor cards', truth: 'Explore Marseille emblems, Waite illustrated cards, Golden Dawn Book T sources, and Thoth printed keywords without flattening their meanings.' },
   { id: 'courts', icon: '♜', title: 'Court Rank Concordance', subtitle: 'Where kings become princes or knights', truth: 'Compare sixteen source-indexed court ranks across four tarot traditions with two transparent alignment conventions.' },
   { id: 'concordance', icon: '⌘', title: 'Cross-Tradition Concordance', subtitle: 'What the tarot traditions actually share', truth: 'Compare all 22 Major Arcana titles and ordinals across Marseille, Waite–Smith, Golden Dawn and Thoth without claiming identical meanings.' },
   { id: 'library', icon: '✧', title: 'Symbolic Library', subtitle: 'Explore meanings with citations', truth: 'Browse all 78 original card meanings and see explicitly reviewed historical notes with primary source links.' },
@@ -21,7 +22,7 @@ const PATHS: { id: 'courts' | 'concordance' | 'library' | 'atlas' | 'ritual' | '
 export function ReadingRoomPanel({
   onNavigate, onReflect
 }: {
-  onNavigate: (id: 'courts' | 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
+  onNavigate: (id: 'pips' | 'courts' | 'concordance' | 'library' | 'atlas' | 'ritual' | 'tarot' | 'astrology' | 'genekeys' | 'ancestry' | 'oracle' | 'pilot') => void;
   onReflect: (data: unknown, label: string, kind: ReadingKind, focus?: string) => void;
 }) {
   const [focus, setFocus] = useState('');
