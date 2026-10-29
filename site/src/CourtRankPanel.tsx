@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   COURT_REFERENCES, courtRankCoverage, courtRankRecord, listCourtRankRecords
 } from './courtRankConcordance';
-import type { CourtAlignment, CourtRankRecord, CourtSuit } from './courtRankConcordance';
+import type { CourtAlignment, CourtSuit } from './courtRankConcordance';
 
 const SUITS:CourtSuit[]=['Wands','Cups','Swords','Pentacles'];
 const SUIT_LABEL:Record<CourtSuit,string>={
