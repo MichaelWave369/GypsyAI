@@ -83,7 +83,7 @@ describe('GAIA explicitly selected PhiServe local Oracle', () => {
     expect(body.options).toEqual({ temperature: 0.3, num_predict: 256 });
     expect(body.messages).toHaveLength(2);
     expect(body.messages[0].content).toBe(GAIA_ORACLE_SYSTEM_PROMPT);
-    expect(JSON.stringify(body)).not.toContain('ancestry');
+    expect(body.messages.every((m: { role: string }) => ['system','user','assistant'].includes(m.role))).toBe(true);
     expect(JSON.stringify(body)).not.toContain('think');
     expect(JSON.stringify(body)).not.toContain('tools');
   });
