@@ -9,6 +9,7 @@ import {
 import type { TarotSpreadType, AncestryData, ChatTurn } from './logic';
 import {
   PHISERVE_LOCAL_URL, phiServeLoopbackOrigin, discoverPhiServeModels, askPhiServeOracle,
+  oracleRecipientContext,
 } from './phiServeOracle';
 import {
   DEFAULT_TIEKAT_CONSENT, normalizeBrainConsent, readBrainMemory, clearBrainMemory,
@@ -277,13 +278,10 @@ function App() {
     const next: ChatTurn[] = [...turns, { role: 'user', content: message }];
     setTurns(next); setQuery(''); setReplyError(''); setPending(true);
     try {
-      const approvedConsent = provider === 'phiserve' && !phiMemoryApproved
-        ? { ...consent, memoryEnabled: false } : consent;
-      const approvedMemories = provider === 'phiserve' && !phiMemoryApproved
-        ? [] : memoryEntries;
+      const permitted = oracleRecipientContext(provider, consent, memoryEntries, phiMemoryApproved);
       const brainTurn = await planLocalBrainTurn({
         message, sessionMode, councilMode,
-        consent: approvedConsent, memoryEntries: approvedMemories, packet
+        consent: permitted.consent, memoryEntries: permitted.memoryEntries, packet
       });
       // Planning and packet consent are deterministic and unchanged. Only
       // the explicitly selected local model transport differs.

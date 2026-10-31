@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   askPhiServeOracle, discoverPhiServeModels,
-  PHISERVE_LOCAL_URL, phiServeLoopbackOrigin,
+  PHISERVE_LOCAL_URL, phiServeLoopbackOrigin, oracleRecipientContext,
 } from '../site/src/phiServeOracle';
 import { GAIA_ORACLE_SYSTEM_PROMPT, buildOracleMessages } from '../site/src/logic';
 
@@ -136,6 +136,21 @@ describe('GAIA explicitly selected PhiServe local Oracle', () => {
         expect(String(error)).not.toContain('secret upstream body');
       }
     }
+  });
+
+  it('TIEKAT note memory is not sent to PhiServe until a second recipient approval', () => {
+    const consent = { allowAncestry: false, includeNames: false, hideLivingPersons: true, memoryEnabled: true };
+    const entries = [{ key: 'note1', summary: 'private', anchors: ['personal'] }] as unknown as import('../site/src/tiekatBrain').TiekatMemoryEntry[];
+    const no = oracleRecipientContext('phiserve', consent, entries, false);
+    expect(no.consent.memoryEnabled).toBe(false);
+    expect(no.memoryEntries).toEqual([]);
+    const yes = oracleRecipientContext('phiserve', consent, entries, true);
+    expect(yes.consent.memoryEnabled).toBe(true);
+    expect(yes.memoryEntries).toBe(entries);
+    const legacy = oracleRecipientContext('ollama', consent, entries, false);
+    expect(legacy.memoryEntries).toBe(entries);
+    const off = oracleRecipientContext('phiserve', { ...consent, memoryEnabled: false }, entries, true);
+    expect(off.memoryEntries).toEqual([]);
   });
 
   it('does not send oversized direct prompts', async () => {

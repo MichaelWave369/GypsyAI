@@ -5,6 +5,18 @@
  */
 import { buildOracleMessages } from './logic';
 import type { ChatTurn } from './logic';
+import type { TiekatConsentState, TiekatMemoryEntry } from './tiekatBrain';
+
+/** Keep previously-approved note memory private when a new inference recipient is selected. */
+export function oracleRecipientContext(
+  provider: 'ollama' | 'phiserve', consent: TiekatConsentState,
+  memoryEntries: TiekatMemoryEntry[], phiMemoryApproved: boolean,
+): { consent: TiekatConsentState; memoryEntries: TiekatMemoryEntry[] } {
+  if (provider === 'phiserve' && (!phiMemoryApproved || !consent.memoryEnabled)) {
+    return { consent: { ...consent, memoryEnabled: false }, memoryEntries: [] };
+  }
+  return { consent, memoryEntries };
+}
 
 export const PHISERVE_LOCAL_URL = 'http://127.0.0.1:11435';
 export const PHISERVE_MAX_PROMPT = 5000;
