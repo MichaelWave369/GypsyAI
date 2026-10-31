@@ -380,7 +380,7 @@ function App() {
               <label htmlFor="phiserve-token">Private local bearer token</label>
               <input id="phiserve-token" type="password" autoComplete="off" spellCheck={false}
                 value={phiToken} disabled={pending || connection === 'checking'}
-                onChange={(e) => { setPhiToken(e.target.value); setConnection('idle'); setModels([]); setSelected(''); }}
+                onChange={(e) => { setPhiToken(e.target.value); setConnection('idle'); setModels([]); setSelected(''); resetModelContext(); setPacket(null); }}
                 placeholder="Paste token from the local PhiServe token file" />
               <p className="muted">Token stays in this tab's memory only. This GitHub Pages origin is shared by other projects on the same host, so trust its scripts before pasting a token. No LAN or cloud gateway is enabled.</p>
             </>}
