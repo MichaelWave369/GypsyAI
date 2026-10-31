@@ -8,6 +8,9 @@ import {
 } from './logic';
 import type { TarotSpreadType, AncestryData, ChatTurn } from './logic';
 import {
+  PHISERVE_LOCAL_URL, phiServeLoopbackOrigin, discoverPhiServeModels, askPhiServeOracle,
+} from './phiServeOracle';
+import {
   DEFAULT_TIEKAT_CONSENT, normalizeBrainConsent, readBrainMemory, clearBrainMemory,
   addBrainMemory, planLocalBrainTurn, checkLocalBrainReply, permittedPacket
 } from './tiekatBrain';
@@ -108,6 +111,9 @@ function App() {
   const [tab, setTab] = useState<Tab>(initialTab);
   const [prefs] = useState(loadPreferences);
   const [base, setBase] = useState(prefs.base);
+  const [provider, setProvider] = useState<'ollama' | 'phiserve'>('ollama');
+  const [phiBase, setPhiBase] = useState(PHISERVE_LOCAL_URL);
+  const [phiToken, setPhiToken] = useState(''); // Tab memory only; never persist.
   const [selected, setSelected] = useState(prefs.model);
   const [keepChat, setKeepChat] = useState(prefs.keepChat);
   const [turns, setTurns] = useState<ChatTurn[]>(prefs.keepChat ? loadSavedChat() : []);
@@ -153,17 +159,21 @@ function App() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
   useEffect(() => {
-    localStorage.setItem(STORE, JSON.stringify({ base, model: selected, keepChat }));
-  }, [base, selected, keepChat]);
+    // Persist only legacy Ollama preferences. Never save PhiServe URL/model/token.
+    if (provider === 'ollama') {
+      localStorage.setItem(STORE, JSON.stringify({ base, model: selected, keepChat }));
+    }
+  }, [base, selected, keepChat, provider]);
   useEffect(() => {
-    if (keepChat) localStorage.setItem(CHAT_STORE, JSON.stringify(turns.slice(-30)));
+    // PhiServe chat stays ephemeral even if legacy Ollama chat persistence was on.
+    if (keepChat && provider === 'ollama') localStorage.setItem(CHAT_STORE, JSON.stringify(turns.slice(-30)));
     else localStorage.removeItem(CHAT_STORE);
-  }, [turns, keepChat]);
+  }, [turns, keepChat, provider]);
   useEffect(() => {
     localStorage.setItem(BRAIN_STORE, JSON.stringify({ consent, sessionMode, councilMode }));
   }, [consent, sessionMode, councilMode]);
   function resetModelContext() {
-    // Revoking consent must also drop old chat turns from the NEXT Ollama call.
+    // Revoking consent must drop old chat turns from the next local model call.
     setTurns([]);
     localStorage.removeItem(CHAT_STORE);
     setLastBrainTurn(null);
@@ -228,17 +238,35 @@ function App() {
     setStatus('Reading packet staged for review. No model was contacted. Check the suggested prompt and press Send in the Local Oracle.');
     go('oracle');
   }
+  function chooseOracleProvider(next: 'ollama' | 'phiserve') {
+    if (pending || connection === 'checking' || next === provider) return;
+    resetModelContext();
+    setPacket(null); // Explicitly restage a reading if the inference recipient changes.
+    setProvider(next); setSelected(''); setModels([]); setConnection('idle');
+    setConnectionError(''); setReplyError(''); setPhiToken('');
+    setStatus('Inference runtime changed; chat and staged reading data cleared. Reconnect explicitly.');
+  }
+  function disconnectOracle() {
+    if (pending || connection === 'checking') return;
+    setConnection('idle'); setConnectionError(''); setModels([]); setSelected('');
+    setPhiToken(''); setPacket(null); resetModelContext();
+  }
   async function connect() {
     setConnection('checking'); setConnectionError(''); setModels([]);
     try {
-      localOllamaUrl(base);
-      const list = await discoverLocalModels(base);
+      const list = provider === 'phiserve'
+        ? await discoverPhiServeModels(phiServeLoopbackOrigin(phiBase), phiToken)
+        : await discoverLocalModels(localOllamaUrl(base));
       setModels(list); setSelected((old) => list.includes(old) ? old : list[0] || '');
       setConnection('connected');
-      if (!list.length) setConnectionError('Ollama is reachable, but no local models were found. Pull a model in Ollama first.');
+      if (!list.length) setConnectionError(provider === 'phiserve'
+        ? 'PhiServe is reachable, but has no registered GGUF models.'
+        : 'Ollama is reachable, but no local models were found. Pull a model in Ollama first.');
     } catch (error) {
       setConnection('error');
-      setConnectionError(error instanceof Error ? error.message : String(error));
+      setConnectionError(error instanceof TypeError
+        ? 'Local browser connection blocked. Check the daemon, exact origin, token and browser local-network permissions.'
+        : (error instanceof Error ? error.message : 'Local model connection unavailable.'));
     }
   }
   async function send() {
@@ -250,7 +278,11 @@ function App() {
       const brainTurn = await planLocalBrainTurn({
         message, sessionMode, councilMode, consent, memoryEntries, packet
       });
-      const answer = await askLocalModel(base, selected, next, brainTurn.promptFrame);
+      // Planning and packet consent are deterministic and unchanged. Only
+      // the explicitly selected local model transport differs.
+      const answer = provider === 'phiserve'
+        ? await askPhiServeOracle(phiBase, phiToken, selected, next, brainTurn.promptFrame)
+        : await askLocalModel(base, selected, next, brainTurn.promptFrame);
       setLastBrainTurn(brainTurn);
       setLastVerification(checkLocalBrainReply(answer, brainTurn));
       setTurns([...next, { role: 'assistant' as const, content: answer }].slice(-30));
@@ -324,22 +356,48 @@ function App() {
         <Notice>The symbolic layers are tools for reflection, not scientific, psychological, medical, legal or financial verdicts. This Pages portal is a staged migration; the legacy Next.js application remains in the repository while features are ported.</Notice>
       </>}
       {tab === 'oracle' && <>
-        <SectionHeader kicker="LOCAL INTELLIGENCE" title="The Sovereign Oracle" description="Your browser talks directly to Ollama on this device, only after you initiate the connection. No API keys, cloud relay or model weights are stored on GitHub Pages." />
+        <SectionHeader kicker="LOCAL INTELLIGENCE" title="The Sovereign Oracle" description="Choose your own local inference runtime explicitly. GAIA's symbolic engine and consent-reviewed reading packets remain unchanged. Nothing is sent until you connect or press Send." />
         <div className="two-columns">
           <div className="panel">
             <h3>01 / Establish the connection</h3>
-            <label htmlFor="model-origin">Local Ollama origin</label><input id="model-origin" value={base} onChange={(e) => { setBase(e.target.value); setConnection('idle'); setModels([]); }} placeholder={defaultModelUrl} />
-            <div className="actions"><button className="primary" disabled={connection === 'checking' || pending} onClick={connect}>{connection === 'checking' ? 'Checking…' : 'Detect local models'}</button>
+            <label htmlFor="oracle-provider">Local inference provider</label>
+            <select id="oracle-provider" value={provider} disabled={pending || connection === 'checking'}
+              onChange={(e) => chooseOracleProvider(e.target.value as 'ollama' | 'phiserve')}>
+              <option value="ollama">Ollama (existing default)</option>
+              <option value="phiserve">Φ PhiServe (opt-in GGUF)</option>
+            </select>
+            {provider === 'ollama' ? <>
+              <label htmlFor="model-origin">Local Ollama origin</label>
+              <input id="model-origin" value={base} disabled={pending || connection === 'checking'}
+                onChange={(e) => { setBase(e.target.value); setConnection('idle'); setModels([]); setSelected(''); resetModelContext(); setPacket(null); }}
+                placeholder={defaultModelUrl} />
+            </> : <>
+              <label htmlFor="phiserve-origin">PhiServe loopback origin</label>
+              <input id="phiserve-origin" value={phiBase} autoComplete="off" spellCheck={false}
+                disabled={pending || connection === 'checking'}
+                onChange={(e) => { setPhiBase(e.target.value); setConnection('idle'); setModels([]); setSelected(''); resetModelContext(); setPacket(null); }}
+                placeholder={PHISERVE_LOCAL_URL} />
+              <label htmlFor="phiserve-token">Private local bearer token</label>
+              <input id="phiserve-token" type="password" autoComplete="off" spellCheck={false}
+                value={phiToken} disabled={pending || connection === 'checking'}
+                onChange={(e) => { setPhiToken(e.target.value); setConnection('idle'); setModels([]); setSelected(''); }}
+                placeholder="Paste token from the local PhiServe token file" />
+              <p className="muted">Token stays in this tab's memory only. This GitHub Pages origin is shared by other projects on the same host, so trust its scripts before pasting a token. No LAN or cloud gateway is enabled.</p>
+            </>}
+            <div className="actions"><button className="primary" disabled={connection === 'checking' || pending} onClick={() => void connect()}>{connection === 'checking' ? 'Checking…' : 'Detect local models'}</button>
+              <button className="secondary" disabled={pending || connection === 'checking'} onClick={disconnectOracle}>Disconnect / clear local session</button>
               <span className={'small-status ' + (connection === 'connected' ? 'ok' : '')}>{connection.toUpperCase()}</span></div>
             {connectionError && <p className="error" role="alert">{connectionError}</p>}
-            <label htmlFor="model-choice">Model</label><select id="model-choice" value={selected} onChange={(e) => setSelected(e.target.value)} disabled={!models.length}>
-              {!models.length && <option value="">Connect Ollama first</option>}
+            <label htmlFor="model-choice">Model</label><select id="model-choice" value={selected}
+              onChange={(e) => { setSelected(e.target.value); resetModelContext(); setPacket(null); }}
+              disabled={!models.length || pending}>
+              {!models.length && <option value="">Connect {provider === 'phiserve' ? 'PhiServe' : 'Ollama'} first</option>}
               {models.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
-            <p className="muted">For a GitHub Pages HTTPS site, local browser access may need an explicit Ollama origin allowlist and compatible browser permissions. The app will never expose Ollama to the public internet.</p>
+            <p className="muted">For a GitHub Pages HTTPS site, browser access to localhost requires an exact trusted origin, appropriate CORS and local-network permissions. No service is exposed to the public internet; phones and Quest cannot reach your PC through their own localhost.</p>
             <div className="thin-rule"/>
             <h3>02 / Approved context</h3>
-            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent to local Ollama only when you press Send. Review the exact attached JSON below, including any historical annotations.</p><details className="gaia-context-preview"><summary>Inspect exact approved context · {packet.text.length} characters</summary><pre>{packet.text}</pre></details><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
+            {packet ? <><p className="context-name">{packet.label}</p><p className="muted">An explicitly selected reading packet is staged for your next request only. It is sent only to the selected local provider when you press Send. Review the exact attached JSON below, including any historical annotations.</p><details className="gaia-context-preview"><summary>Inspect exact approved context · {packet.text.length} characters</summary><pre>{packet.text}</pre></details><button className="text-button" onClick={() => setPacket(null)}>Remove attached context</button></> : <p className="muted">No reading or ancestry information attached. Use “Prepare local GAIA interpretation” on a reading to stage its source-grounded packet.</p>}
 
             <div className="thin-rule"/>
             <h3>03 / TIEKAT Local Brain</h3>
@@ -354,7 +412,7 @@ function App() {
               <option value="deliberation_oracle">Deliberation Oracle</option>
               <option value="swarm_synthesis">Swarm Synthesis</option>
             </select>
-            <p className="muted">The council is a deterministic plan from the original TIEKAT engine. Ollama still generates ONE response. No fictional agent calls or scientific verification.</p>
+            <p className="muted">The council is a deterministic plan from the original TIEKAT engine. The selected local model still generates ONE response. No fictional agent calls or scientific verification.</p>
             <label className="switch"><input type="checkbox" checked={consent.allowAncestry} onChange={(e) => toggleAncestry(e.target.checked)} />
               Allow explicitly attached, aggregate-only ancestry context</label>
             <p className="muted">Default OFF. Names and living-person data remain blocked. Turning consent off drops ancestry attachments and resets model chat context.</p>
@@ -384,7 +442,7 @@ function App() {
           <div className="panel conversation">
             <div className="conversation-head"><div><span className="eyebrow">DIRECT · LOCAL</span><h3>Conversation</h3></div><span className="conversation-live">{connection === 'connected' ? '● READY' : '○ OFFLINE'}</span></div>
             <div className="message-area" aria-live="polite">
-              {!turns.length && <div className="empty-chat"><span>✺</span><h3>An open mind. A grounded reading.</h3><p>Connect your Ollama model, then begin. We separate interpretations from what the underlying reader actually calculated.</p></div>}
+              {!turns.length && <div className="empty-chat"><span>✺</span><h3>An open mind. A grounded reading.</h3><p>Connect your chosen local model, then begin. We separate interpretations from what the underlying reader actually calculated.</p></div>}
               {turns.map((turn, index) => <div key={index} className={'chat-bubble ' + turn.role}><span className="bubble-role">{turn.role === 'user' ? 'YOU' : 'GAIA · LOCAL MODEL'}</span><p>{turn.content}</p></div>)}
               {pending && <p className="muted">GAIA is reflecting through your local model…</p>}
             </div>
@@ -480,7 +538,7 @@ function App() {
             <p className="muted">Endpoint: {base} (loopback-only policy). Browser-to-local access depends on HTTPS, CORS, local-network browser permissions, and an explicit Ollama origin allowlist.</p>
             <button className="secondary" onClick={() => go('oracle')}>Configure local model ↗</button><button className="secondary" onClick={() => go('lab')}>Open model diagnostics ↗</button>
             <div className="thin-rule"/><h3>Conversation storage</h3><label className="switch"><input type="checkbox" checked={keepChat} onChange={(e) => setKeepChat(e.target.checked)} /> Remember local chat in this browser</label>
-            <p className="muted">Off by default. Turning this off deletes the locally saved conversation history, but keeps currently visible messages until you clear them.</p>
+            <p className="muted">Off by default. PhiServe chats always stay ephemeral even if this Ollama-only setting is enabled. Turning this off deletes the locally saved conversation history, but keeps currently visible messages until you clear them.</p>
             <div className="actions"><button className="secondary" onClick={() => exportJson('gypsyai-local-chat.json', turns)}>Export chat JSON</button><button className="danger" onClick={() => { if (window.confirm('Clear the local chat and stored history?')) { setTurns([]); localStorage.removeItem(CHAT_STORE); } }}>Clear chat history</button></div>
           </section>
           <section className="panel"><h3>What's local, what's not</h3>
