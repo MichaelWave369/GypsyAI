@@ -183,6 +183,7 @@ function App() {
   }
   function toggleMemory(enabled: boolean) {
     if (!enabled) {
+      setPhiMemoryApproved(false); // Revoked note memory cannot reactivate on PhiServe later.
       clearBrainMemory();
       setMemoryEntries([]);
       resetModelContext();
