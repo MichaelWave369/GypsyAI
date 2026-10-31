@@ -119,7 +119,7 @@ describe('GAIA explicitly selected PhiServe local Oracle', () => {
   it('rejects non-text and missing last user turn', () => {
     expect(() => buildOracleMessages([{ role: 'assistant', content: 'hi' }])).toThrow(/user message/);
     expect(() => buildOracleMessages([])).toThrow(/user message/);
-    expect(() => buildOracleMessages([{ role: 'tool' as 'user', content: 'execute' }])).toThrow(/only sends text/);
+    expect(() => buildOracleMessages([{ role: 'tool' as 'user', content: 'execute' }, { role: 'user', content: 'hi' }])).toThrow(/only sends text/);
   });
 
   it('rejects unauthorized or busy local service without cloud fallback or secret leakage', async () => {
