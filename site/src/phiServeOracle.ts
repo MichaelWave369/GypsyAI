@@ -16,7 +16,7 @@ export function phiServeLoopbackOrigin(input: string): string {
   catch { throw new Error('Enter a complete PhiServe loopback URL.'); }
   if (url.protocol !== 'http:' ||
       !['localhost','127.0.0.1','[::1]'].includes(url.hostname) ||
-      !url.port || url.username || url.password || url.search || url.hash ||
+      !url.port || Number(url.port) < 1 || url.username || url.password || url.search || url.hash ||
       (url.pathname !== '/' && url.pathname !== '')) {
     throw new Error('PhiServe only accepts an HTTP loopback origin with an explicit port; no remote host or credentials.');
   }
