@@ -114,6 +114,7 @@ function App() {
   const [provider, setProvider] = useState<'ollama' | 'phiserve'>('ollama');
   const [phiBase, setPhiBase] = useState(PHISERVE_LOCAL_URL);
   const [phiToken, setPhiToken] = useState(''); // Tab memory only; never persist.
+  const [phiMemoryApproved, setPhiMemoryApproved] = useState(false); // Separate per-runtime consent.
   const [selected, setSelected] = useState(prefs.model);
   const [keepChat, setKeepChat] = useState(prefs.keepChat);
   const [turns, setTurns] = useState<ChatTurn[]>(prefs.keepChat ? loadSavedChat() : []);
@@ -244,12 +245,13 @@ function App() {
     setPacket(null); // Explicitly restage a reading if the inference recipient changes.
     setProvider(next); setSelected(''); setModels([]); setConnection('idle');
     setConnectionError(''); setReplyError(''); setPhiToken('');
+    setPhiMemoryApproved(false);
     setStatus('Inference runtime changed; chat and staged reading data cleared. Reconnect explicitly.');
   }
   function disconnectOracle() {
     if (pending || connection === 'checking') return;
     setConnection('idle'); setConnectionError(''); setModels([]); setSelected('');
-    setPhiToken(''); setPacket(null); resetModelContext();
+    setPhiToken(''); setPhiMemoryApproved(false); setPacket(null); resetModelContext();
   }
   async function connect() {
     setConnection('checking'); setConnectionError(''); setModels([]);
@@ -275,8 +277,13 @@ function App() {
     const next: ChatTurn[] = [...turns, { role: 'user', content: message }];
     setTurns(next); setQuery(''); setReplyError(''); setPending(true);
     try {
+      const approvedConsent = provider === 'phiserve' && !phiMemoryApproved
+        ? { ...consent, memoryEnabled: false } : consent;
+      const approvedMemories = provider === 'phiserve' && !phiMemoryApproved
+        ? [] : memoryEntries;
       const brainTurn = await planLocalBrainTurn({
-        message, sessionMode, councilMode, consent, memoryEntries, packet
+        message, sessionMode, councilMode,
+        consent: approvedConsent, memoryEntries: approvedMemories, packet
       });
       // Planning and packet consent are deterministic and unchanged. Only
       // the explicitly selected local model transport differs.
@@ -375,14 +382,20 @@ function App() {
               <label htmlFor="phiserve-origin">PhiServe loopback origin</label>
               <input id="phiserve-origin" value={phiBase} autoComplete="off" spellCheck={false}
                 disabled={pending || connection === 'checking'}
-                onChange={(e) => { setPhiBase(e.target.value); setConnection('idle'); setModels([]); setSelected(''); resetModelContext(); setPacket(null); }}
+                onChange={(e) => { setPhiBase(e.target.value); setConnection('idle'); setModels([]); setSelected(''); setPhiMemoryApproved(false); resetModelContext(); setPacket(null); }}
                 placeholder={PHISERVE_LOCAL_URL} />
               <label htmlFor="phiserve-token">Private local bearer token</label>
               <input id="phiserve-token" type="password" autoComplete="off" spellCheck={false}
                 value={phiToken} disabled={pending || connection === 'checking'}
-                onChange={(e) => { setPhiToken(e.target.value); setConnection('idle'); setModels([]); setSelected(''); resetModelContext(); setPacket(null); }}
+                onChange={(e) => { setPhiToken(e.target.value); setConnection('idle'); setModels([]); setSelected(''); setPhiMemoryApproved(false); resetModelContext(); setPacket(null); }}
                 placeholder="Paste token from the local PhiServe token file" />
               <p className="muted">Token stays in this tab's memory only. This GitHub Pages origin is shared by other projects on the same host, so trust its scripts before pasting a token. No LAN or cloud gateway is enabled.</p>
+              <label className="switch"><input type="checkbox"
+                checked={phiMemoryApproved}
+                disabled={pending || !consent.memoryEnabled}
+                onChange={(e) => { setPhiMemoryApproved(e.target.checked); resetModelContext(); setPacket(null); }} />
+                Separately approve sending my enabled TIEKAT memory notes to local PhiServe on future Send clicks.</label>
+              <p className="muted">Off by default, even if GAIA's existing note memory is enabled. Approved reading packets still require their own review and Send. This checkbox resets when you change provider, token or endpoint, or disconnect.</p>
             </>}
             <div className="actions"><button className="primary" disabled={connection === 'checking' || pending} onClick={() => void connect()}>{connection === 'checking' ? 'Checking…' : 'Detect local models'}</button>
               <button className="secondary" disabled={pending || connection === 'checking'} onClick={disconnectOracle}>Disconnect / clear local session</button>
